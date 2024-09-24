@@ -157,7 +157,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-accordion',
 		GREENSHIFT_DIR_URL . 'libs/accordion/index.js',
 		array(),
-		'1.7',
+		'1.8',
 		true
 	);
 
