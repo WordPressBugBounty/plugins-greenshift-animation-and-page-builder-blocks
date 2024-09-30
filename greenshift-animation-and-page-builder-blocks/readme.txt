@@ -8,7 +8,7 @@ Requires at least: 6.3
 Tested up to: 6.6
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 9.5.2
+Stable tag: 9.5.6
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -112,10 +112,11 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 
 == Changelog ==
 
-= 9.5.2 =
+= 9.5.6 =
 
 * Fix: Custom css option and hover options for updated Element block
 * Added: improved Content Section variation for Element block
+* Added: Fast appearance panel for toolbar in Element block
 
 = 9.5 =
 
