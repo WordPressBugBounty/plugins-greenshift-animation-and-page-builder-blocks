@@ -187,6 +187,34 @@ if (!current_user_can('manage_options')) {
                                     </svg></div>
                                 <div class="gs-box-text">
                                     <?php esc_html_e('Before using the importer, it is recommended to save and back up your current design using the Export function.', 'greenshift-animation-and-page-builder-blocks'); ?>
+                                    <?php
+                                        $terms = get_terms( array(
+                                            'taxonomy' => 'wp_theme',
+                                            'hide_empty' => false, // Show terms even if they have no posts associated with them.
+                                        ) );
+
+                                        if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+                                            foreach ( $terms as $term ) {
+                                                // Check if the term name contains a double quote symbol.
+                                                if ( strpos( $term->name, '"' ) !== false ) {
+                                                    // Remove double quotes from the term name.
+                                                    $new_name = str_replace( '"', '', $term->name );
+
+                                                    // Update the term with the new name.
+                                                    $updated_term = wp_update_term( $term->term_id, 'wp_theme', array(
+                                                        'name' => $new_name,
+                                                    ) );
+
+                                                    if ( ! is_wp_error( $updated_term ) ) {
+                                                        echo 'Fixed term ID before importing: ' . $term->term_id . ': ' . esc_html( $new_name ) . '<br>';
+                                                    } else {
+                                                        echo 'Error updating term ID ' . $term->term_id . ': ' . $updated_term->get_error_message() . '<br>';
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        ?>
                                 </div>
                             </div>
                         </div>

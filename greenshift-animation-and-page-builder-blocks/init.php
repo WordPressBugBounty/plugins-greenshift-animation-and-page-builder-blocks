@@ -448,6 +448,30 @@ function gspb_greenShift_register_scripts_blocks(){
 	);
 
 	wp_register_script(
+		'cursor-follow',
+		GREENSHIFT_DIR_URL . 'libs/cursor/follow.js',
+		array(),
+		'1.1',
+		true
+	);
+
+	wp_register_script(
+		'cursor-shift',
+		GREENSHIFT_DIR_URL . 'libs/cursor/shift.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
+		'gs-lightbox',
+		GREENSHIFT_DIR_URL . 'libs/greenlightbox/index.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
 		'gspb_map',
 		GREENSHIFT_DIR_URL . 'libs/map/index.js',
 		array(),
@@ -482,7 +506,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'2.4',
+		'2.6',
 		true
 	);
 
@@ -793,7 +817,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				}
 				if($blockname == 'greenshift-blocks/buttonbox'){
 					$html = str_replace('class="gspb_slidingPanel"', 'aria-hidden="true"  class="gspb_slidingPanel"', $html);
-					$html = str_replace('class="gspb_slidingPanel-close"', 'tabindex="0"  class="gspb_slidingPanel-close"', $html);
+					$html = str_replace('<div class="gspb_slidingPanel-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M13 11.8l6.1-6.3-1-1-6.1 6.2-6.1-6.2-1 1 6.1 6.3-6.5 6.7 1 1 6.5-6.6 6.5 6.6 1-1z"></path></svg></div>', '<button class="gspb_slidingPanel-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M13 11.8l6.1-6.3-1-1-6.1 6.2-6.1-6.2-1 1 6.1 6.3-6.5 6.7 1 1 6.5-6.6 6.5 6.6 1-1z"></path></svg></button>', $html);
 					$html = str_replace('href="#"', 'href="#popup"', $html);
 				}
 			}
@@ -1125,6 +1149,12 @@ function gspb_greenShift_block_script_assets($html, $block)
 			if (!empty($block['attrs']['localStyles']['background']['lazy'])) {
 				wp_enqueue_script('greenshift-inview-bg');
 			}
+			if (!empty($block['attrs']['customCursor'])) {
+				wp_enqueue_script('cursor-follow');
+			}
+			if (!empty($block['attrs']['cursorEffect'])) {
+				wp_enqueue_script('cursor-shift');
+			}
 			if (isset($block['attrs']['tag']) && $block['attrs']['tag'] == 'table' && (!empty($block['attrs']['tableAttributes']['table']['sortable']) || !empty($block['attrs']['tableStyles']['table']['style']))) {
 				wp_enqueue_script('gstablesort');
 			}
@@ -1371,6 +1401,9 @@ function gspb_greenShift_block_script_assets($html, $block)
 									}
 								}
 							}
+						}
+						if(!empty($action['actionname']) && $action['actionname'] == 'lightbox'){
+							wp_enqueue_script('gs-lightbox');
 						}
 					}
 				}
@@ -2546,6 +2579,7 @@ function gspb_update_global_wp_settings($request)
 		
 				$category_domain = 'wp_theme';
 				$category_slug = $themename;
+				$category_slug = str_replace( '"', '', $category_slug );
 		
 				wp_set_object_terms($post_id, $category_slug, $category_domain, false);
 			}

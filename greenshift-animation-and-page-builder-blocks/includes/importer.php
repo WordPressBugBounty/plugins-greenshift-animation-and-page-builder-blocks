@@ -359,6 +359,9 @@ function greenshift_design_importer($file='') {
 			$category_domain = greenshift_import_sanitize_data( $category['domain'], '' );
 			$category_slug = greenshift_import_sanitize_data( $category['nicename'], '' );
 			$category_name = greenshift_import_sanitize_data( $category, '' );
+			$category_slug = str_replace( '"', '', $category_slug );
+			$category_name = str_replace( '"', '', $category_name );
+			$category_domain = str_replace( '"', '', $category_domain );
 			$term_exists = term_exists( $category_slug, $category_domain );
 			$term_id     = is_array( $term_exists ) ? $term_exists['term_id'] : $term_exists;
 			if ( ! $term_id ) {
@@ -370,6 +373,7 @@ function greenshift_design_importer($file='') {
 			$terms[$category_domain][] = $category_slug;
 			if ( $category_domain === 'wp_theme' ) {
 				$theme_slug = $category_slug;
+				$theme_slug = str_replace( '"', '', $theme_slug );
 			}
 		}
 		if ( $theme_slug ) {

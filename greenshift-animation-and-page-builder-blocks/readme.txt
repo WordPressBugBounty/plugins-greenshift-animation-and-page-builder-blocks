@@ -8,7 +8,7 @@ Requires at least: 6.3
 Tested up to: 6.6
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 9.5.6
+Stable tag: 9.6
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -111,6 +111,16 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 9.6 =
+
+* Added: Better accessibility for Sliding panel block (replaced close element to button tag)
+* Added: Interaction layer has keyboard trigger option (on keydown event)
+* Added: Lightbox Action for Interaction layer
+* Added: Fast Flex options for toolbar in Element block
+* Added: Custom cursor and cursor effects options for Element block
+* Added: Presets for Font options in Element block
+* Fix: if you have problems after template import, visit Greenshift Settings - Import/Export, check if you see notice about term ID fix
 
 = 9.5.6 =
 
