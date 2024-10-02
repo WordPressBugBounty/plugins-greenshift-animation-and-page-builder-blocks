@@ -276,7 +276,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'1.1',
 		true
 	);
-	wp_register_style('gslightbox', GREENSHIFT_DIR_URL . 'libs/lightbox/simpleLightbox.min.css', array(), '1.5');
+	wp_register_style('gslightbox', GREENSHIFT_DIR_URL . 'libs/lightbox/simpleLightbox.min.css', array(), '1.6');
 
 	// counter
 	wp_register_script(
@@ -506,7 +506,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'2.6',
+		'2.7',
 		true
 	);
 
@@ -1181,14 +1181,54 @@ function gspb_greenShift_block_script_assets($html, $block)
 					wp_enqueue_script('greenShift-scrollable-init');
 				}
 			}
-			if (function_exists('GSPB_make_dynamic_text') && !empty($block['attrs']['dynamictext']['dynamicEnable']) && !empty($block['attrs']['textContent'])) {
-				$html = GSPB_make_dynamic_text($html, $block['attrs'], $block, $block['attrs']['dynamictext'], $block['attrs']['textContent']);
-				if(!empty($block['attrs']['splitText'])){
-					//ensure to split also dynamic text
-					$type = !empty($block['attrs']['splitTextType']) ? $block['attrs']['splitTextType'] : 'words';
-					$html = greenshift_split_dynamic_text($html, $block['attrs']['splitTextType']);
+			if (function_exists('GSPB_make_dynamic_text')) {
+				if(!empty($block['attrs']['dynamictext']['dynamicEnable']) && !empty($block['attrs']['textContent'])){
+					$html = GSPB_make_dynamic_text($html, $block['attrs'], $block, $block['attrs']['dynamictext'], $block['attrs']['textContent']);
+					if(!empty($block['attrs']['splitText'])){
+						//ensure to split also dynamic text
+						$type = !empty($block['attrs']['splitTextType']) ? $block['attrs']['splitTextType'] : 'words';
+						$html = greenshift_split_dynamic_text($html, $block['attrs']['splitTextType']);
+					}
 				}
-				
+				if(!empty($block['attrs']['dynamiclink']['dynamicEnable'])){
+					if($block['attrs']['tag'] == 'img' || $block['attrs']['tag'] == 'video'){
+						$p = new WP_HTML_Tag_Processor( $html );
+						$p->next_tag();
+						$value = GSPB_make_dynamic_text($block['attrs']['src'], $block['attrs'], $block, $block['attrs']['dynamiclink']);
+						if($value){
+							if($block['attrs']['tag'] == 'video'){
+								$p->next_tag();
+							}
+							$p->set_attribute( 'src', $value);
+							$html = $p->get_updated_html();
+						}else{
+							return '';
+						}
+					}else if($block['attrs']['tag'] == 'a'){
+						$p = new WP_HTML_Tag_Processor( $html );
+						$p->next_tag();
+						$value = GSPB_make_dynamic_text($block['attrs']['href'], $block['attrs'], $block, $block['attrs']['dynamiclink']);
+						if($value){
+							$p->set_attribute( 'href', $value);
+							$html = $p->get_updated_html();
+						}else{
+							return '';
+						}
+					}
+				}
+				if(!empty($block['attrs']['dynamicextra']['dynamicEnable'])){
+					if($block['attrs']['tag'] == 'video'){
+						$p = new WP_HTML_Tag_Processor( $html );
+						$p->next_tag();
+						$value = GSPB_make_dynamic_text($block['attrs']['poster'], $block['attrs'], $block, $block['attrs']['dynamiclink']);
+						if($value){
+							$p->set_attribute( 'poster', $value);
+							$html = $p->get_updated_html();
+						}else{
+							return '';
+						}
+					}
+				}
 			}
 			if(!empty($block['attrs']['dynamicAttributes'])){
 				$dynamicAttributes = [];

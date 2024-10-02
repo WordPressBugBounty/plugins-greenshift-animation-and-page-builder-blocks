@@ -56,7 +56,7 @@ class GSLightbox{constructor(e={}){this.options={linkAttribute:"href",iframeWidt
     }
     .gs-lightbox-video-wrapper {
         position: relative;
-        max-width: 100%;
+        max-width: 90%;
         width: 142.3vh;
         margin: 0 auto;
         overflow: hidden;
