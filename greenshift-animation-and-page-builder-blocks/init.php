@@ -1876,15 +1876,15 @@ function gspb_global_variables()
 		}
 
 		//Style presets and global class render
-		$styleStore = GreenShiftStyleStore::getInstance();
-		$styles = $styleStore->renderStyles();
-		$classstyles = $styleStore->renderClassStyles();
-		if($styles || $classstyles){
-			$styles = $styles . $classstyles;
-			wp_register_style('greenshift-style-presets', false);
-			wp_enqueue_style('greenshift-style-presets');
-			wp_add_inline_style('greenshift-style-presets', $styles);
-		}
+		// $styleStore = GreenShiftStyleStore::getInstance();
+		// $styles = $styleStore->renderStyles();
+		// $classstyles = $styleStore->renderClassStyles();
+		// if($styles || $classstyles){
+		// 	$styles = $styles . $classstyles;
+		// 	wp_register_style('greenshift-style-presets', false);
+		// 	wp_enqueue_style('greenshift-style-presets');
+		// 	wp_add_inline_style('greenshift-style-presets', $styles);
+		// }
 
 		if (!empty($options['global_interactions']) && is_array($options['global_interactions'])) {
 			wp_enqueue_script('gspb_motion_one');
