@@ -1345,6 +1345,112 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			if (!empty($sitesettings['sitesettings']['smoothscroll'])) {
 				echo '<style>html.lenis, html.lenis body {height: auto;}.lenis.lenis-smooth {scroll-behavior: auto !important;}.lenis.lenis-smooth [data-lenis-prevent] {overscroll-behavior: contain;}.lenis.lenis-stopped {overflow: hidden;}.lenis.lenis-smooth iframe {pointer-events: none;}</style>';
 			}
+			if (!empty($sitesettings['sitesettings']['pagetransition']) && !empty($sitesettings['sitesettings']['pagetransitioneffect'])) {
+				echo '<style>
+					@view-transition {navigation: auto;}
+					::view-transition-old(root) {animation: 1s gs-pagetransition-out 0s var(--gs-root-pagetransition-easing, ease);}
+					::view-transition-new(root) {animation: 1s gs-pagetransition-in 0s var(--gs-root-pagetransition-easing, ease);}
+					@media (prefers-reduced-motion) {
+						::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) {
+							animation: none !important;
+						}
+					}
+				</style>';
+				if (!empty($sitesettings['sitesettings']['pagetransitioneffect'])) {
+					if($sitesettings['sitesettings']['pagetransitioneffect'] == 'fade'){
+						echo '<style>
+							@keyframes gs-pagetransition-out {from {opacity: 1;}to {opacity: 0;}}
+							@keyframes gs-pagetransition-in {from {opacity: 0;}to {opacity: 1;}}
+						</style>';
+					}
+					else if($sitesettings['sitesettings']['pagetransitioneffect'] == 'slide-bottom'){
+						echo '<style>
+							@keyframes gs-pagetransition-out {from {opacity: 1;translate: 0;}to {opacity: 0;translate: 0 5rem;}}
+							@keyframes gs-pagetransition-in {from {opacity: 0;translate: 0 -5rem;}to {opacity: 1;translate: 0;}}
+						</style>';
+					}
+					else if($sitesettings['sitesettings']['pagetransitioneffect'] == 'slide-left'){
+						echo '<style>
+							@keyframes gs-pagetransition-out {from {opacity: 1;translate: 0;}to {opacity: 0;translate: -5rem 0;}}
+							@keyframes gs-pagetransition-in {from {opacity: 0;translate: 5rem 0;}to {opacity: 1;translate: 0;}}
+						</style>';
+					}
+					else if($sitesettings['sitesettings']['pagetransitioneffect'] == 'slide-right'){
+						echo '<style>
+							@keyframes gs-pagetransition-out {from {opacity: 1;translate: 0;}to {opacity: 0;translate: 5rem 0;}}
+							@keyframes gs-pagetransition-in {from {opacity: 0;translate: -5rem 0;}to {opacity: 1;translate: 0;}}
+						</style>';
+					}
+					else if($sitesettings['sitesettings']['pagetransitioneffect'] == 'zoom'){
+						echo '<style>
+							@keyframes gs-pagetransition-out {from {opacity: 1;scale: 1;}to {opacity: 0;scale: 1.2;}}
+							@keyframes gs-pagetransition-in {from {opacity: 0;scale: 0.8;}to {opacity: 1;scale: 1;}}
+						</style>';
+					}
+					else if($sitesettings['sitesettings']['pagetransitioneffect'] == 'parallax-out'){
+						echo '<style>
+							::view-transition-old(root) {
+								animation: 1s gs-pagetransition-out 0s var(--gs-root-pagetransition-easing, ease) both;
+							}
+							::view-transition-new(root) {
+								animation: 1s gs-pagetransition-in 0s var(--gs-root-pagetransition-easing, ease) both;
+							}
+							@keyframes gs-pagetransition-out {
+								from { opacity: 1; transform: translateY(0); }
+								to { opacity: 0.5; transform: translateY(-50%); }
+							}
+							@keyframes gs-pagetransition-in {
+								from { opacity: 0; transform: translateY(100%); }
+								to { opacity: 1; transform: translateY(0); }
+							}
+						</style>';
+					}
+					else if($sitesettings['sitesettings']['pagetransitioneffect'] == 'push'){
+						echo '<style>
+							::view-transition-old(root) {
+								animation: 1s gs-pagetransition-out 0s var(--gs-root-pagetransition-easing, ease) both;
+							}
+							::view-transition-new(root) {
+								animation: 1s gs-pagetransition-in 0s var(--gs-root-pagetransition-easing, ease) both;
+							}
+							@keyframes gs-pagetransition-out {
+								from { transform: translateY(0); }
+								to { transform: translateY(-100%); }
+							}
+							@keyframes gs-pagetransition-in {
+								from { transform: translateY(100%); }
+								to { transform: translateY(0); }
+							}
+						</style>';
+					}
+					else{	
+						echo '<style>
+							@keyframes gs-pagetransition-out {from {opacity: 1;translate: 0;}to {opacity: 0;translate: 0 -5rem;}}
+							@keyframes gs-pagetransition-in {from {opacity: 0;translate: 0 5rem;}to {opacity: 1;translate: 0;}}
+						</style>';
+					}
+				}
+				if (!empty($sitesettings['sitesettings']['pagetransitionsafe'])) {
+					echo '<style>';
+					$safeselectors = explode(',', $sitesettings['sitesettings']['pagetransitionsafe']);
+					foreach ($safeselectors as $selector) {
+						echo $selector . ' { view-transition-name: ' . str_replace(array('.', '#'), '', esc_attr($selector)) . '; }';
+					}
+					echo '</style>';
+				}else{
+					echo '<style>
+					header{
+						view-transition-name: header;
+					}
+					footer{
+						view-transition-name: footer;
+					}
+					#wpadminbar{
+						view-transition-name: topbar;
+					}
+				</style>';
+				}
+			}
 		}
 
 		function greenshift_additional__footer_elements()

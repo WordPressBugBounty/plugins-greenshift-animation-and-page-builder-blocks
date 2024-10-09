@@ -124,7 +124,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-aos-lib',
 		GREENSHIFT_DIR_URL . 'libs/aos/aoslight.js',
 		array(),
-		'3.2',
+		'3.3',
 		true
 	);
 
@@ -140,12 +140,12 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-scrollable-init',
 		GREENSHIFT_DIR_URL . 'libs/scrollable/init.js',
 		array(),
-		'2.0',
+		'2.1',
 		true
 	);
 
 	wp_register_script(
-		'greenShift-drag-init',
+		'greenshift-drag-init',
 		GREENSHIFT_DIR_URL . 'libs/scrollable/drag.js',
 		array(),
 		'1.3',
@@ -369,7 +369,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenshift-inview',
 		GREENSHIFT_DIR_URL . 'libs/inview/index.js',
 		array(),
-		'1.1',
+		'1.4',
 		true
 	);
 	wp_register_script(
@@ -472,6 +472,53 @@ function gspb_greenShift_register_scripts_blocks(){
 	);
 
 	wp_register_script(
+		'gs-greensyncpanels',
+		GREENSHIFT_DIR_URL . 'libs/greensyncpanels/index.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
+		'gs-greenpanel',
+		GREENSHIFT_DIR_URL . 'libs/greenpanel/index.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
+		'gs-lightcounter',
+		GREENSHIFT_DIR_URL . 'libs/greencounter/index.js',
+		array(),
+		'1.0',
+		true
+	);
+	wp_register_script(
+		'greenshift-twin-slide',
+		GREENSHIFT_DIR_URL . 'libs/utility/twinslide.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
+		'greenshift-split-text',
+		GREENSHIFT_DIR_URL . 'libs/utility/splittext.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
+		'greenshift-scroll-scrub',
+		GREENSHIFT_DIR_URL . 'libs/utility/scroll-scrub.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
 		'gspb_map',
 		GREENSHIFT_DIR_URL . 'libs/map/index.js',
 		array(),
@@ -506,7 +553,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'2.7',
+		'2.8',
 		true
 	);
 
@@ -531,25 +578,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'9.6.1'
+		'9.8'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'9.6.1'
+		'9.8'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'9.6.1'
+		'9.8'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'9.6.1'
+		'9.8'
 	);
 
 	//Script for ajax reusable loading
@@ -585,7 +632,7 @@ function gspb_greenShift_register_scripts_blocks(){
 	register_block_type(__DIR__ . '/blockrender/buttonbox');
 	register_block_type(__DIR__ . '/blockrender/switcher');
 	register_block_type(__DIR__ . '/blockrender/text');
-	register_block_type(__DIR__ . '/blockrender/element');
+	//register_block_type(__DIR__ . '/blockrender/element');
 
 	// admin settings scripts and styles
 	wp_register_script('gsadminsettings',  GREENSHIFT_DIR_URL . 'libs/admin/settings.js', array(), '1.2', true);
@@ -647,6 +694,7 @@ function gspb_greenShift_register_scripts_blocks(){
 require_once GREENSHIFT_DIR_PATH . 'blockrender/social-share/block.php';
 require_once GREENSHIFT_DIR_PATH . 'blockrender/toc/block.php';
 require_once GREENSHIFT_DIR_PATH . 'blockrender/map/block.php';
+require_once GREENSHIFT_DIR_PATH . 'blockrender/element/block.php';
 
 
 function gspb_greenShift_block_script_assets($html, $block)
@@ -686,6 +734,29 @@ function gspb_greenShift_block_script_assets($html, $block)
 		// looking for accordion
 		else if ($blockname === 'greenshift-blocks/accordion') {
 			wp_enqueue_script('gs-accordion');
+
+			$p = new \WP_HTML_Tag_Processor( $html );
+			$itrigger = 0;
+			while ( $p->next_tag() ) {
+				// Skip an element if it's not supposed to be processed.
+				if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs-accordion-item__title' )) ) {
+					$p->set_attribute( 'id', 'gs-trigger-'.$block['attrs']['id'].'-'.$itrigger);
+					$itrigger ++;
+				}
+			}
+			$html = $p->get_updated_html();
+
+			$p = new \WP_HTML_Tag_Processor( $html );
+			$icontent = 0;
+			while ( $p->next_tag() ) {
+				// Skip an element if it's not supposed to be processed.
+				if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs-accordion-item__content' )) ) {
+					$p->set_attribute( 'aria-labelledby', 'gs-trigger-'.$block['attrs']['id'].'-'.$icontent);
+					$icontent ++;
+				}
+			}
+			$html = $p->get_updated_html();
+
 		}else if ($blockname === 'greenshift-blocks/switchtoggle') {
 			$html = str_replace('class="gspb__switcher-element"', 'tabindex="0"  class="gspb__switcher-element"', $html);
 			wp_enqueue_script('gspbswitcheraria');
@@ -911,7 +982,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				wp_enqueue_script('greenShift-scrollable-init');
 			}
 			if (!empty($block['attrs']['mobileSmartScroll']) && !empty($block['attrs']['dragEnable'])) {
-				wp_enqueue_script('greenShift-drag-init');
+				wp_enqueue_script('greenshift-drag-init');
 			}
 			if (!empty($block['attrs']['shapeDivider']['topShape']['animate']) || !empty($block['attrs']['shapeDivider']['bottomShape']['animate'])) {
 				wp_enqueue_script('greenShift-aos-lib-full');
@@ -1145,113 +1216,6 @@ function gspb_greenShift_block_script_assets($html, $block)
 			if (function_exists('GSPB_make_dynamic_text') && !empty($block['attrs']['dynamictext']['dynamicEnable']) && !empty($block['attrs']['textContent'])) {
 				$html = GSPB_make_dynamic_text($html, $block['attrs'], $block, $block['attrs']['dynamictext'], $block['attrs']['textContent']);
 			}
-		}else if ($blockname === 'greenshift-blocks/element') {
-			if (!empty($block['attrs']['localStyles']['background']['lazy'])) {
-				wp_enqueue_script('greenshift-inview-bg');
-			}
-			if (!empty($block['attrs']['customCursor'])) {
-				wp_enqueue_script('cursor-follow');
-			}
-			if (!empty($block['attrs']['cursorEffect'])) {
-				wp_enqueue_script('cursor-shift');
-			}
-			if (isset($block['attrs']['tag']) && $block['attrs']['tag'] == 'table' && (!empty($block['attrs']['tableAttributes']['table']['sortable']) || !empty($block['attrs']['tableStyles']['table']['style']))) {
-				wp_enqueue_script('gstablesort');
-			}
-			if (!empty($block['attrs']['type']) && $block['attrs']['type'] == 'repeater') {
-				//Generate dynamic repeater
-				$html = GSPB_generate_dynamic_repeater($html, $block);
-			}
-			if(!empty($block['attrs']['isVariation']) && $block['attrs']['isVariation'] == 'marquee'){
-				$pattern = '/<div class="gspb_marquee_content">(.*?)<span class="gspb_marquee_content_end"><\/span><\/div>/s';
-				$html = preg_replace_callback($pattern, function ($matches) {
-					// Original div
-					$originalDiv = '<div class="gspb_marquee_content">'.$matches[1].'</div>';
-					
-					// Duplicated div with aria-hidden="true"
-					$duplicatedDiv = '<div class="gspb_marquee_content" aria-hidden="true">'.$matches[1].'</div>';
-				
-					// Return original and duplicated div
-					return $originalDiv . $duplicatedDiv;
-				}, $html);
-			}
-			if(!empty($block['attrs']['isVariation']) && $block['attrs']['isVariation'] == 'draggable'){
-				wp_enqueue_script('greenShift-drag-init');
-				if(!empty($block['attrs']['enableScrollButtons'])){
-					wp_enqueue_script('greenShift-scrollable-init');
-				}
-			}
-			if (function_exists('GSPB_make_dynamic_text')) {
-				if(!empty($block['attrs']['dynamictext']['dynamicEnable']) && !empty($block['attrs']['textContent'])){
-					$html = GSPB_make_dynamic_text($html, $block['attrs'], $block, $block['attrs']['dynamictext'], $block['attrs']['textContent']);
-					if(!empty($block['attrs']['splitText'])){
-						//ensure to split also dynamic text
-						$type = !empty($block['attrs']['splitTextType']) ? $block['attrs']['splitTextType'] : 'words';
-						$html = greenshift_split_dynamic_text($html, $block['attrs']['splitTextType']);
-					}
-				}
-				if(!empty($block['attrs']['dynamiclink']['dynamicEnable'])){
-					if($block['attrs']['tag'] == 'img' || $block['attrs']['tag'] == 'video'){
-						$p = new WP_HTML_Tag_Processor( $html );
-						$p->next_tag();
-						$value = GSPB_make_dynamic_text($block['attrs']['src'], $block['attrs'], $block, $block['attrs']['dynamiclink']);
-						if($value){
-							if($block['attrs']['tag'] == 'video'){
-								$p->next_tag();
-							}
-							$p->set_attribute( 'src', $value);
-							$html = $p->get_updated_html();
-						}else{
-							return '';
-						}
-					}else if($block['attrs']['tag'] == 'a'){
-						$p = new WP_HTML_Tag_Processor( $html );
-						$p->next_tag();
-						$value = GSPB_make_dynamic_text($block['attrs']['href'], $block['attrs'], $block, $block['attrs']['dynamiclink']);
-						if($value){
-							$p->set_attribute( 'href', $value);
-							$html = $p->get_updated_html();
-						}else{
-							return '';
-						}
-					}
-				}
-				if(!empty($block['attrs']['dynamicextra']['dynamicEnable'])){
-					if($block['attrs']['tag'] == 'video'){
-						$p = new WP_HTML_Tag_Processor( $html );
-						$p->next_tag();
-						$value = GSPB_make_dynamic_text($block['attrs']['poster'], $block['attrs'], $block, $block['attrs']['dynamiclink']);
-						if($value){
-							$p->set_attribute( 'poster', $value);
-							$html = $p->get_updated_html();
-						}else{
-							return '';
-						}
-					}
-				}
-			}
-			if(!empty($block['attrs']['dynamicAttributes'])){
-				$dynamicAttributes = [];
-				foreach($block['attrs']['dynamicAttributes'] as $index=>$value){
-					$dynamicAttributes[$index] = $value;
-					if(!empty($value['dynamicEnable']) && function_exists('GSPB_make_dynamic_text')){
-						$dynamicAttributes[$index]['value'] = GSPB_make_dynamic_text($dynamicAttributes[$index]['value'], $block['attrs'], $block, $value);
-					}else{
-						$dynamicAttributes[$index]['value'] = sanitize_text_field($value['value']);
-						if(strpos($value['name'], 'on') === 0){
-							$dynamicAttributes[$index]['value'] = '';
-						}
-					}
-				}
-				if(!empty($dynamicAttributes)){
-					$p = new WP_HTML_Tag_Processor( $html );
-					foreach($dynamicAttributes as $index=>$value){
-						$p->next_tag();
-						$p->set_attribute( $value['name'], $value['value']);
-					}
-					$html = $p->get_updated_html();
-				}
-			}
 		}
 
 		// looking for 3d modelviewer
@@ -1389,25 +1353,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 
 		// aos script
 		if (!empty($block['attrs']['animation']['type']) && empty($block['attrs']['animation']['usegsap'])) {
-			$animationtype = $block['attrs']['animation']['type'];
-			if ($animationtype == 'slide-up' || $animationtype == 'slide-down' || $animationtype == 'slide-right' || $animationtype == 'slide-left' || $animationtype == 'clip-up' || $animationtype == 'clip-down' || $animationtype == 'clip-right' || $animationtype == 'clip-left') {
-				wp_enqueue_script('greenShift-aos-lib-full');
-			} else {
-				wp_enqueue_script('greenShift-aos-lib');
-			}
-		}
-
-		//Will be deprecated in 8.0
-		if (!empty($block['attrs']['dynamicGClass'])) {
-			$gs_settings = get_option('gspb_global_settings');
-			$class = $block['attrs']['dynamicGClass'];
-			if (!empty($gs_settings['reusablestyles'][$class]['style'])) {
-				$reusable_style = '<style>' . wp_kses_post($gs_settings['reusablestyles'][$class]['style']) . '</style>';
-				$reusable_style = gspb_get_final_css($reusable_style);
-				$reusable_style = gspb_quick_minify_css($reusable_style);
-				$reusable_style = htmlspecialchars_decode($reusable_style);
-				$html = $html . $reusable_style;
-			}
+			wp_enqueue_script('greenShift-aos-lib');
 		}
 
 		if (!empty($block['attrs']['dynamicGClasses'])) {
@@ -1415,7 +1361,13 @@ function gspb_greenShift_block_script_assets($html, $block)
 				if(!empty($class['type'])){
 					$type = $class['type'];
 					if($type == 'preset' || $type == 'global'){
-						$css = greenshift_get_style_from_class_array($class['value'], $type);
+						$value = $class['value'];
+						$css = '';
+						if($type == 'preset' && (strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0)){
+							// do nothing because we are handling this in the regular className loop below
+						}else{
+							$css = greenshift_get_style_from_class_array($class['value'], $type);
+						}
 						if($css){
 							$class_style = '<style>' . wp_kses_post($css) . '</style>';
 							$class_style = gspb_get_final_css($class_style);
@@ -1425,6 +1377,23 @@ function gspb_greenShift_block_script_assets($html, $block)
 					}
 				}
 			}
+		}
+
+		if( !empty($block['attrs']['className'])){
+			$classes = $block['attrs']['className'];
+			$classes = explode(' ', $classes);
+			foreach($classes as $value){
+				if(strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0){
+					$css = greenshift_get_style_from_class_array($value, 'preset');
+					if($css){
+						$class_style = '<style>' . wp_kses_post($css) . '</style>';
+						$class_style = gspb_get_final_css($class_style);
+						$class_style = htmlspecialchars_decode($class_style);
+						$html = $html . $class_style;
+					}
+				}
+			}
+		
 		}
 
 		if(!empty($block['attrs']['interactionLayers'])){
@@ -1444,6 +1413,9 @@ function gspb_greenShift_block_script_assets($html, $block)
 						}
 						if(!empty($action['actionname']) && $action['actionname'] == 'lightbox'){
 							wp_enqueue_script('gs-lightbox');
+						}
+						if(!empty($action['actionname']) && $action['actionname'] == 'panel'){
+							wp_enqueue_script('gs-greenpanel');
 						}
 					}
 				}
@@ -1830,11 +1802,6 @@ function gspb_global_variables()
 			
 	if (!is_admin()) {
 		//Front assets
-		//Will be deprecated in 8.0
-		if (!empty($options['globalcss'])) {
-			$gs_global_css = $options['globalcss'];
-			$gs_global_css = str_replace('!important', '', $gs_global_css);
-		}
 
 		if (!empty($options['custom_css'])) {
 			$custom_css = $options['custom_css'];
@@ -1908,6 +1875,17 @@ function gspb_global_variables()
 			wp_add_inline_style('greenshift-global-css', $gs_global_css);
 		}
 
+		//Style presets and global class render
+		$styleStore = GreenShiftStyleStore::getInstance();
+		$styles = $styleStore->renderStyles();
+		$classstyles = $styleStore->renderClassStyles();
+		if($styles || $classstyles){
+			$styles = $styles . $classstyles;
+			wp_register_style('greenshift-style-presets', false);
+			wp_enqueue_style('greenshift-style-presets');
+			wp_add_inline_style('greenshift-style-presets', $styles);
+		}
+
 		if (!empty($options['global_interactions']) && is_array($options['global_interactions'])) {
 			wp_enqueue_script('gspb_motion_one');
 			wp_enqueue_script('gspb_interactions');
@@ -1923,29 +1901,11 @@ function gspb_global_variables()
 
 		$stylesrender = '';
 
-		//Will be deprecated in 8.0
-		$styles = !empty($options['reusablestyles']) ? $options['reusablestyles'] : '';
-		if(!empty($styles)){
-			foreach ($styles as $id=>$value){
-				$style = $value['style'];
-				$style = gspb_get_final_css($style);
-				$style = gspb_quick_minify_css($style);
-				$style = htmlspecialchars_decode($style);
-				$style = str_replace('body.gspbody', 'body', $style);
-				$stylesrender .= $style;
-			}
-		}
 		$hidelandscape = apply_filters('greenshift_hide_landscape_breakpoint', false);
 		if($hidelandscape){
 			if(empty($options['enable_landscape'])){
 				$stylesrender .= '.gspb_inspector_device-icons__icon[data-device="landscape-mobile"], .gspb_inspector_toggle_landscapemobile_hide{display:none !important;}';
 			}
-		}
-
-		//Will be deprecated in 8.0
-		if (!empty($options['globalcss'])) {
-			$gs_global_css = $options['globalcss'];
-			$gs_global_css = str_replace('!important', '', $gs_global_css);
 		}
 
 		if (!empty($options['custom_css'])) {
@@ -2135,12 +2095,12 @@ function gspb_global_variables_head(){
 
 function greenshift_app_pass_validation( $request ) {
     // Verify the application password
-    if ( !wp_validate_application_password(false) ) {
+    if ( wp_validate_application_password(false) ) {
         // Application password is valid, grant access
         return true;
     } else {
         // Application password is invalid, deny access
-        return new WP_Error( 'rest_forbidden', esc_html__( 'Invalid application password.', 'greenshift-animation-and-page-builder-blocks' ), array( 'status' => 403 ) );
+        return new WP_Error( 'rest_forbidden', esc_html__( 'Invalid application password.', 'greenshift-animation-and-page-builder-blocks' ), array( 'status' => 401 ) );
     }
 }
 
