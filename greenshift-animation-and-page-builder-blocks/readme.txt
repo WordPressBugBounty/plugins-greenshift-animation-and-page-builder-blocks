@@ -8,7 +8,7 @@ Requires at least: 6.3
 Tested up to: 6.6
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 9.8.1
+Stable tag: 9.9.1
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -111,6 +111,14 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 9.9.1 =
+
+* Added: CountdDown Element
+* Added: Tabs Element
+* Added: Option to set priority to Greenshift Elements in Inserter (Greenshift Settings - Interface)
+* Added: Better support for Blocksy width in Content Element block
+
 
 = 9.8.1 =
 

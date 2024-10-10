@@ -1,7 +1,6 @@
 {
 	"name": "greenshift-blocks/row",
-	"category":"GreenShift",
+	"category":"GreenShiftContent",
 	"title": "Row",
-	"editorStyle": "greenShift-block-css",
 	"apiVersion": 3
 }

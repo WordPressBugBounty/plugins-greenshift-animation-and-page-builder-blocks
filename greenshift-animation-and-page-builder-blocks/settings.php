@@ -29,6 +29,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			add_action('wp_ajax_gspb_generate_stylebook', array($this, 'gspb_generate_stylebook'));
 			add_action('admin_init', array($this, 'gspb_stylebook_redirect'));
 			add_action('admin_enqueue_scripts', array($this, 'greenshift_admin_enqueue_scripts'));
+			add_filter('block_categories_all', array($this, 'gspb_greenShift_category'), 11, 2);
 			add_filter( 'allowed_block_types_all', array($this, 'greenshift_inserter_allowed_blocks'), 10, 2 );
 			add_filter('block_editor_settings_all', array($this, 'gspb_generate_anchor_headings'), 10, 2);
 			if (!defined('REHUB_ADMIN_DIR')) {
@@ -75,6 +76,48 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			return $settings;
 		}
 
+		public function gspb_greenShift_category($categories, $post)
+		{
+			$global_settings = $this->global_settings;
+			if (!empty($global_settings['show_element_block']) && ($global_settings['show_element_block'] === 'bothelement')) {
+				return array_merge(
+					array(
+						array(
+							'slug'  => 'GreenLightElements',
+							'title' => __('GreenLight Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenShiftContent',
+							'title' => __('GreenShift Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenShift',
+							'title' => __('Extra Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+					),
+					$categories
+				);
+			}else{
+				return array_merge(
+					array(
+						array(
+							'slug'  => 'GreenShiftContent',
+							'title' => __('GreenShift Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenLightElements',
+							'title' => __('GreenLight Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenShift',
+							'title' => __('Extra Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+					),
+					$categories
+				);
+			}
+		}
+
 		public function greenshift_inserter_allowed_blocks( $allowed_block_types, $editor_context ) {
 			$global_settings = $this->global_settings;
 			if (!empty($global_settings['show_element_block']) && ($global_settings['show_element_block'] === 'element' || $global_settings['show_element_block'] === 'regular')) {
@@ -84,6 +127,20 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 						'greenshift-blocks/heading',
 						'greenshift-blocks/text',
 						'greenshift-blocks/image',
+						'greenshift-blocks/tabs',
+						'greenshift-blocks/tab',
+						'greenshift-blocks/countdown',
+						'greenshift-blocks/counter',
+						'greenshift-blocks/accordion',
+						'greenshift-blocks/accordionitem',
+						'greenshift-blocks/buttonbox',
+						'greenshift-blocks/button',
+						'greenshift-blocks/counter',
+						'greenshift-blocks/iconbox',
+						'greenshift-blocks/iconlist',
+						'greenshift-blocks/titlebox',
+						'greenshift-blocks/row',
+						'greenshift-blocks/column',
 					);
 				
 				}else if($global_settings['show_element_block'] === 'regular'){
@@ -608,12 +665,13 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 															</td>
 														</tr>
 														<tr>
-															<td> <label for="show_element_block"><?php esc_html_e("Priority for Element Blocks in Inserter", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
+															<td> <label for="show_element_block"><?php esc_html_e("Priority for GreenLightElement Blocks in Inserter", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
 															<td>
 																<select name="show_element_block">
-																	<option value="both" <?php selected($show_element_block, 'both'); ?>><?php esc_html_e("Show both, priority on regular", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
-																	<option value="element" <?php selected($show_element_block, 'element'); ?>> <?php esc_html_e("Show only Element blocks", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
-																	<option value="regular" <?php selected($show_element_block, 'regular'); ?>> <?php esc_html_e("Show only regular blocks", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
+																	<option value="both" <?php selected($show_element_block, 'both'); ?>><?php esc_html_e("Show both, priority on regular Greenshift blocks", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
+																	<option value="bothelement" <?php selected($show_element_block, 'bothelement'); ?>><?php esc_html_e("Show both, priority on GreenLight Element blocks", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
+																	<option value="element" <?php selected($show_element_block, 'element'); ?>> <?php esc_html_e("Show only GreenLight Element blocks", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
+																	<option value="regular" <?php selected($show_element_block, 'regular'); ?>> <?php esc_html_e("Show only Greenshift blocks", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
 																</select>
 															</td>
 														</tr>

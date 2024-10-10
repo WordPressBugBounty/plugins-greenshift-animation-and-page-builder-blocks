@@ -267,7 +267,7 @@ if (!current_user_can('manage_options')) {
                                         <?php else : ?>
                                             <span class="gspb-badge gspb-badge-warning gspb-badge-2">Not Installed</span>
                                         <?php endif; ?>
-                                        <li class="gspb-title">Greenshift Query</li>
+                                        <li class="gspb-title">Query and Dynamic</li>
                                         <li class="gspb-offer">
                                             <span class="gspb-price">$19.99</span>
                                         </li>
@@ -329,7 +329,7 @@ if (!current_user_can('manage_options')) {
                                         <?php else : ?>
                                             <span class="gspb-badge gspb-badge-warning gspb-badge-2">Not Installed</span>
                                         <?php endif; ?>
-                                        <li class="gspb-title">Greenshift Chart</li>
+                                        <li class="gspb-title">Chart Addon</li>
                                         <li class="gspb-offer">
                                             <span class="gspb-price">$9.50</span>
                                         </li>

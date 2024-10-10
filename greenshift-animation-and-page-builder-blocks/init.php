@@ -494,6 +494,15 @@ function gspb_greenShift_register_scripts_blocks(){
 		'1.0',
 		true
 	);
+
+	wp_register_script(
+		'gs-lightcountdown',
+		GREENSHIFT_DIR_URL . 'libs/greencountdown/index.js',
+		array(),
+		'1.0',
+		true
+	);
+
 	wp_register_script(
 		'greenshift-twin-slide',
 		GREENSHIFT_DIR_URL . 'libs/utility/twinslide.js',

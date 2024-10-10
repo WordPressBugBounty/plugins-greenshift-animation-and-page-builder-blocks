@@ -2,5 +2,6 @@
 	"name": "greenshift-blocks/toc",
 	"title": "Table of Content",
 	"category":"GreenShift",
-	"apiVersion": 3
+	"apiVersion": 3,
+	"editorStyle": "greenShift-block-css"
 }

@@ -6,7 +6,7 @@
  * Author: Wpsoul
  * Author URI: https://greenshiftwp.com
  * Plugin URI: https://greenshiftwp.com
- * Version: 9.8.1
+ * Version: 9.9.1
  * Text Domain: greenshift-animation-and-page-builder-blocks
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
@@ -20,32 +20,6 @@ if (!defined('ABSPATH')) {
 // Define Dir URL
 define('GREENSHIFT_DIR_URL', plugin_dir_url(__FILE__));
 define('GREENSHIFT_DIR_PATH', plugin_dir_path(__FILE__));
-
-/**
- * GreenShift Blocks Category
- */
-function gspb_greenShift_category($categories, $post)
-{
-	return array_merge(
-		array(
-			array(
-				'slug'  => 'GreenShiftContent',
-				'title' => __('Content Elements', 'greenshift-animation-and-page-builder-blocks'),
-			),
-			array(
-				'slug'  => 'GreenShift',
-				'title' => __('Interactive Elements', 'greenshift-animation-and-page-builder-blocks'),
-			),
-			array(
-				'slug'  => 'GreenShiftElements',
-				'title' => __('Framework Elements', 'greenshift-animation-and-page-builder-blocks'),
-			),
-		),
-		$categories
-	);
-}
-
-add_filter('block_categories_all', 'gspb_greenShift_category', 11, 2);
 
 // GreenShift Page Templates
 class gspb_PageTemplater

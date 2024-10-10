@@ -29,6 +29,12 @@ class Element
 		$block = (is_array($block)) ? $block : $block->parsed_block;
 		$html = $inner_content;
 
+		if(!empty($block['attrs']['styleAttributes']['hideOnFrontend_Extra'])){
+			if(!is_admin()){
+				return '';
+			}
+		}
+
 		if (!empty($block['attrs']['localStyles']['background']['lazy'])) {
 			wp_enqueue_script('greenshift-inview-bg');
 		}
@@ -71,13 +77,13 @@ class Element
 				}, $html);
 			}else if($block['attrs']['isVariation'] == 'counter'){
 				wp_enqueue_script('gs-lightcounter');
+			}else if($block['attrs']['isVariation'] == 'countdown'){
+				wp_enqueue_script('gs-lightcountdown');
 			}else if($block['attrs']['isVariation'] == 'draggable'){
 				wp_enqueue_script('greenshift-drag-init');
 				if(!empty($block['attrs']['enableScrollButtons'])){
 					wp_enqueue_script('greenShift-scrollable-init');
 				}
-			}else if($block['attrs']['isVariation'] == 'accordion'){
-				wp_enqueue_script('gs-greensyncpanels');
 			}
 		}
 		if (function_exists('GSPB_make_dynamic_text')) {
@@ -151,8 +157,10 @@ class Element
 				$html = $p->get_updated_html();
 			}
 		}
-		if(!empty($block['attrs']['isVariation']) && $block['attrs']['isVariation'] == 'accordion'){
-			
+		if(!empty($block['attrs']['isVariation']) && ($block['attrs']['isVariation'] == 'accordion' || $block['attrs']['isVariation'] == 'tabs')){
+
+			wp_enqueue_script('gs-greensyncpanels');
+
 			$p = new \WP_HTML_Tag_Processor( $html );
 			$itrigger = 0;
 			while ( $p->next_tag() ) {
