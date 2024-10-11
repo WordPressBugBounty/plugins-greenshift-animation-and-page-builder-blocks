@@ -86,6 +86,12 @@ class Element
 				}
 			}
 		}
+		if(!empty($block['attrs']['enableTooltip'])){
+			wp_enqueue_script('gs-lighttooltip');
+		}
+		if(!empty($block['attrs']['textAnimated'])){
+			wp_enqueue_script('gs-textanimate');
+		}
 		if (function_exists('GSPB_make_dynamic_text')) {
 			if(!empty($block['attrs']['dynamictext']['dynamicEnable']) && !empty($block['attrs']['textContent'])){
 				$html = GSPB_make_dynamic_text($html, $block['attrs'], $block, $block['attrs']['dynamictext'], $block['attrs']['textContent']);

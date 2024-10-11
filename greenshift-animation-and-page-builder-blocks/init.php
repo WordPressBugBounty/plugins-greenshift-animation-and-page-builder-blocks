@@ -124,7 +124,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-aos-lib',
 		GREENSHIFT_DIR_URL . 'libs/aos/aoslight.js',
 		array(),
-		'3.3',
+		'3.4',
 		true
 	);
 
@@ -472,6 +472,22 @@ function gspb_greenShift_register_scripts_blocks(){
 	);
 
 	wp_register_script(
+		'gs-lighttooltip',
+		GREENSHIFT_DIR_URL . 'libs/greentooltip/index.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
+		'gs-textanimate',
+		GREENSHIFT_DIR_URL . 'libs/greentextanimate/index.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
 		'gs-greensyncpanels',
 		GREENSHIFT_DIR_URL . 'libs/greensyncpanels/index.js',
 		array(),
@@ -523,7 +539,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenshift-scroll-scrub',
 		GREENSHIFT_DIR_URL . 'libs/utility/scroll-scrub.js',
 		array(),
-		'1.0',
+		'1.1',
 		true
 	);
 
@@ -1361,8 +1377,14 @@ function gspb_greenShift_block_script_assets($html, $block)
 		}
 
 		// aos script
-		if (!empty($block['attrs']['animation']['type']) && empty($block['attrs']['animation']['usegsap'])) {
+		if (!empty($block['attrs']['animation']['type']) && empty($block['attrs']['animation']['usegsap']) && empty($block['attrs']['animation']['onclass_active'])) {
 			wp_enqueue_script('greenShift-aos-lib');
+			if(!empty($block['attrs']['animation']['onscrub'])){
+				wp_enqueue_script('greenshift-scroll-scrub');
+			}
+			if(!empty($block['attrs']['animation']['onsplit'])){
+				wp_enqueue_script('greenshift-split-text');
+			}
 		}
 
 		if (!empty($block['attrs']['dynamicGClasses'])) {

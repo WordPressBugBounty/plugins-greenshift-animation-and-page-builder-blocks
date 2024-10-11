@@ -329,7 +329,17 @@ if (!function_exists('gspb_AnimationRenderProps')) {
 				}
 			} else if (!empty($animation['type'])) {
 
-				$animeprops['data-aos'] = esc_attr($animation['type']);
+				if(!empty($animation['onscrub'])){
+					$animeprops['data-aos-scrub'] = "yes";
+				}
+				if(!empty($animation['onsplit'])){
+					$animeprops['data-aos-split'] = "yes";
+				}
+				if(!empty($animation['onclass_active']) || !empty($animation['onscrub'])){
+					//do not trigger on view animation
+				}else{
+					$animeprops['data-aos'] = esc_attr($animation['type']);
+				}
 
 				if (!empty($animation['delay'])) {
 					$animeprops['data-aos-delay'] = esc_attr($animation['delay']);
@@ -710,7 +720,7 @@ function greenshift_render_preset_classes(){
 			))
 		),
 		array(
-			'label' => esc_html__('Motion Init and Activators', 'greenshift-animation-and-page-builder-blocks'),
+			'label' => esc_html__('Motion Presets', 'greenshift-animation-and-page-builder-blocks'),
 			'options' => apply_filters('greenshift_motion_activator_classes', array(
 				[
 					'value'=> 'gs-motion-init',
@@ -831,7 +841,7 @@ function greenshift_render_preset_classes(){
 				[
 					'value'=> 'gs-motion-child-delay',
 					'label' => "Transition stagger delay for child",
-					'css'=> '.gs-motion-child-delay > *:first-child{transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 1))} .gs-motion-child-delay > *:nth-child(2){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 2))} .gs-motion-child-delay > *:nth-child(3){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 3))} .gs-motion-child-delay > *:nth-child(4){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 4))} .gs-motion-child-delay > *:nth-child(5){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 5))} .gs-motion-child-delay > *:nth-child(6){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 6))} .gs-motion-child-delay > *:nth-child(7){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 7))} .gs-motion-child-delay > *:nth-child(8){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 8))} .gs-motion-child-delay > *:nth-child(9){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 9))} .gs-motion-child-delay > *:nth-child(n+10){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 10))}',
+					'css'=> '.gs-motion-child-delay > *:first-child{transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 0))} .gs-motion-child-delay > *:nth-child(2){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 1))} .gs-motion-child-delay > *:nth-child(3){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 2))} .gs-motion-child-delay > *:nth-child(4){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 3))} .gs-motion-child-delay > *:nth-child(5){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 4))} .gs-motion-child-delay > *:nth-child(6){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 5))} .gs-motion-child-delay > *:nth-child(7){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 6))} .gs-motion-child-delay > *:nth-child(8){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 7))} .gs-motion-child-delay > *:nth-child(9){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 8))} .gs-motion-child-delay > *:nth-child(n+10){transition-delay: calc(var(--gs-root-transition-delay, .3s) + calc(var(--gs-root-transition-delay-multiplier, .1s) * 9))}',
 					'type'=> "preset",
 					'style_store' => array(	
 						array(
