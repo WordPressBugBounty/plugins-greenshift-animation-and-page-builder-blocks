@@ -97,6 +97,13 @@
 			</key>
 		</gutenberg-block>
 
+		<gutenberg-block
+			type="greenshift-blocks/element" translate="1" label="Elements">
+			<key name="textContent" />
+			<key name="tooltipText" />
+			<key name="title" />
+		</gutenberg-block>
+
 	</gutenberg-blocks>
 	<custom-fields>
 		<custom-field action="copy">_gspb_post_css</custom-field>

@@ -475,7 +475,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-lighttooltip',
 		GREENSHIFT_DIR_URL . 'libs/greentooltip/index.js',
 		array(),
-		'1.0',
+		'1.1',
 		true
 	);
 
