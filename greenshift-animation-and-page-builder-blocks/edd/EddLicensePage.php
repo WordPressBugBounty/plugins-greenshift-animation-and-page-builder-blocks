@@ -398,7 +398,7 @@ class EddLicensePage
 			if (is_wp_error($response)) {
 				$message = $response->get_error_message();
 			} else {
-				$message = __('An error occurred, please try again.');
+				$message = __('An error occurred, please try again.', 'greenshift-animation-and-page-builder-blocks');
 			}
 		} else {
 
@@ -443,6 +443,8 @@ class EddLicensePage
 						$message = __('An error occurred, please try again.', 'greenshift-animation-and-page-builder-blocks');
 						break;
 				}
+			} else if(!isset($license_data->success)){
+				$message = __('An error occurred, we can not connect with License server, please contact with support', 'greenshift-animation-and-page-builder-blocks'); 
 			}
 		}
 
@@ -681,6 +683,10 @@ class EddLicensePage
 			}
 
 			$license_data = json_decode(wp_remote_retrieve_body($response));
+
+			if(!isset($license_data->license)){
+				return false;
+			}
 
 			switch ($license_data->license) {
 				case 'invalid':
