@@ -491,7 +491,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greensyncpanels',
 		GREENSHIFT_DIR_URL . 'libs/greensyncpanels/index.js',
 		array(),
-		'1.0',
+		'1.1',
 		true
 	);
 
