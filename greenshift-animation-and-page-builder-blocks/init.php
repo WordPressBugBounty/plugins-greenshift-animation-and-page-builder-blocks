@@ -539,7 +539,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenshift-scroll-scrub',
 		GREENSHIFT_DIR_URL . 'libs/utility/scroll-scrub.js',
 		array(),
-		'1.1',
+		'1.2',
 		true
 	);
 
@@ -578,7 +578,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'2.8',
+		'2.9',
 		true
 	);
 
