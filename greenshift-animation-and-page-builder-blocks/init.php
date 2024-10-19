@@ -413,7 +413,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gsmodelinit',
 		GREENSHIFT_DIR_URL . 'libs/modelviewer/index.js',
 		array(),
-		'1.11.3',
+		'1.11.4',
 		true
 	);
 	wp_localize_script(

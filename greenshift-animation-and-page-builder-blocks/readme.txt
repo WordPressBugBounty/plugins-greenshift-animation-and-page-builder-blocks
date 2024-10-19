@@ -8,7 +8,7 @@ Requires at least: 6.3
 Tested up to: 6.6
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 9.9.8
+Stable tag: 9.9.8.3
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -111,6 +111,12 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 9.9.8.3 =
+
+* Added: Copy/Paste styles are working for Local styles to Class system
+* Added: Right click on input fields will open variable selector
+* Added: Increase specificity for local styles (use dot icon in Local styles panel)
 
 = 9.9.8 =
 
