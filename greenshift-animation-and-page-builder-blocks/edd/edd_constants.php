@@ -5,7 +5,7 @@ define( 'EDD_GSPB_PLUGIN_LICENSE_PAGE', 'greenshift-license' );
 
 // this is the URL our updater / license checker pings. This should be the URL of the site with EDD installed
 define( 'EDD_GSPB_STORE_URL', 'https://shop.greenshiftwp.com/' );
-define( 'EDD_GSPB_STORE_URL_UPDATE', 'https://lookmetrics.co/update-plugin' );
+define( 'EDD_GSPB_STORE_URL_UPDATE', 'https://shop.greenshiftwp.com/update-plugin');
 
 // all in one data
 define( 'EDD_ALL_IN_ONE_ADDON_ID', 223 );
