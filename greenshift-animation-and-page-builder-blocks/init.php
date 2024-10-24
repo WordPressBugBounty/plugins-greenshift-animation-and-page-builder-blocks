@@ -216,7 +216,7 @@ function gspb_greenShift_register_scripts_blocks(){
 			'breakpoints' => gspb_get_breakpoints()
 		)
 	);
-	wp_register_style('gsswiper', GREENSHIFT_DIR_URL . 'libs/swiper/swiper-bundle.min.css', array(), '8.1');
+	wp_register_style('gsswiper', GREENSHIFT_DIR_URL . 'libs/swiper/swiper-bundle.min.css', array(), '8.2');
 
 	// tabs
 	wp_register_script(
@@ -1547,6 +1547,7 @@ function gspb_greenShift_editor_assets()
 	$default_unit = (!empty($sitesettings['default_unit'])) ? $sitesettings['default_unit'] : '';
 	$variables = greenshift_render_variables($global_variables);
 	$addonlink = admin_url('admin.php?page=greenshift_upgrade');
+	$show_element_block = (!empty($sitesettings['show_element_block'])) ? $sitesettings['show_element_block'] : '';
 	$updatelink = $addonlink;
 	$theme = wp_get_theme();
 	if ($theme->parent_theme) {
@@ -1743,6 +1744,7 @@ function gspb_greenShift_editor_assets()
 			'stylebook_url' => $stylebook_url,
 			'hide_local_styles' => $hide_local_styles,
 			'row_padding_disable' => $row_padding_disable,
+			'show_element_block' => $show_element_block,
 			'default_unit' => $default_unit,
 			'local_wp_fonts' => $local_wp_fonts,
 			'nonce' => wp_create_nonce('gspb_nonce'),

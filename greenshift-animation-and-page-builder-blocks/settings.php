@@ -30,7 +30,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			add_action('admin_init', array($this, 'gspb_stylebook_redirect'));
 			add_action('admin_enqueue_scripts', array($this, 'greenshift_admin_enqueue_scripts'));
 			add_filter('block_categories_all', array($this, 'gspb_greenShift_category'), 11, 2);
-			add_filter( 'allowed_block_types_all', array($this, 'greenshift_inserter_allowed_blocks'), 10, 2 );
+			//add_filter( 'allowed_block_types_all', array($this, 'greenshift_inserter_allowed_blocks'), 10, 2 );
 			add_filter('block_editor_settings_all', array($this, 'gspb_generate_anchor_headings'), 10, 2);
 			if (!defined('REHUB_ADMIN_DIR')) {
 				//Show Reusable blocks column
