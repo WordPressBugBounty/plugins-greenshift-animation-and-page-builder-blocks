@@ -216,7 +216,7 @@ function gspb_greenShift_register_scripts_blocks(){
 			'breakpoints' => gspb_get_breakpoints()
 		)
 	);
-	wp_register_style('gsswiper', GREENSHIFT_DIR_URL . 'libs/swiper/swiper-bundle.min.css', array(), '8.2');
+	wp_register_style('gsswiper', GREENSHIFT_DIR_URL . 'libs/swiper/swiper-bundle.min.css', array(), '8.3');
 
 	// tabs
 	wp_register_script(
@@ -541,6 +541,21 @@ function gspb_greenShift_register_scripts_blocks(){
 		array(),
 		'1.2',
 		true
+	);
+
+	wp_register_script(
+		'scroll-view-polyfill',
+		GREENSHIFT_DIR_URL . 'libs/utility/scroll-timeline-init.js',
+		array(),
+		'1.0',
+		true
+	);
+	wp_localize_script(
+		'scroll-view-polyfill',
+		'gspb_scroll_params',
+		array(
+			'gspbLibraryUrl' => GREENSHIFT_DIR_URL
+		)
 	);
 
 	wp_register_script(

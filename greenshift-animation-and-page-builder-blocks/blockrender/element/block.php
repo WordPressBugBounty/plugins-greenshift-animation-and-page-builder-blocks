@@ -44,6 +44,9 @@ class Element
 		if (!empty($block['attrs']['cursorEffect'])) {
 			wp_enqueue_script('cursor-shift');
 		}
+		if(!empty($block['attrs']['styleAttributes']['animationTimeline'])){
+			wp_enqueue_script('scroll-view-polyfill');
+		}
 		if (isset($block['attrs']['tag']) && $block['attrs']['tag'] == 'table' && (!empty($block['attrs']['tableAttributes']['table']['sortable']) || !empty($block['attrs']['tableStyles']['table']['style']))) {
 			wp_enqueue_script('gstablesort');
 		}
