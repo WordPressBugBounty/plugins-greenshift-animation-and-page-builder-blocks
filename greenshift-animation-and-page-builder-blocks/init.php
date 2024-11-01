@@ -467,7 +467,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-lightbox',
 		GREENSHIFT_DIR_URL . 'libs/greenlightbox/index.js',
 		array(),
-		'1.0',
+		'1.1',
 		true
 	);
 
@@ -491,7 +491,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greensyncpanels',
 		GREENSHIFT_DIR_URL . 'libs/greensyncpanels/index.js',
 		array(),
-		'1.1',
+		'1.2',
 		true
 	);
 
@@ -593,7 +593,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'3.0',
+		'3.1',
 		true
 	);
 
@@ -1419,6 +1419,16 @@ function gspb_greenShift_block_script_assets($html, $block)
 							$class_style = gspb_get_final_css($class_style);
 							$class_style = htmlspecialchars_decode($class_style);
 							$html = $html . $class_style;
+						}
+					}
+					if(!empty($class['attributes']['styleAttributes']['animationTimeline'])){
+						wp_enqueue_script('scroll-view-polyfill');
+					}
+					if(!empty($class['selectors'])){
+						foreach($class['selectors'] as $selector){
+							if(!empty($selector['attributes']['styleAttributes']['animationTimeline'])){
+								wp_enqueue_script('scroll-view-polyfill');
+							}
 						}
 					}
 				}

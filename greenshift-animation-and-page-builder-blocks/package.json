@@ -31,7 +31,7 @@
     "bezier-editor": "^1.0.1",
     "colord": "^2.9.3",
     "convert-svg-react": "^1.0.0",
-    "csso": "^4.2.0",
+    "csso": "^5.0.5",
     "debounce-promise": "^3.1.2",
     "extract-json-string": "^1.0.1",
     "gsap": "^3.12.2",
