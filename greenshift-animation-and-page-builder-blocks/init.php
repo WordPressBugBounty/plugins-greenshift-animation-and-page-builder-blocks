@@ -216,7 +216,7 @@ function gspb_greenShift_register_scripts_blocks(){
 			'breakpoints' => gspb_get_breakpoints()
 		)
 	);
-	wp_register_style('gsswiper', GREENSHIFT_DIR_URL . 'libs/swiper/swiper-bundle.min.css', array(), '8.3');
+	wp_register_style('gsswiper', GREENSHIFT_DIR_URL . 'libs/swiper/swiper-bundle.min.css', array(), '8.4');
 
 	// tabs
 	wp_register_script(

@@ -665,7 +665,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 															</td>
 														</tr>
 														<tr>
-															<td> <label for="show_element_block"><?php esc_html_e("Priority for GreenLightElement Blocks in Inserter", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
+															<td> <label for="show_element_block"><?php esc_html_e("Priority for GreenLight Element Blocks in Inserter", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
 															<td>
 																<select name="show_element_block">
 																	<option value="both" <?php selected($show_element_block, 'both'); ?>><?php esc_html_e("Show both, priority on regular Greenshift blocks", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
@@ -1406,14 +1406,18 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			if (!empty($sitesettings['sitesettings']['pagetransition']) && !empty($sitesettings['sitesettings']['pagetransitioneffect'])) {
 				echo '<style>
 					@view-transition {navigation: auto;}
-					::view-transition-old(root) {animation: 1s gs-pagetransition-out 0s var(--gs-root-pagetransition-easing, ease);}
-					::view-transition-new(root) {animation: 1s gs-pagetransition-in 0s var(--gs-root-pagetransition-easing, ease);}
 					@media (prefers-reduced-motion) {
 						::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) {
 							animation: none !important;
 						}
 					}
 				</style>';
+				if($sitesettings['sitesettings']['pagetransitioneffect'] != 'none'){
+					echo '<style>
+						::view-transition-old(root) {animation: 1s gs-pagetransition-out 0s var(--gs-root-pagetransition-easing, ease);}
+						::view-transition-new(root) {animation: 1s gs-pagetransition-in 0s var(--gs-root-pagetransition-easing, ease);}
+					</style>';
+				}
 				if (!empty($sitesettings['sitesettings']['pagetransitioneffect'])) {
 					if($sitesettings['sitesettings']['pagetransitioneffect'] == 'fade'){
 						echo '<style>
