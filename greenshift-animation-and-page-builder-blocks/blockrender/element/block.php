@@ -105,7 +105,7 @@ class Element
 				}
 			}
 			if(!empty($block['attrs']['dynamiclink']['dynamicEnable'])){
-				if($block['attrs']['tag'] == 'img' || $block['attrs']['tag'] == 'video'){
+				if(isset($block['attrs']['tag']) && ($block['attrs']['tag'] == 'img' || $block['attrs']['tag'] == 'video')){
 					$p = new \WP_HTML_Tag_Processor( $html );
 					$p->next_tag();
 					$value = GSPB_make_dynamic_text($block['attrs']['src'], $block['attrs'], $block, $block['attrs']['dynamiclink']);
@@ -118,7 +118,7 @@ class Element
 					}else{
 						return '';
 					}
-				}else if($block['attrs']['tag'] == 'a'){
+				}else if(isset($block['attrs']['tag']) && $block['attrs']['tag'] == 'a'){
 					$p = new \WP_HTML_Tag_Processor( $html );
 					$p->next_tag();
 					$value = GSPB_make_dynamic_text($block['attrs']['href'], $block['attrs'], $block, $block['attrs']['dynamiclink']);

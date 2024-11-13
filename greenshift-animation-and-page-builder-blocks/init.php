@@ -609,7 +609,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_motion_one',
 		GREENSHIFT_DIR_URL . 'build/gspbMotion.js',
 		array(),
-		'10.19',
+		'10.2',
 		true
 	);
 
@@ -618,25 +618,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'9.9.8'
+		'9.9.9'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'9.9.8'
+		'9.9.9'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'9.9.8'
+		'9.9.9'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'9.9.8'
+		'9.9.9'
 	);
 
 	//Script for ajax reusable loading
@@ -1509,29 +1509,15 @@ function gspb_greenShift_editor_assets()
 	$index_asset_file = include(GREENSHIFT_DIR_PATH . 'build/index.asset.php');
 	$library_asset_file = include(GREENSHIFT_DIR_PATH . 'build/gspbLibrary.asset.php');
 
-	if (isset($GLOBALS['pagenow']) && $GLOBALS['pagenow'] == 'site-editor.php') {
-		// gspb FSE plugin script
-		wp_register_script(
-			'greenShift-site-editor-js',
-			GREENSHIFT_DIR_URL . 'build/gspbSiteEditor.js',
-			array('greenShift-library-script','wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-data', 'wp-plugins', 'wp-edit-site'),
-			$library_asset_file['version'],
-			false
-		);
-		wp_set_script_translations('greenShift-site-editor-js', 'greenshift-animation-and-page-builder-blocks');
-		wp_enqueue_script('greenShift-site-editor-js');
-	}else{
-		// gspb Post Plugin script
-		wp_register_script(
-			'greenShift-post-editor-js',
-			GREENSHIFT_DIR_URL . 'build/gspbPostEditor.js',
-			array('greenShift-library-script','wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-data', 'wp-plugins', 'wp-edit-post'),
-			$library_asset_file['version'],
-			false
-		);
-		wp_set_script_translations('greenShift-post-editor-js', 'greenshift-animation-and-page-builder-blocks');
-		wp_enqueue_script('greenShift-post-editor-js');
-	}
+	wp_register_script(
+		'greenShift-site-editor-js',
+		GREENSHIFT_DIR_URL . 'build/gspbSiteEditor.js',
+		array('greenShift-library-script','wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-data', 'wp-plugins'),
+		$library_asset_file['version'],
+		false
+	);
+	wp_set_script_translations('greenShift-site-editor-js', 'greenshift-animation-and-page-builder-blocks');
+	wp_enqueue_script('greenShift-site-editor-js');
 
 	// gspb library script
 	wp_register_script(

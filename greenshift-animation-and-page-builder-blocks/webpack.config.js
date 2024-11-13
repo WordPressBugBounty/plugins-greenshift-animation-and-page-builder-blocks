@@ -15,7 +15,6 @@
             index: './src/index.js',
             gspbLibrary: './src/gspb-library/index.js',
             gspbSiteEditor: './src/gspb-library/site-editor.js',
-            gspbPostEditor: './src/gspb-library/post-editor.js',
             gspbCustomEditor: './src/customJS/editor/index.js',
             gspbStylebook: './src/stylebook/index.js',
             gspbMotion: './src/motion/index.js',
