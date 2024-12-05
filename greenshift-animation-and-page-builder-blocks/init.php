@@ -140,7 +140,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-scrollable-init',
 		GREENSHIFT_DIR_URL . 'libs/scrollable/init.js',
 		array(),
-		'2.1',
+		'2.2',
 		true
 	);
 
@@ -475,7 +475,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-lighttooltip',
 		GREENSHIFT_DIR_URL . 'libs/greentooltip/index.js',
 		array(),
-		'1.1',
+		'1.2',
 		true
 	);
 
@@ -499,7 +499,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greenpanel',
 		GREENSHIFT_DIR_URL . 'libs/greenpanel/index.js',
 		array(),
-		'1.0',
+		'1.3',
 		true
 	);
 
@@ -559,6 +559,21 @@ function gspb_greenShift_register_scripts_blocks(){
 	);
 
 	wp_register_script(
+		'anchor-polyfill',
+		GREENSHIFT_DIR_URL . 'libs/utility/anchor-init.js',
+		array(),
+		'1.1',
+		true
+	);
+	wp_localize_script(
+		'anchor-polyfill',
+		'gspb_anchor_params',
+		array(
+			'gspbLibraryUrl' => GREENSHIFT_DIR_URL
+		)
+	);
+
+	wp_register_script(
 		'gspb_map',
 		GREENSHIFT_DIR_URL . 'libs/map/index.js',
 		array(),
@@ -593,7 +608,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'3.1',
+		'3.2',
 		true
 	);
 
@@ -618,25 +633,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'9.9.9'
+		'9.9.9.3'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'9.9.9'
+		'9.9.9.3'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'9.9.9'
+		'9.9.9.3'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'9.9.9'
+		'9.9.9.4'
 	);
 
 	//Script for ajax reusable loading
@@ -1424,10 +1439,16 @@ function gspb_greenShift_block_script_assets($html, $block)
 					if(!empty($class['attributes']['styleAttributes']['animationTimeline'])){
 						wp_enqueue_script('scroll-view-polyfill');
 					}
+					if(!empty($class['attributes']['styleAttributes']['anchorName'])){
+						wp_enqueue_script('anchor-polyfill');
+					}
 					if(!empty($class['selectors'])){
 						foreach($class['selectors'] as $selector){
 							if(!empty($selector['attributes']['styleAttributes']['animationTimeline'])){
 								wp_enqueue_script('scroll-view-polyfill');
+							}
+							if(!empty($selector['attributes']['styleAttributes']['anchorName'])){
+								wp_enqueue_script('anchor-polyfill');
 							}
 						}
 					}
@@ -1470,7 +1491,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 						if(!empty($action['actionname']) && $action['actionname'] == 'lightbox'){
 							wp_enqueue_script('gs-lightbox');
 						}
-						if(!empty($action['actionname']) && $action['actionname'] == 'panel'){
+						if(!empty($action['actionname']) && ($action['actionname'] == 'panel' || $action['actionname'] == 'popup')){
 							wp_enqueue_script('gs-greenpanel');
 						}
 					}
@@ -1559,6 +1580,14 @@ function gspb_greenShift_editor_assets()
 	$variables = greenshift_render_variables($global_variables);
 	$addonlink = admin_url('admin.php?page=greenshift_upgrade');
 	$show_element_block = (!empty($sitesettings['show_element_block'])) ? $sitesettings['show_element_block'] : '';
+	$simplified_panels = (!empty($sitesettings['simplified_panels'])) ? $sitesettings['simplified_panels'] : '';
+	if($simplified_panels){
+		if(!current_user_can('delete_others_posts')){
+			$simplified_panels = true;
+		}else{
+			$simplified_panels = false;
+		}
+	}
 	$updatelink = $addonlink;
 	$theme = wp_get_theme();
 	if ($theme->parent_theme) {
@@ -1754,6 +1783,7 @@ function gspb_greenShift_editor_assets()
 			'enabledcroll' => (function_exists('greenshift_check_cron_exec')) ? '1' : '',
 			'stylebook_url' => $stylebook_url,
 			'hide_local_styles' => $hide_local_styles,
+			'simplified_panels' => $simplified_panels,
 			'row_padding_disable' => $row_padding_disable,
 			'show_element_block' => $show_element_block,
 			'default_unit' => $default_unit,
@@ -1804,7 +1834,7 @@ function gspb_register_post_meta()
 }
 add_action('init', 'gspb_register_post_meta', 10);
 
-add_action('wp_enqueue_scripts', 'gspb_save_inline_css');
+add_action('wp_enqueue_scripts', 'gspb_save_inline_css', apply_filters('greenshift_dynamic_css_priority', 10));
 function gspb_save_inline_css()
 {
 	// Get the css registred for the post
@@ -2990,6 +3020,9 @@ function greenshift_new_add_type_to_script($tag, $handle, $source){
         $tag = '<script src="'. $source .'" type="module"></script>';
     } 
 	if ('gs-spline-init' === $handle) {
+        $tag = '<script src="'. $source .'" type="module"></script>';
+    } 
+	if ('anchor-polyfill' === $handle) {
         $tag = '<script src="'. $source .'" type="module"></script>';
     } 
     return $tag;

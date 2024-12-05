@@ -30,8 +30,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			add_action('admin_init', array($this, 'gspb_stylebook_redirect'));
 			add_action('admin_enqueue_scripts', array($this, 'greenshift_admin_enqueue_scripts'));
 			add_filter('block_categories_all', array($this, 'gspb_greenShift_category'), 11, 2);
-			//add_filter( 'allowed_block_types_all', array($this, 'greenshift_inserter_allowed_blocks'), 10, 2 );
-			add_filter('block_editor_settings_all', array($this, 'gspb_generate_anchor_headings'), 10, 2);
+			add_filter('block_editor_settings_all', array($this, 'gspb_generate_custom_block_settings'), 10, 2);
 			if (!defined('REHUB_ADMIN_DIR')) {
 				//Show Reusable blocks column
 				add_filter('manage_wp_block_posts_columns', array($this, 'gspb_template_screen_add_column'));
@@ -67,11 +66,14 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			return $classes;
 		}
 
-		function gspb_generate_anchor_headings($settings, $block_editor_context)
+		function gspb_generate_custom_block_settings($settings, $block_editor_context)
 		{
 			$global_settings = $this->global_settings;
 			if (empty($global_settings['anchors_disable'])) {
 				$settings['generateAnchors'] = true;
+			}
+			if (!empty($global_settings['simplified_panels'])) {
+				$settings['canLockBlocks'] = current_user_can( 'delete_others_posts' );
 			}
 			return $settings;
 		}
@@ -79,20 +81,36 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 		public function gspb_greenShift_category($categories, $post)
 		{
 			$global_settings = $this->global_settings;
-			if (!empty($global_settings['show_element_block']) && ($global_settings['show_element_block'] === 'bothelement')) {
+			if ((!empty($global_settings['show_element_block']) && ($global_settings['show_element_block'] === 'bothelement' || $global_settings['show_element_block'] === 'element')) || empty($global_settings['show_element_block'])) {
 				return array_merge(
 					array(
 						array(
-							'slug'  => 'GreenLightElements',
-							'title' => __('GreenLight Elements', 'greenshift-animation-and-page-builder-blocks'),
+							'slug'  => 'GreenLightLayout',
+							'title' => __('GreenLight Layout Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenLightContent',
+							'title' => __('GreenLight Content Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenLightExtra',
+							'title' => __('GreenLight Extra Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenLightTags',
+							'title' => __('GreenLight Tags Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenShiftLayout',
+							'title' => __('GreenShift Layout Blocks', 'greenshift-animation-and-page-builder-blocks'),
 						),
 						array(
 							'slug'  => 'GreenShiftContent',
-							'title' => __('GreenShift Elements', 'greenshift-animation-and-page-builder-blocks'),
+							'title' => __('GreenShift Content Blocks', 'greenshift-animation-and-page-builder-blocks'),
 						),
 						array(
-							'slug'  => 'GreenShift',
-							'title' => __('Extra Elements', 'greenshift-animation-and-page-builder-blocks'),
+							'slug'  => 'GreenShiftExtra',
+							'title' => __('GreenShift Extra Blocks', 'greenshift-animation-and-page-builder-blocks'),
 						),
 					),
 					$categories
@@ -101,67 +119,37 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				return array_merge(
 					array(
 						array(
+							'slug'  => 'GreenShiftLayout',
+							'title' => __('GreenShift Layout Blocks', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
 							'slug'  => 'GreenShiftContent',
-							'title' => __('GreenShift Elements', 'greenshift-animation-and-page-builder-blocks'),
+							'title' => __('GreenShift Content Blocks', 'greenshift-animation-and-page-builder-blocks'),
 						),
 						array(
-							'slug'  => 'GreenLightElements',
-							'title' => __('GreenLight Elements', 'greenshift-animation-and-page-builder-blocks'),
+							'slug'  => 'GreenShiftExtra',
+							'title' => __('GreenShift Extra Blocks', 'greenshift-animation-and-page-builder-blocks'),
 						),
 						array(
-							'slug'  => 'GreenShift',
-							'title' => __('Extra Elements', 'greenshift-animation-and-page-builder-blocks'),
+							'slug'  => 'GreenLightTags',
+							'title' => __('GreenLight Tags Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenLightLayout',
+							'title' => __('GreenLight Layout Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenLightContent',
+							'title' => __('GreenLight Content Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenLightExtra',
+							'title' => __('GreenLight Extra Elements', 'greenshift-animation-and-page-builder-blocks'),
 						),
 					),
 					$categories
 				);
 			}
-		}
-
-		public function greenshift_inserter_allowed_blocks( $allowed_block_types, $editor_context ) {
-			$global_settings = $this->global_settings;
-			if (!empty($global_settings['show_element_block']) && ($global_settings['show_element_block'] === 'element' || $global_settings['show_element_block'] === 'regular')) {
-				if($global_settings['show_element_block'] === 'element'){
-					$disallowed_blocks = array(
-						'greenshift-blocks/container',
-						'greenshift-blocks/heading',
-						'greenshift-blocks/text',
-						'greenshift-blocks/image',
-						'greenshift-blocks/tabs',
-						'greenshift-blocks/tab',
-						'greenshift-blocks/countdown',
-						'greenshift-blocks/counter',
-						'greenshift-blocks/accordion',
-						'greenshift-blocks/accordionitem',
-						'greenshift-blocks/buttonbox',
-						'greenshift-blocks/button',
-						'greenshift-blocks/counter',
-						'greenshift-blocks/iconbox',
-						'greenshift-blocks/iconlist',
-						'greenshift-blocks/titlebox',
-						'greenshift-blocks/row',
-						'greenshift-blocks/column',
-					);
-				
-				}else if($global_settings['show_element_block'] === 'regular'){
-					$disallowed_blocks = array(
-						'greenshift-blocks/element',
-					);
-				}
-				if ( ! is_array( $allowed_block_types ) || empty( $allowed_block_types ) ) {
-					$registered_blocks   = WP_Block_Type_Registry::get_instance()->get_all_registered();
-					$allowed_block_types = array_keys( $registered_blocks );
-				}
-		
-				$filtered_blocks = array();
-				foreach ( $allowed_block_types as $block ) {
-					if ( ! in_array( $block, $disallowed_blocks, true ) ) {
-						$filtered_blocks[] = $block;
-					}
-				}
-				return $filtered_blocks;
-			}
-			return $allowed_block_types;
 		}
 
 		public function greenshift_admin_enqueue_scripts()
@@ -606,6 +594,11 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											} else {
 												$default_settings['hide_local_styles'] = false;
 											}
+											if (isset($_POST['simplified_panels'])) {
+												$default_settings['simplified_panels'] = true;
+											} else {
+												$default_settings['simplified_panels'] = false;
+											}
 											if (isset($_POST['show_element_block'])) {
 												$default_settings['show_element_block'] = sanitize_text_field($_POST['show_element_block']);
 											}
@@ -620,6 +613,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										$anchors_disable = !empty($global_settings['anchors_disable']) ? $global_settings['anchors_disable'] : '';
 										$dark_accent_scheme = !empty($global_settings['dark_accent_scheme']) ? $global_settings['dark_accent_scheme'] : '';
 										$hide_local_styles = !empty($global_settings['hide_local_styles']) ? $global_settings['hide_local_styles'] : '';
+										$simplified_panels = !empty($global_settings['simplified_panels']) ? $global_settings['simplified_panels'] : '';
 										$show_element_block = !empty($global_settings['show_element_block']) ? $global_settings['show_element_block'] : '';
 										$default_unit = !empty($global_settings['default_unit']) ? $global_settings['default_unit'] : '';
 										$row_padding_disable = !empty($global_settings['row_padding_disable']) ? $global_settings['row_padding_disable'] : '';
@@ -689,6 +683,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 															<td> <label for="hide_local_styles"><?php esc_html_e("Close Local style option in Element block by default", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
 															<td>
 																<input type="checkbox" name="hide_local_styles" id="hide_local_styles" <?php echo $hide_local_styles == true ? 'checked' : ''; ?> />
+															</td>
+														</tr>
+														<tr>
+															<td> <label for="simplified_panels"><?php esc_html_e("Simplified panels for non editor user roles", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
+															<td>
+																<input type="checkbox" name="simplified_panels" id="simplified_panels" <?php echo $simplified_panels == true ? 'checked' : ''; ?> />
 															</td>
 														</tr>
 													</table>
@@ -1268,6 +1268,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 
 				$content_post = get_post($id);
 				if (!is_object($content_post)) return false;
+				if($content_post->post_type != 'wp_block') return false;
 				$contentpost = $content_post->post_content;
 				$style = '';
 				if (has_blocks($contentpost)) {
@@ -1317,6 +1318,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				$content = str_replace('strokedasharray', 'stroke-dasharray', $content);
 				$content = str_replace('stopcolor', 'stop-color', $content);
 				$content = str_replace('loading="lazy"', '', $content);
+				if($content_post->post_type != 'wp_block') $content = 'Please use this feature only for reusable blocks';
 			}
 			if ($content) {
 				wp_send_json_success($content);

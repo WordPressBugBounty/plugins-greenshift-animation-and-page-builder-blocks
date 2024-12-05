@@ -47,6 +47,9 @@ class Element
 		if(!empty($block['attrs']['styleAttributes']['animationTimeline'])){
 			wp_enqueue_script('scroll-view-polyfill');
 		}
+		if(!empty($block['attrs']['styleAttributes']['anchorName'])){
+			wp_enqueue_script('anchor-polyfill');
+		}
 		if (isset($block['attrs']['tag']) && $block['attrs']['tag'] == 'table' && (!empty($block['attrs']['tableAttributes']['table']['sortable']) || !empty($block['attrs']['tableStyles']['table']['style']))) {
 			wp_enqueue_script('gstablesort');
 		}

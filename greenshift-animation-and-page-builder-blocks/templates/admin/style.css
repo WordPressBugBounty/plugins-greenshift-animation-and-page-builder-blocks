@@ -205,11 +205,16 @@ body #gspb_container-id-gsbp-cbc3fa8c-bb26.gspb_container {
     max-width: 1200px
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 1223px) {
     #gspb_container-id-gsbp-cbc3fa8c-bb26.gspb_container {
         grid-template-columns: repeat(1, minmax(0, 1fr));
         grid-template: auto/1fr
     }
+}
+
+@media (min-width: 600px) and (max-width: 1223px) {
+    .gspb_iconsList-id-gsbp-843b958c-d873{display: grid;grid-template-columns: repeat(3, 1fr);
+        column-gap: 20px;}
 }
 
 #gspb_container-id-gsbp-cbc3fa8c-bb26.gspb_container {
