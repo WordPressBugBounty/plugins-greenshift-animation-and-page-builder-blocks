@@ -1285,6 +1285,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			} else {
 				$content_post = get_post($id);
 				if (!is_object($content_post)) return false;
+				if($content_post->post_type != 'wp_block') return false;
 				$content = $content_post->post_content;
 				$style = '';
 				if ($inlinestyle) {
