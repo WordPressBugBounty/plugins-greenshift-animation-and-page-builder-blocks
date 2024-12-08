@@ -633,25 +633,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'9.9.9.3'
+		'9.9.9.6'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'9.9.9.3'
+		'9.9.9.6'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'9.9.9.3'
+		'9.9.9.6'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'9.9.9.4'
+		'9.9.9.6'
 	);
 
 	//Script for ajax reusable loading
@@ -1520,6 +1520,8 @@ function gspb_greenShift_block_script_assets($html, $block)
 // Enqueue Gutenberg block assets for backend editor.
 //////////////////////////////////////////////////////////////////
 
+
+
 // Hook: Editor assets.
 add_action('enqueue_block_editor_assets', 'gspb_greenShift_editor_assets');
 
@@ -1950,15 +1952,15 @@ function gspb_global_variables()
 		}
 
 		//Style presets and global class render
-		// $styleStore = GreenShiftStyleStore::getInstance();
-		// $styles = $styleStore->renderStyles();
-		// $classstyles = $styleStore->renderClassStyles();
-		// if($styles || $classstyles){
-		// 	$styles = $styles . $classstyles;
-		// 	wp_register_style('greenshift-style-presets', false);
-		// 	wp_enqueue_style('greenshift-style-presets');
-		// 	wp_add_inline_style('greenshift-style-presets', $styles);
-		// }
+		$styleStore = GreenShiftStyleStore::getInstance();
+		$styles = $styleStore->renderStyles();
+		$classstyles = $styleStore->renderClassStyles();
+		if($styles || $classstyles){
+			$styles = $styles . $classstyles;
+			wp_register_style('greenshift-style-presets', false);
+			wp_enqueue_style('greenshift-style-presets');
+			wp_add_inline_style('greenshift-style-presets', $styles);
+		}
 
 		if (!empty($options['global_interactions']) && is_array($options['global_interactions'])) {
 			wp_enqueue_script('gspb_motion_one');

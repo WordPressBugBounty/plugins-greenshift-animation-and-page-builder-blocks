@@ -993,7 +993,7 @@ Worm form
                                                     <span class="worm-form-label-desc"><?php esc_html_e("GreenLight Element blocks", 'greenshift-animation-and-page-builder-blocks'); ?></span>
                                                 </div>
                                         </label>
-                                        <input id="c" type="radio" name="blocks" value="bothelement" <?php echo ($show_element_block == 'bothelement' || empty($show_element_block)) ? 'checked' : ''; ?>>
+                                        <input id="c" type="radio" name="blocks" value="bothelement" <?php echo ($show_element_block == 'bothelement') ? 'checked' : ''; ?>>
                                         <label for="c">
                                             <span class="worm-form-radio"></span>
                                             <div class="worm-form-label">
@@ -1001,7 +1001,7 @@ Worm form
                                                     <span class="worm-form-label-desc"><?php esc_html_e("GreenLight Elements first", 'greenshift-animation-and-page-builder-blocks'); ?></span>
                                                 </div>
                                             </label>
-                                        <input id="d" type="radio" name="blocks" value="both" <?php echo ($show_element_block == 'both') ? 'checked' : ''; ?>>
+                                        <input id="d" type="radio" name="blocks" value="both" <?php echo ($show_element_block == 'both' || empty($show_element_block)) ? 'checked' : ''; ?>>
                                         <label for="d">
                                             <span class="worm-form-radio"></span>
                                             <div class="worm-form-label">

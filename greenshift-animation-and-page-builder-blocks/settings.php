@@ -81,7 +81,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 		public function gspb_greenShift_category($categories, $post)
 		{
 			$global_settings = $this->global_settings;
-			if ((!empty($global_settings['show_element_block']) && ($global_settings['show_element_block'] === 'bothelement' || $global_settings['show_element_block'] === 'element')) || empty($global_settings['show_element_block'])) {
+			if ((!empty($global_settings['show_element_block']) && ($global_settings['show_element_block'] === 'bothelement' || $global_settings['show_element_block'] === 'element'))) {
 				return array_merge(
 					array(
 						array(
@@ -131,10 +131,6 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 							'title' => __('GreenShift Extra Blocks', 'greenshift-animation-and-page-builder-blocks'),
 						),
 						array(
-							'slug'  => 'GreenLightTags',
-							'title' => __('GreenLight Tags Elements', 'greenshift-animation-and-page-builder-blocks'),
-						),
-						array(
 							'slug'  => 'GreenLightLayout',
 							'title' => __('GreenLight Layout Elements', 'greenshift-animation-and-page-builder-blocks'),
 						),
@@ -145,6 +141,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 						array(
 							'slug'  => 'GreenLightExtra',
 							'title' => __('GreenLight Extra Elements', 'greenshift-animation-and-page-builder-blocks'),
+						),
+						array(
+							'slug'  => 'GreenLightTags',
+							'title' => __('GreenLight Tags Elements', 'greenshift-animation-and-page-builder-blocks'),
 						),
 					),
 					$categories
@@ -509,11 +509,19 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												$newargs = wp_parse_args(array('dark_mode_on' => false), $default_settings);
 												update_option('gspb_global_settings', $newargs);
 											}
+											if (isset($_POST['enable_head_inline'])) {
+												$newargs = wp_parse_args(array('enable_head_inline' => true), $default_settings);
+												update_option('gspb_global_settings', $newargs);
+											} else {
+												$newargs = wp_parse_args(array('enable_head_inline' => false), $default_settings);
+												update_option('gspb_global_settings', $newargs);
+											}
 										}
 
 										$global_settings = get_option('gspb_global_settings');
 										$css_tsyle_option = get_option('gspb_css_save');
 										$dark_mode_on = !empty($global_settings['dark_mode_on']) ? $global_settings['dark_mode_on'] : '';
+										$enable_head_inline = !empty($global_settings['enable_head_inline']) ? $global_settings['enable_head_inline'] : '';
 										?>
 										<div class="gspb_settings_form">
 											<form method="POST">
@@ -543,6 +551,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 															<td> <label for="dark_mode_on"><?php esc_html_e("Enable detection of dark mode before site loading", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
 															<td>
 																<input type="checkbox" name="dark_mode_on" id="dark_mode_on" <?php echo $dark_mode_on == true ? 'checked' : ''; ?> />
+															</td>
+														</tr>
+														<tr>
+															<td> <label for="enable_head_inline"><?php esc_html_e("Try to load inline class styles in head (Beta)", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
+															<td>
+																<input type="checkbox" name="enable_head_inline" id="enable_head_inline" <?php echo $enable_head_inline == true ? 'checked' : ''; ?> />
 															</td>
 														</tr>
 													</table>

@@ -35,9 +35,11 @@ class GreenShiftStyleStore {
 
     public function renderStyles() {
         $output = '';
-        foreach ($this->styles as $selector => $css) {
-            $output .= $selector . '{' . $css . '}';
-        }
+		if(!empty($this->styles)){
+			foreach ($this->styles as $selector => $css) {
+				$output .= $selector . '{' . $css . '}';
+			}
+		}
         return $output;
     }
 
@@ -53,9 +55,11 @@ class GreenShiftStyleStore {
 
 	public function renderClassStyles() {
         $output = '';
-        foreach ($this->classstyles as $selector => $css) {
-            $output .= $css;
-        }
+		if(!empty($this->classstyles)){
+			foreach ($this->classstyles as $selector => $css) {
+				$output .= $css;
+			}
+		}
         return $output;
     }
 }
@@ -1064,6 +1068,8 @@ function greenshift_render_preset_classes(){
 
 function greenshift_get_style_from_class_array($value, $type = 'preset'){
 	$css = '';
+	$gs_settings = get_option('gspb_global_settings');
+	$enable_head_inline = !empty($gs_settings['enable_head_inline']) ? $gs_settings['enable_head_inline'] : '';
 	if($type == 'preset'){
 		$presets = greenshift_render_preset_classes();
 		if(!empty($presets)){
@@ -1076,19 +1082,19 @@ function greenshift_get_style_from_class_array($value, $type = 'preset'){
 			if(!empty($common)){
 				foreach($common as $key => $option){
 					if(!empty($option['value']) && !empty($option['css']) && $option['value'] == $value){
-						// if(!empty($option['style_store'])){
-						// 	foreach ($option['style_store'] as $style) {
-						// 		$styleStore = GreenShiftStyleStore::getInstance();
-						// 		if(!empty($style['css'])){
-						// 			$styletocopy = $style['css'];
-						// 			$styleStore->addStyle($style['selector'], $styletocopy);
-						// 		}
-						// 	}
-						// }
-						// else{
-						// 	$css = $option['css'];
-						// }
-						$css = $option['css'];
+						if(!empty($option['style_store']) && $enable_head_inline){
+							foreach ($option['style_store'] as $style) {
+								$styleStore = GreenShiftStyleStore::getInstance();
+								if(!empty($style['css'])){
+									$styletocopy = $style['css'];
+									$styleStore->addStyle($style['selector'], $styletocopy);
+								}
+							}
+						}
+						else{
+							$css = $option['css'];
+						}
+						//$css = $option['css'];
 						if($value == 'gs-motion-inview' || $value == 'gs-motion-inview-child'){
 							wp_enqueue_script('greenshift-inview');
 						}
@@ -1110,22 +1116,30 @@ function greenshift_get_style_from_class_array($value, $type = 'preset'){
 		if(!empty($gs_settings['global_classes'])){
 			foreach($gs_settings['global_classes'] as $key => $option){
 				if(!empty($option['value']) && !empty($option['css']) && $option['value'] == $value){
-					// $styleStore = GreenShiftStyleStore::getInstance();
-					// $styletocopy = $option['css'];
-					// $styletocopy = gspb_get_final_css($styletocopy);
-					// $styletocopy = htmlspecialchars_decode($styletocopy);
-					// $styleStore->addClassStyle($value, $styletocopy);
-					$css = $option['css'];
+					if($enable_head_inline){
+						$styleStore = GreenShiftStyleStore::getInstance();
+						$styletocopy = $option['css'];
+						$styletocopy = gspb_get_final_css($styletocopy);
+						$styletocopy = htmlspecialchars_decode($styletocopy);
+						$styleStore->addClassStyle($value, $styletocopy);
+					}
+					else{
+						$css = $option['css'];
+					}
 				}
 				if(!empty($option['selectors'])){
 					foreach($option['selectors'] as $selector){
 						if(!empty($selector['css'])){
-							// $styleStore = GreenShiftStyleStore::getInstance();
-							// $styletocopy = $selector['css'];
-							// $styletocopy = gspb_get_final_css($styletocopy);
-							// $styletocopy = htmlspecialchars_decode($styletocopy);
-							// $styleStore->addClassStyle($value.$selector['value'], $styletocopy);
-							$css .= $selector['css'];
+							if($enable_head_inline){
+								$styleStore = GreenShiftStyleStore::getInstance();
+								$styletocopy = $selector['css'];
+								$styletocopy = gspb_get_final_css($styletocopy);
+								$styletocopy = htmlspecialchars_decode($styletocopy);
+								$styleStore->addClassStyle($value.$selector['value'], $styletocopy);
+							}
+							else{
+								$css .= $selector['css'];
+							}
 						}
 					}
 				}
