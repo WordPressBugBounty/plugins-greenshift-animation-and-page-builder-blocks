@@ -73,7 +73,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				$settings['generateAnchors'] = true;
 			}
 			if (!empty($global_settings['simplified_panels'])) {
-				$settings['canLockBlocks'] = current_user_can( 'delete_others_posts' );
+				$settings['canLockBlocks'] = current_user_can( 'manage_options' );
 			}
 			return $settings;
 		}
@@ -700,7 +700,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 															</td>
 														</tr>
 														<tr>
-															<td> <label for="simplified_panels"><?php esc_html_e("Simplified panels for non editor user roles", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
+															<td> <label for="simplified_panels"><?php esc_html_e("Simplified panels for non admin user roles", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
 															<td>
 																<input type="checkbox" name="simplified_panels" id="simplified_panels" <?php echo $simplified_panels == true ? 'checked' : ''; ?> />
 															</td>

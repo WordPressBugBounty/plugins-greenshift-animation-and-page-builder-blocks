@@ -124,7 +124,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-aos-lib',
 		GREENSHIFT_DIR_URL . 'libs/aos/aoslight.js',
 		array(),
-		'3.4',
+		'3.5',
 		true
 	);
 
@@ -191,7 +191,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-swiper-init',
 		GREENSHIFT_DIR_URL . 'libs/swiper/init.js',
 		array(),
-		'8.9.9',
+		'8.9.9.1',
 		true
 	);
 	wp_localize_script(
@@ -1584,7 +1584,7 @@ function gspb_greenShift_editor_assets()
 	$show_element_block = (!empty($sitesettings['show_element_block'])) ? $sitesettings['show_element_block'] : '';
 	$simplified_panels = (!empty($sitesettings['simplified_panels'])) ? $sitesettings['simplified_panels'] : '';
 	if($simplified_panels){
-		if(!current_user_can('delete_others_posts')){
+		if(!current_user_can('manage_options')){
 			$simplified_panels = true;
 		}else{
 			$simplified_panels = false;

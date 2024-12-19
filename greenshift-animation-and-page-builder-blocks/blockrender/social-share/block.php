@@ -49,7 +49,8 @@ class SocialShare
                 'in' => 'Share on Linkedin',
                 'email' => 'Share on Email',
                 'copy' => 'Copy Link',
-                'copydone' => 'Link is Copied!'
+                'copydone' => 'Link is Copied!',
+                'bs' => 'Share on Bluesky'
             )
         ),
         'socialEnabledStatus' => array(
@@ -63,6 +64,7 @@ class SocialShare
                 'in' => true,
                 'email' => true,
                 'copy' => true,
+                'bs' => true
             )
         ),
         'queryString' => array(
@@ -144,6 +146,11 @@ class SocialShare
         // mail
         if(!empty($socialEnabledStatus['email'])){
             $res .= '<span tabindex="0" role="button" aria-label="' . esc_attr($socialLabelsDef['email']) . '" title="' . esc_attr($socialLabelsDef['email']) . '" data-href="mailto:?subject=' . urlencode(html_entity_decode($title, ENT_COMPAT, 'UTF-8')) . '&body=' . esc_html__('Check out:', 'greenshift-animation-and-page-builder-blocks') . ' ' . urlencode($link) . ' - ' . urlencode(html_entity_decode(get_bloginfo("name"), ENT_COMPAT, 'UTF-8')) . '" class="email gs-share-link" data-service="email"><span class="social-share-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 88.86"><path fill="currentColor" d="M7.05,0H115.83a7.07,7.07,0,0,1,7,7.05V81.81a7,7,0,0,1-1.22,4,2.78,2.78,0,0,1-.66,1,2.62,2.62,0,0,1-.66.46,7,7,0,0,1-4.51,1.65H7.05a7.07,7.07,0,0,1-7-7V7.05A7.07,7.07,0,0,1,7.05,0Zm-.3,78.84L43.53,40.62,6.75,9.54v69.3ZM49.07,45.39,9.77,83.45h103L75.22,45.39l-11,9.21h0a2.7,2.7,0,0,1-3.45,0L49.07,45.39Zm31.6-4.84,35.46,38.6V9.2L80.67,40.55ZM10.21,5.41,62.39,47.7,112.27,5.41Z"/></svg></span><span class="social-share-label"><span>' . esc_attr($socialLabelsDef['email']) . '</span><span class="dark-bg"></span></span></span>';
+        }
+
+        // bluesky
+        if(!empty($socialEnabledStatus['bs'])){
+            $res .= '<span tabindex="0" role="button" aria-label="' . esc_attr($socialLabelsDef['tg']) . '" title="' . esc_attr($socialLabelsDef['bs']) . '" data-href="https://bsky.app/intent/compose?text=&text=' . urlencode(html_entity_decode($title, ENT_COMPAT, 'UTF-8')) . '" class="bs gs-share-link" data-service="bluesky"><span class="social-share-icon" aria-hidden="true"><svg viewBox="0 0 600 530" xmlns="http://www.w3.org/2000/svg"><path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/></svg></span><span class="social-share-label"><span>' . esc_attr($socialLabelsDef['bs']) . '</span><span class="dark-bg"></span></span></span>';
         }
 
         $res .= '</span>';

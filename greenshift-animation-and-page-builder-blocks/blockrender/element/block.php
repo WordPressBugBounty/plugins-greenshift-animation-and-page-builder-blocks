@@ -109,9 +109,10 @@ class Element
 			}
 			if(!empty($block['attrs']['dynamiclink']['dynamicEnable'])){
 				if(isset($block['attrs']['tag']) && ($block['attrs']['tag'] == 'img' || $block['attrs']['tag'] == 'video')){
+					$src = !empty($block['attrs']['src']) ? $block['attrs']['src'] : '';
 					$p = new \WP_HTML_Tag_Processor( $html );
 					$p->next_tag();
-					$value = GSPB_make_dynamic_text($block['attrs']['src'], $block['attrs'], $block, $block['attrs']['dynamiclink']);
+					$value = GSPB_make_dynamic_text($src, $block['attrs'], $block, $block['attrs']['dynamiclink']);
 					if($value){
 						if($block['attrs']['tag'] == 'video'){
 							$p->next_tag();
