@@ -191,7 +191,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-swiper-init',
 		GREENSHIFT_DIR_URL . 'libs/swiper/init.js',
 		array(),
-		'8.9.9.1',
+		'8.9.9.2',
 		true
 	);
 	wp_localize_script(
@@ -491,7 +491,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greensyncpanels',
 		GREENSHIFT_DIR_URL . 'libs/greensyncpanels/index.js',
 		array(),
-		'1.2',
+		'1.3',
 		true
 	);
 

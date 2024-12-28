@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.7
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 10.0.1
+Stable tag: 10.0.2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -111,6 +111,13 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 10.0.2 =
+
+* Added: Option to have only one opened item for Accordion Element (add all blocks to parent block with class gs_collapsible)
+* Added: Improved Release on Edge for Mobile devices for Slider block
+* Added: Improved width for Advanced Image block
+* Added: Default attributes for Section Element, Content Area
 
 = 10.0.1 =
 
