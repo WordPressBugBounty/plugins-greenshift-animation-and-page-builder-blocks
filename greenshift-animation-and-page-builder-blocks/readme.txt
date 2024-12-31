@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.7
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 10.0.2
+Stable tag: 10.1.1
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -111,6 +111,12 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 10.1 =
+
+* Added: More placeholders for Interaction Layers (TRIGGERNEXT, TRIGGERPREVIOUS, TRIGGERPARENT, TRIGGERGRANDPARENT, TRIGGERCHILD)
+* Added: Set CSS options for Interaction Layers supports separate transform values (translateX, translateY, scale, rotate, skew, etc)
+* Added: Class system now auto detects all classes from all blocks from parent section
 
 = 10.0.2 =
 

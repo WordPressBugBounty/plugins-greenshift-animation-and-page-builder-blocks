@@ -118,6 +118,19 @@ class Element
 							$p->next_tag();
 						}
 						$p->set_attribute( 'src', $value);
+						if(!empty($block['attrs']['enableSrcSet'])){
+							$id = attachment_url_to_postid($value);
+							if($id && $id > 0){
+								$size = 'full';
+								if(!empty($block['attrs']['dynamiclink']['dynamicPostImageSize'])){
+									$size = esc_attr($block['attrs']['dynamiclink']['dynamicPostImageSize']);
+								}
+								$srcset = wp_get_attachment_image_srcset($id, $size);
+								if($srcset){
+									$p->set_attribute( 'srcset', $srcset);
+								}
+							}
+						}
 						$html = $p->get_updated_html();
 					}else{
 						return '';
