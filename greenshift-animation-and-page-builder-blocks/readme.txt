@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.7
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 10.1.1
+Stable tag: 10.2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -112,11 +112,19 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 
 == Changelog ==
 
-= 10.1 =
+= 10.2 =
+
+* Added: Popover/Tooltip/Dropdown Interaction Layers
+* Added: If element has Interaction layer with Panel/Popup/Popover, it will show Synced Panel Control
+* Added: Animation panel has option for active custom selector that will trigger animation presets
+* Added: Beta option to merge all inline styles in head (works only in block themes). GS Settings - CSS Options
+
+= 10.1.1 =
 
 * Added: More placeholders for Interaction Layers (TRIGGERNEXT, TRIGGERPREVIOUS, TRIGGERPARENT, TRIGGERGRANDPARENT, TRIGGERCHILD)
 * Added: Set CSS options for Interaction Layers supports separate transform values (translateX, translateY, scale, rotate, skew, etc)
 * Added: Class system now auto detects all classes from all blocks from parent section
+* Added: Spacing presets for Element block and class system
 
 = 10.0.2 =
 
