@@ -506,7 +506,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greenpanel',
 		GREENSHIFT_DIR_URL . 'libs/greenpanel/index.js',
 		array(),
-		'1.4',
+		'1.5',
 		true
 	);
 
@@ -615,7 +615,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'3.5',
+		'3.6',
 		true
 	);
 
@@ -640,25 +640,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'10.0.3'
+		'10.2.1'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'10.0.3'
+		'10.2.1'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'10.0.3'
+		'10.2.1'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'10.0.3'
+		'10.2.1'
 	);
 
 	//Script for ajax reusable loading
@@ -1891,6 +1891,9 @@ function gspb_greenShift_editor_assets()
 		wp_enqueue_script('greenShift-stylebook-js', GREENSHIFT_DIR_URL . 'build/gspbStylebook.js', array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-data'), $index_asset_file['version'], true);
 		wp_set_script_translations('greenShift-stylebook-js', 'greenshift-animation-and-page-builder-blocks');
 	}
+
+	wp_enqueue_script('anchor-polyfill');
+	//wp_enqueue_script('scroll-view-polyfill');
 
 }
 

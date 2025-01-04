@@ -212,6 +212,16 @@ class Element
 			$html = $p->get_updated_html();
 		}
 
+		if(!empty($block['attrs']['anchor']) && strpos($block['attrs']['anchor'], '{POST_ID}') != false){
+			global $post;
+			$post_id = $post->ID;
+			$anchor = str_replace('{POST_ID}', $post_id, $block['attrs']['anchor']);
+			$p = new \WP_HTML_Tag_Processor( $html );
+			$p->next_tag();
+			$p->set_attribute( 'id', $anchor);
+			$html = $p->get_updated_html();
+		}
+
 		return $html;
 	}
 }
