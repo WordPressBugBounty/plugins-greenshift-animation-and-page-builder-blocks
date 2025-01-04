@@ -640,25 +640,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'10.2.1'
+		'10.2.2'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'10.2.1'
+		'10.2.2'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'10.2.1'
+		'10.2.2'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'10.2.1'
+		'10.2.2'
 	);
 
 	//Script for ajax reusable loading
@@ -2119,7 +2119,7 @@ function gspb_global_variables()
 					}
 				}
 				if(!empty($global_class_style) && $global_class_value){
-					$cleanTopvalue = preg_replace('/[^a-zA-Z]/', '', $global_class_value);
+					$cleanTopvalue = preg_replace('/[^a-zA-Z0-9]/', '', $global_class_value);
 
 					wp_register_style('greenshift-global-class-id-'.$cleanTopvalue, false);
 					wp_enqueue_style('greenshift-global-class-id-'.$cleanTopvalue);
