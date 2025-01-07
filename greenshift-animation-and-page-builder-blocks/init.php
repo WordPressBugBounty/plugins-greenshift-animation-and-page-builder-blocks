@@ -1892,7 +1892,7 @@ function gspb_greenShift_editor_assets()
 		wp_set_script_translations('greenShift-stylebook-js', 'greenshift-animation-and-page-builder-blocks');
 	}
 
-	wp_enqueue_script('anchor-polyfill');
+	//wp_enqueue_script('anchor-polyfill');
 	//wp_enqueue_script('scroll-view-polyfill');
 
 }
