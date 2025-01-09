@@ -101,7 +101,9 @@ function gspb_quick_minify_css($css)
 add_action('init', 'gspb_greenShift_register_scripts_blocks');
 add_filter('render_block', 'gspb_greenShift_block_script_assets', 10, 2);
 
-$enable_head_inline = !empty($global_gs_options['enable_head_inline']) ? $global_gs_options['enable_head_inline'] : '';
+//$enable_head_inline = !empty($global_gs_options['enable_head_inline']) ? $global_gs_options['enable_head_inline'] : '';
+$enable_head_inline = function_exists('wp_is_block_theme') && wp_is_block_theme();
+
 if($enable_head_inline){
 	add_filter('render_block', 'gspb_greenShift_block_inline_head', 10, 2);
 }else{
@@ -631,7 +633,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_motion_one',
 		GREENSHIFT_DIR_URL . 'build/gspbMotion.js',
 		array(),
-		'10.2',
+		'10.3',
 		true
 	);
 
@@ -1424,64 +1426,31 @@ function gspb_greenShift_block_script_assets($html, $block)
 			}
 		}
 
+		//Load polyfills from classes
 		if (!empty($block['attrs']['dynamicGClasses'])) {
 			foreach ($block['attrs']['dynamicGClasses'] as $class) {
-				if(!empty($class['type'])){
-					$type = $class['type'];
-					if($type == 'preset' || $type == 'global'){
-						$value = $class['value'];
-						$css = '';
-						if($type == 'preset' && (strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0)){
-							// do nothing because we are handling this in the regular className loop below
-						}else{
-							$css = greenshift_get_style_from_class_array($class['value'], $type);
+				if(!empty($class['attributes']['styleAttributes']['animationTimeline'])){
+					wp_enqueue_script('scroll-view-polyfill');
+				}
+				if(!empty($class['attributes']['styleAttributes']['anchorName'])){
+					wp_enqueue_script('anchor-polyfill');
+				}
+				if(!empty($class['selectors'])){
+					foreach($class['selectors'] as $selector){
+						if(!empty($selector['attributes']['styleAttributes']['animationTimeline'])){
+							wp_enqueue_script('scroll-view-polyfill');
 						}
-						if($css){
-							$class_style = '<style>' . wp_kses_post($css) . '</style>';
-							$class_style = gspb_get_final_css($class_style);
-							$class_style = htmlspecialchars_decode($class_style);
-							$html = $html . $class_style;
-						}
-					}
-					if(!empty($class['attributes']['styleAttributes']['animationTimeline'])){
-						wp_enqueue_script('scroll-view-polyfill');
-					}
-					if(!empty($class['attributes']['styleAttributes']['anchorName'])){
-						wp_enqueue_script('anchor-polyfill');
-					}
-					if(!empty($class['selectors'])){
-						foreach($class['selectors'] as $selector){
-							if(!empty($selector['attributes']['styleAttributes']['animationTimeline'])){
-								wp_enqueue_script('scroll-view-polyfill');
-							}
-							if(!empty($selector['attributes']['styleAttributes']['anchorName'])){
-								wp_enqueue_script('anchor-polyfill');
-							}
+						if(!empty($selector['attributes']['styleAttributes']['anchorName'])){
+							wp_enqueue_script('anchor-polyfill');
 						}
 					}
 				}
 			}
 		}
 
-		if( !empty($block['attrs']['className'])){
-			$classes = $block['attrs']['className'];
-			$classes = explode(' ', $classes);
-			foreach($classes as $value){
-				if(strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0){
-					$css = greenshift_get_style_from_class_array($value, 'preset');
-					if($css){
-						$class_style = '<style>' . wp_kses_post($css) . '</style>';
-						$class_style = gspb_get_final_css($class_style);
-						$class_style = htmlspecialchars_decode($class_style);
-						$html = $html . $class_style;
-					}
-				}
-			}
-		
-		}
 
 		if(!empty($block['attrs']['interactionLayers'])){
-			wp_enqueue_script('gspb_interactions');
+			//Animations
 			foreach($block['attrs']['interactionLayers'] as $layer){
 				$actions = $layer['actions'];
 				if(!empty($actions)){
@@ -1496,6 +1465,17 @@ function gspb_greenShift_block_script_assets($html, $block)
 								}
 							}
 						}
+					}
+				}
+			}
+			//Interactions script
+			wp_enqueue_script('gspb_interactions');
+
+			//Other scripts
+			foreach($block['attrs']['interactionLayers'] as $layer){
+				$actions = $layer['actions'];
+				if(!empty($actions)){
+					foreach($actions as $action){
 						if(!empty($action['actionname']) && $action['actionname'] == 'lightbox'){
 							wp_enqueue_script('gs-lightbox');
 						}
@@ -1559,16 +1539,59 @@ function gspb_greenShift_block_script_assets($html, $block)
 				}
 			}
 		}
-
 	}
-
 
 	return $html;
 }
 function gspb_greenShift_block_inline_styles($html, $block){
 	if (!is_admin()) {
-		if (!empty($block['attrs']['inlineCssStyles'])) {
-			$dynamic_style = '<style>' . wp_kses_post($block['attrs']['inlineCssStyles']) . '</style>';
+
+		if (!empty($block['attrs']['dynamicGClasses'])) {
+			foreach ($block['attrs']['dynamicGClasses'] as $class) {
+				if(!empty($class['type'])){
+					$type = $class['type'];
+					if($type == 'preset' || $type == 'global'){
+						$value = $class['value'];
+						$css = '';
+						if($type == 'preset' && (strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0)){
+							// do nothing because we are handling this in the regular className loop below
+						}else{
+							$css = greenshift_get_style_from_class_array($class['value'], $type, $inline = true);
+						}
+						if($css){
+							$class_style = '<style>' . wp_kses_post($css) . '</style>';
+							$class_style = gspb_get_final_css($class_style);
+							$class_style = htmlspecialchars_decode($class_style);
+							$html = $html . $class_style;
+						}
+					}
+				}
+			}
+		}
+
+		if( !empty($block['attrs']['className'])){
+			$classes = $block['attrs']['className'];
+			$classes = explode(' ', $classes);
+			foreach($classes as $value){
+				if(strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0){
+					$css = greenshift_get_style_from_class_array($value, 'preset', $inline = true);
+					if($css){
+						$class_style = '<style>' . wp_kses_post($css) . '</style>';
+						$class_style = gspb_get_final_css($class_style);
+						$class_style = htmlspecialchars_decode($class_style);
+						$html = $html . $class_style;
+					}
+				}
+			}
+		}
+
+		if (!empty($block['attrs']['inlineCssStyles']) || ($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])) ) {
+			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
+				$dynamic_style = get_post_meta((int)$block['attrs']['ref'], '_gspb_post_css', true);
+				$dynamic_style = '<style>' . wp_kses_post($dynamic_style) . '</style>';
+			}else{
+				$dynamic_style = '<style>' . wp_kses_post($block['attrs']['inlineCssStyles']) . '</style>';
+			}
 			$dynamic_style = gspb_get_final_css($dynamic_style);
 			$dynamic_style = gspb_quick_minify_css($dynamic_style);
 			$dynamic_style = htmlspecialchars_decode($dynamic_style);
@@ -1582,16 +1605,64 @@ function gspb_greenShift_block_inline_styles($html, $block){
 }
 function gspb_greenShift_block_inline_head($html, $block){
 	if (!is_admin()) {
-		if (!empty($block['attrs']['inlineCssStyles'])) {
+
+		if (!empty($block['attrs']['dynamicGClasses'])) {
+			foreach ($block['attrs']['dynamicGClasses'] as $class) {
+				if(!empty($class['type'])){
+					$type = $class['type'];
+					if($type == 'preset' || $type == 'global'){
+						$value = $class['value'];
+						$css = '';
+						if($type == 'preset' && (strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0)){
+							// do nothing because we are handling this in the regular className loop below
+						}else{
+							$css = greenshift_get_style_from_class_array($class['value'], $type, $inline = false);
+						}
+						if($css){
+							$class_style = '<style>' . wp_kses_post($css) . '</style>';
+							$class_style = gspb_get_final_css($class_style);
+							$class_style = htmlspecialchars_decode($class_style);
+							$html = $html . $class_style;
+						}
+					}
+				}
+			}
+		}
+
+		if( !empty($block['attrs']['className'])){
+			$classes = $block['attrs']['className'];
+			$classes = explode(' ', $classes);
+			foreach($classes as $value){
+				if(strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0){
+					$css = greenshift_get_style_from_class_array($value, 'preset', $inline = false);
+					if($css){
+						$class_style = '<style>' . wp_kses_post($css) . '</style>';
+						$class_style = gspb_get_final_css($class_style);
+						$class_style = htmlspecialchars_decode($class_style);
+						$html = $html . $class_style;
+					}
+				}
+			}
+		}
+
+		if (!empty($block['attrs']['inlineCssStyles']) || ($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])) ) {
 			$styleStore = GreenShiftStyleStore::getInstance();
-			$dynamic_style = wp_kses_post($block['attrs']['inlineCssStyles']);
+			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
+				$dynamic_style = get_post_meta((int)$block['attrs']['ref'], '_gspb_post_css', true);
+			}else{
+				$dynamic_style = wp_kses_post($block['attrs']['inlineCssStyles']);
+			}
 			$dynamic_style = gspb_get_final_css($dynamic_style);
 			$dynamic_style = gspb_quick_minify_css($dynamic_style);
 			$dynamic_style = htmlspecialchars_decode($dynamic_style);
 			if (function_exists('GSPB_make_dynamic_image') && !empty($block['attrs']['background']['dynamicEnable'])) {
 				$dynamic_style = GSPB_make_dynamic_image($dynamic_style, $block['attrs'], $block, $block['attrs']['background'], $block['attrs']['background']['image']);
 			}
-			$styleStore->addClassStyle($block['attrs']['id'], $dynamic_style);
+			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
+				$styleStore->addClassStyle($block['attrs']['ref'], $dynamic_style);
+			}else{
+				$styleStore->addClassStyle($block['attrs']['id'], $dynamic_style);
+			}
 			//echo $styleStore->getStyles();
 		}
 	}
@@ -2048,13 +2119,19 @@ function gspb_global_variables()
 		}
 
 		if (!empty($options['global_interactions']) && is_array($options['global_interactions'])) {
-			wp_enqueue_script('gspb_motion_one');
-			wp_enqueue_script('gspb_interactions');
+			$has_value = false;			
 			$script = '';
 			foreach ($options['global_interactions'] as $index => $value) {
-				$script .= 'GSPB_Trigger_Actions("front", document.querySelectorAll(".'.esc_attr($index).'"), window, document, null, \''.json_encode($value).'\');';
+				if(!empty($value)){
+					$has_value = true;
+					$script .= 'GSPB_Trigger_Actions("front", document.querySelectorAll(".'.esc_attr($index).'"), window, document, null, \''.json_encode($value).'\');';
+				}
 			}
-			wp_add_inline_script('gspb_interactions', $script, 'after');
+			if($has_value){
+				wp_enqueue_script('gspb_motion_one');
+				wp_enqueue_script('gspb_interactions');
+				wp_add_inline_script('gspb_interactions', $script, 'after');
+			}
 		}
 
 	}else{
@@ -2208,11 +2285,17 @@ function gspb_global_variables()
 
 
 		if (!empty($options['global_interactions']) && is_array($options['global_interactions'])) {
+			$has_value = false;			
 			$script = '';
 			foreach ($options['global_interactions'] as $index => $value) {
-				$script .= 'GSPB_Trigger_Actions("editor", document.querySelectorAll(".'.esc_attr($index).'"), window, document, null, \''.json_encode($value).'\');';
+				if(!empty($value)){
+					$has_value = true;
+					$script .= 'GSPB_Trigger_Actions("front", document.querySelectorAll(".'.esc_attr($index).'"), window, document, null, \''.json_encode($value).'\');';
+				}
 			}
-			wp_add_inline_script('gspb_interactions', $script, 'after');
+			if($has_value){
+				wp_add_inline_script('gspb_interactions', $script, 'after');
+			}
 		}
 
 		if(!empty($options['dark_accent_scheme'])){

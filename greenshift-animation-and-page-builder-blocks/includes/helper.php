@@ -1066,10 +1066,9 @@ function greenshift_render_preset_classes(){
 	return $options;
 }
 
-function greenshift_get_style_from_class_array($value, $type = 'preset'){
+function greenshift_get_style_from_class_array($value, $type = 'preset', $inline = false){
 	$css = '';
-	$gs_settings = get_option('gspb_global_settings');
-	$enable_head_inline = !empty($gs_settings['enable_head_inline']) ? $gs_settings['enable_head_inline'] : '';
+	$enable_head_inline = !$inline;
 	if($type == 'preset'){
 		$presets = greenshift_render_preset_classes();
 		if(!empty($presets)){
