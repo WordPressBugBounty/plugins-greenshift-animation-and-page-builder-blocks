@@ -101,8 +101,8 @@ function gspb_quick_minify_css($css)
 add_action('init', 'gspb_greenShift_register_scripts_blocks');
 add_filter('render_block', 'gspb_greenShift_block_script_assets', 10, 2);
 
-//$enable_head_inline = !empty($global_gs_options['enable_head_inline']) ? $global_gs_options['enable_head_inline'] : '';
-$enable_head_inline = function_exists('wp_is_block_theme') && wp_is_block_theme();
+$enable_head_inline = !empty($global_gs_options['enable_head_inline']) ? $global_gs_options['enable_head_inline'] : '';
+//$enable_head_inline = function_exists('wp_is_block_theme') && wp_is_block_theme();
 
 if($enable_head_inline){
 	add_filter('render_block', 'gspb_greenShift_block_inline_head', 10, 2);

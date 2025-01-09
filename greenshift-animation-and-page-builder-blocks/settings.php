@@ -553,6 +553,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																<input type="checkbox" name="dark_mode_on" id="dark_mode_on" <?php echo $dark_mode_on == true ? 'checked' : ''; ?> />
 															</td>
 														</tr>
+														<tr>
+															<td> <label for="enable_head_inline"><?php esc_html_e("Try to merge all inline styles (Beta, works only in block themes)", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
+															<td>
+																<input type="checkbox" name="enable_head_inline" id="enable_head_inline" <?php echo $enable_head_inline == true ? 'checked' : ''; ?> />
+															</td>
+														</tr>
 													</table>
 
 													<input type="submit" name="gspb_save_settings" value="<?php esc_html_e("Save settings"); ?>" class="button button-primary button-large">
