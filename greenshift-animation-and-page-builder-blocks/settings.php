@@ -1273,6 +1273,15 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 					return;
 				}
 			}
+			$style = '';
+			$post_css = get_post_meta((int)$id, '_gspb_post_css', true);
+			if(!empty($post_css)){
+				$dynamic_style = '<style>' . wp_kses_post($post_css) . '</style>';
+				$dynamic_style = gspb_get_final_css($dynamic_style);
+				$dynamic_style = gspb_quick_minify_css($dynamic_style);
+				$dynamic_style = htmlspecialchars_decode($dynamic_style);
+				$style .= $dynamic_style;
+			}
 			if (!empty($ajax)) {
 				wp_enqueue_style('wp-block-library');
 				wp_enqueue_style('gspreloadercss');
@@ -1288,7 +1297,6 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				if (!is_object($content_post)) return false;
 				if($content_post->post_type != 'wp_block') return false;
 				$contentpost = $content_post->post_content;
-				$style = '';
 				if (has_blocks($contentpost)) {
 					$blocks = parse_blocks($contentpost);
 					$style .= '<style>';
@@ -1305,7 +1313,6 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				if (!is_object($content_post)) return false;
 				if($content_post->post_type != 'wp_block') return false;
 				$content = $content_post->post_content;
-				$style = '';
 				if ($inlinestyle) {
 					if (has_blocks($content)) {
 						$blocks = parse_blocks($content);
