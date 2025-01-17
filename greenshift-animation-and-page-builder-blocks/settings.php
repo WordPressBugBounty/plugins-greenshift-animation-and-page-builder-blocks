@@ -1606,13 +1606,6 @@ function gspb_get_inline_styles_blocks($blocks)
 {
 	$inlinestyle = '';
 	foreach ($blocks as $block) {
-		if (!empty($block['attrs']['inlineCssStyles'])) {
-			$dynamic_style = $block['attrs']['inlineCssStyles'];
-			$dynamic_style = gspb_get_final_css($dynamic_style);
-			$dynamic_style = gspb_quick_minify_css($dynamic_style);
-			$dynamic_style = htmlspecialchars_decode($dynamic_style);
-			$inlinestyle .= $dynamic_style;
-		}
 		gspb_greenShift_block_script_assets('', $block);
 		if (function_exists('greenShiftGsap_block_script_assets')) {
 			greenShiftGsap_block_script_assets('', $block);

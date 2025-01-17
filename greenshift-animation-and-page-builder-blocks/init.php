@@ -642,25 +642,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'10.2.2'
+		'10.5'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'10.2.2'
+		'10.5'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'10.2.2'
+		'10.5'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'10.2.2'
+		'10.5'
 	);
 
 	//Script for ajax reusable loading
@@ -3163,6 +3163,7 @@ function gspb_get_saved_block()
 		'posts_per_page' => 100
 	);
 	$id       = (!empty($_POST['block_id'])) ? intval($_POST['block_id']) : '';
+	$id       = (!empty($_POST['gspb_layout_id'])) ? intval($_POST['gspb_layout_id']) : $id;
 	if ($id) {
 		$args['p'] = $id;
 	}

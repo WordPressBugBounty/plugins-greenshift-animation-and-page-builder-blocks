@@ -729,48 +729,48 @@ function greenshift_render_preset_classes(){
 				[
 					'value'=> 'gs_padding_s',
 					'label' => "Padding Small",
-					'css'=> ".gs_padding_s{padding: 0.67rem;}",
+					'css'=> ".gs_padding_s{padding: var(--wp--preset--spacing--30, 0.67rem);}",
 					'type'=> "preset",
 					'style_store' => array(
 						array(
 							'selector'     => '.gs_padding_s',
-							'css' => 'padding: 0.67rem'
+							'css' => 'padding: var(--wp--preset--spacing--30, 0.67rem)'
 						),
 					),
 				],
 				[
 					'value'=> 'gs_padding_m',
 					'label' => "Padding Medium",
-					'css'=> ".gs_padding_m{padding: 1.2rem;}",
+					'css'=> ".gs_padding_m{padding: var(--wp--preset--spacing--50, 1.5rem);}",
 					'type'=> "preset",
 					'style_store' => array(
 						array(
 							'selector'     => '.gs_padding_m',
-							'css' => 'padding: 1.2rem'
+							'css' => 'padding: var(--wp--preset--spacing--50, 1.5rem)'
 						),
 					),
 				],
 				[
 					'value'=> 'gs_padding_l',
 					'label' => "Padding Large",
-					'css'=> ".gs_padding_l{padding: 2rem;}",
+					'css'=> ".gs_padding_l{padding: var(--wp--preset--spacing--60, 2.25rem);}",
 					'type'=> "preset",
 					'style_store' => array(
 						array(
 							'selector'     => '.gs_padding_l',
-							'css' => 'padding: 2rem'
+							'css' => 'padding: var(--wp--preset--spacing--60, 2.25rem)'
 						),
 					),
 				],
 				[
 					'value'=> 'gs_padding_xl',
 					'label' => "Padding X Large",
-					'css'=> ".gs_padding_xl{padding: 3rem;}",
+					'css'=> ".gs_padding_xl{padding: var(--wp--preset--spacing--70, 3.38rem);}",
 					'type'=> "preset",
 					'style_store' => array(
 						array(
 							'selector'     => '.gs_padding_xl',
-							'css' => 'padding: 3rem'
+							'css' => 'padding: var(--wp--preset--spacing--70, 3.38rem)'
 						),
 					),
 				],
