@@ -1699,7 +1699,7 @@ function gspb_greenShift_editor_assets()
 	wp_register_script(
 		'greenShift-library-script',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.js',
-		array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-data', 'wp-plugins', 'wp-edit-post'),
+		array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-data', 'wp-plugins'),
 		$library_asset_file['version'],
 		false
 	);
