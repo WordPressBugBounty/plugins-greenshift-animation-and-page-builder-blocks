@@ -1,1 +1,127 @@
-class GSTooltip{constructor(){this.handleMouseOver=this.handleMouseOver.bind(this),this.handleMouseOut=this.handleMouseOut.bind(this),this.init()}init(){document.querySelectorAll("[data-gs-tooltip]").forEach(t=>{t.addEventListener("mouseover",this.handleMouseOver),t.addEventListener("mouseout",this.handleMouseOut)})}GSPBgetTransformValue(t,e){let s=new DOMMatrix(t),l={scale:()=>Math.sqrt(s.a*s.a+s.b*s.b),rotate:()=>Math.atan2(s.b,s.a)*(180/Math.PI),scaleX:()=>s.a,scaleY:()=>s.d,rotateX(){let e=t.match(/rotateX\(([^)]+)\)/);return e?parseFloat(e[1]):0},rotateY(){let e=t.match(/rotateY\(([^)]+)\)/);return e?parseFloat(e[1]):0},translateX:()=>s.e,translateY:()=>s.f,translateZ:()=>s.m34};return l.hasOwnProperty(e)?l[e]():null}createTooltipElement(t){let e=document.createElement("span");return e.classList.add("gs_tooltip"),e.textContent=t,e}show(t,e){let s=this.createTooltipElement(e);t.classList.contains("gs_tooltip_trigger")||t.classList.add("gs_tooltip_trigger"),t.appendChild(s),s.offsetHeight;let l=s.getBoundingClientRect(),o=window.innerWidth;if(l.right>o-20||l.left<20){s.style.position="fixed",s.style.whiteSpace="normal",l.right>o-20?(s.style.left=`${o-l.width-20}px`,s.style.setProperty("--tooltip-after-right","20px"),s.style.setProperty("--tooltip-after-left","auto")):(s.style.left="20px",s.style.setProperty("--tooltip-after-right","auto"),s.style.setProperty("--tooltip-after-left","20px")),s.style.bottom="auto";let r=window.getComputedStyle(s).transform,a=this.GSPBgetTransformValue(r,"translateY"),i=this.GSPBgetTransformValue(r,"scale"),n=this.GSPBgetTransformValue(r,"rotateX");s.style.transform=`translateY(${a}px) scale(${i}) rotateX(${n}deg) translateX(0px)`,s.offsetHeight;let h=s.getBoundingClientRect();h.right>o-40&&(s.style.right="20px"),h.left<40&&(s.style.left="20px");let p=s.parentElement.getBoundingClientRect();s.style.top=`${p.top-h.height-8}px`,s.classList.add("gs_tooltip_show_mobile")}else s.classList.add("gs_tooltip_show")}hide(t){let e=t.querySelectorAll(".gs_tooltip");e&&e.forEach(t=>{t.classList.remove("gs_tooltip_show"),t.classList.remove("gs_tooltip_show_mobile"),t.style.transition="0.3s cubic-bezier(0.4, 0, 0.2, 1)",setTimeout(()=>t.remove(),300)})}handleMouseOver(t){let e=t.currentTarget,s=e.getAttribute("data-gs-tooltip");this.show(e,s)}handleMouseOut(t){this.hide(t.currentTarget)}}new GSTooltip;
+class GSTooltip {
+    constructor() {
+        this.handleMouseOver = this.handleMouseOver.bind(this);
+        this.handleMouseOut = this.handleMouseOut.bind(this);
+        this.init();
+    }
+  
+    init() {
+        document.querySelectorAll('[data-gs-tooltip]').forEach(element => {
+            element.addEventListener('mouseenter', this.handleMouseOver);
+            element.addEventListener('mouseleave', this.handleMouseOut);
+        });
+    }
+  
+    GSPBgetTransformValue(transformString, valueName) {
+        const matrix = new DOMMatrix(transformString);
+    
+        const values = {
+            scale: () => Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b),
+            rotate: () => Math.atan2(matrix.b, matrix.a) * (180 / Math.PI),
+            scaleX: () => matrix.a,
+            scaleY: () => matrix.d,
+            rotateX: () => {
+                const match = transformString.match(/rotateX\(([^)]+)\)/);
+                return match ? parseFloat(match[1]) : 0;
+            },
+            rotateY: () => {
+                const match = transformString.match(/rotateY\(([^)]+)\)/);
+                return match ? parseFloat(match[1]) : 0;
+            },
+            translateX: () => matrix.e,
+            translateY: () => matrix.f,
+            translateZ: () => matrix.m34
+        };
+    
+        if (values.hasOwnProperty(valueName)) {
+            return values[valueName]();
+        } else {
+            return null;
+        }
+    }
+  
+    createTooltipElement(text) {
+        const tooltip = document.createElement('span');
+        tooltip.classList.add('gs_tooltip');
+        tooltip.textContent = text;
+        return tooltip;
+    }
+  
+    show(element, tooltipText) {
+        const tooltip = this.createTooltipElement(tooltipText);
+  
+        if (!element.classList.contains('gs_tooltip_trigger')) {
+            element.classList.add('gs_tooltip_trigger');
+        }
+  
+        element.appendChild(tooltip);
+  
+        // Force reflow and add show class
+        tooltip.offsetHeight;
+        const rect = tooltip.getBoundingClientRect();
+        const windowWidth = window.innerWidth;
+        if (rect.right > windowWidth - 20 || rect.left < 20) {
+            tooltip.style.position = 'fixed';
+            tooltip.style.whiteSpace = 'normal';
+            
+            if (rect.right > windowWidth - 20) {
+                tooltip.style.left = `${windowWidth - rect.width - 20}px`;
+                tooltip.style.setProperty('--tooltip-after-right', '20px');
+                tooltip.style.setProperty('--tooltip-after-left', 'auto');
+            } else {
+                tooltip.style.left = '20px';
+                tooltip.style.setProperty('--tooltip-after-right', 'auto');
+                tooltip.style.setProperty('--tooltip-after-left', '20px');
+            }
+            tooltip.style.bottom = 'auto';
+  
+            let transformOriginal = window.getComputedStyle(tooltip).transform;
+            let transformY = this.GSPBgetTransformValue(transformOriginal, 'translateY');
+            let transformScale = this.GSPBgetTransformValue(transformOriginal, 'scale');
+            let transformRotateX = this.GSPBgetTransformValue(transformOriginal, 'rotateX');
+            tooltip.style.transform = `translateY(${transformY}px) scale(${transformScale}) rotateX(${transformRotateX}deg) translateX(0px)`;
+  
+            tooltip.offsetHeight;
+            const updatedRect = tooltip.getBoundingClientRect();
+  
+            if (updatedRect.right > windowWidth - 40) {
+                tooltip.style.right = '20px';
+            }
+            if (updatedRect.left < 40) {
+                tooltip.style.left = '20px';
+            }
+  
+            const parentRect = tooltip.parentElement.getBoundingClientRect();
+            tooltip.style.top = `${parentRect.top - updatedRect.height - 8}px`;
+            tooltip.classList.add('gs_tooltip_show_mobile');
+        } else {
+            tooltip.classList.add('gs_tooltip_show');
+        }
+    }
+  
+    hide(element) {
+        const tooltips = element.querySelectorAll('.gs_tooltip');
+        if (tooltips) {
+            tooltips.forEach(tooltip => {
+                tooltip.classList.remove('gs_tooltip_show');
+                tooltip.classList.remove('gs_tooltip_show_mobile');
+                tooltip.style.transition = '0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                setTimeout(() => tooltip.remove(), 300);
+            });
+        }
+    }
+  
+    handleMouseOver(event) {
+        const element = event.currentTarget;
+        const tooltipText = element.getAttribute('data-gs-tooltip');
+        this.show(element, tooltipText);
+    }
+  
+    handleMouseOut(event) {
+        this.hide(event.currentTarget);
+    }
+  }
+  
+  // Initialize tooltips
+  new GSTooltip();
+  

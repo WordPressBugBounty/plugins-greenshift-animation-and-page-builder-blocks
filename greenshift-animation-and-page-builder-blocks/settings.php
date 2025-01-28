@@ -879,7 +879,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											}
 											$sanitised = array();
 
-											if (isset($_POST['googleapi']) || isset($_POST['openaiapi']) || isset($_POST['openaiapimodel'])) {
+											if (isset($_POST['googleapi']) || isset($_POST['openaiapi']) || isset($_POST['openaiapimodel']) || isset($_POST['claudeapi']) || isset($_POST['deepseekapi'])) {
 												$global_settings = get_option('gspb_global_settings');
 												if (isset($_POST['googleapi'])) {
 													$sanitised['googleapi'] = sanitize_text_field($_POST['googleapi']);
@@ -890,6 +890,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												if (isset($_POST['openaiapimodel'])) {
 													$sanitised['openaiapimodel'] = sanitize_text_field($_POST['openaiapimodel']);
 												}
+												if (isset($_POST['claudeapi'])) {
+													$sanitised['claudeapi'] = sanitize_text_field($_POST['claudeapi']);
+												}
+												if (isset($_POST['deepseekapi'])) {
+													$sanitised['deepseekapi'] = sanitize_text_field($_POST['deepseekapi']);
+												}
 												$newargs = wp_parse_args($sanitised, $global_settings);
 												update_option('gspb_global_settings', $newargs);
 											}
@@ -899,6 +905,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										$googleapi = !empty($global_settings['googleapi']) ? $global_settings['googleapi'] : '';
 										$openaiapi = !empty($global_settings['openaiapi']) ? $global_settings['openaiapi'] : '';
 										$openaiapimodel = !empty($global_settings['openaiapimodel']) ? $global_settings['openaiapimodel'] : '';
+										$claudeapi = !empty($global_settings['claudeapi']) ? $global_settings['claudeapi'] : '';
+										$deepseekapi = !empty($global_settings['deepseekapi']) ? $global_settings['deepseekapi'] : '';
 
 									?>
 										<div class="gspb_settings_form">
@@ -925,21 +933,42 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<div style="margin-bottom:15px"><a href="https://platform.openai.com/account/api-keys"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
 																</td>
 															</tr>
+															<tr class="claudeapikey">
+																<td>
+																	<label for="claudeapi"><?php esc_html_e("Claude API Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+																</td>
+																<td>
+																	<textarea style="width:100%; min-height:50px;border-color:#ddd" id="claudeapi" name="claudeapi"><?php echo esc_html($claudeapi); ?></textarea>
+																	<div style="margin-bottom:15px"><a href="https://console.anthropic.com/"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
+																</td>
+															</tr>
+															<tr class="deepseekapikey">
+																<td>
+																	<label for="deepseekapi"><?php esc_html_e("Deepseek API Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+																</td>
+																<td>
+																	<textarea style="width:100%; min-height:50px;border-color:#ddd" id="deepseekapi" name="deepseekapi"><?php echo esc_html($deepseekapi); ?></textarea>
+																	<div style="margin-bottom:15px"><a href="https://platform.deepseek.com/api_keys"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
+																</td>
+															</tr>
 															<tr class="openaiapimodel">
 																<td>
-																	<label for="openaiapimodel"><?php esc_html_e("Open AI Model", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+																	<label for="openaiapimodel"><?php esc_html_e("Select Model for AI", 'greenshift-animation-and-page-builder-blocks'); ?></label>
 																</td>
 																<td>
 																	<select name="openaiapimodel">
-																		<option value="gpt-3.5-turbo" <?php selected($openaiapimodel, 'gpt-3.5-turbo'); ?>><?php esc_html_e("gpt-3.5-turbo", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
-																		<option value="gpt-4" <?php selected($openaiapimodel, 'gpt-4'); ?>> <?php esc_html_e("gpt-4", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
-																		<option value="gpt-4-turbo" <?php selected($openaiapimodel, 'gpt-4-turbo'); ?>> <?php esc_html_e("gpt-4-turbo", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
-																		<option value="gpt-4-32k" <?php selected($openaiapimodel, 'gpt-4-32k'); ?>> <?php esc_html_e("gpt-4-32k", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
-																		<option value="gpt-4o" <?php selected($openaiapimodel, 'gpt-4o'); ?>> <?php esc_html_e("gpt-4o", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
-																		<option value="gpt-4o-mini" <?php selected($openaiapimodel, 'gpt-4o-mini'); ?>> <?php esc_html_e("gpt-4o-mini", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
-																		<option value="o1" <?php selected($openaiapimodel, 'o1'); ?>> <?php esc_html_e("o1", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
-																		<option value="o1-mini" <?php selected($openaiapimodel, 'o1-mini'); ?>> <?php esc_html_e("o1-mini", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
-																		<option value="o1-preview" <?php selected($openaiapimodel, 'o1-preview'); ?>> <?php esc_html_e("o1-preview", 'greenshift-animation-and-page-builder-blocks'); ?> </option>
+																		<option value="gpt-3.5-turbo" <?php selected($openaiapimodel, 'gpt-3.5-turbo'); ?>> gpt-3.5-turbo </option>
+																		<option value="gpt-4" <?php selected($openaiapimodel, 'gpt-4'); ?>> gpt-4 </option>
+																		<option value="gpt-4-turbo" <?php selected($openaiapimodel, 'gpt-4-turbo'); ?>> gpt-4-turbo </option>
+																		<option value="gpt-4-32k" <?php selected($openaiapimodel, 'gpt-4-32k'); ?>> gpt-4-32k </option>
+																		<option value="gpt-4o" <?php selected($openaiapimodel, 'gpt-4o'); ?>> gpt-4o </option>
+																		<option value="gpt-4o-mini" <?php selected($openaiapimodel, 'gpt-4o-mini'); ?>> gpt-4o-mini </option>
+																		<option value="o1" <?php selected($openaiapimodel, 'o1'); ?>> o1 </option>
+																		<option value="o1-mini" <?php selected($openaiapimodel, 'o1-mini'); ?>> o1-mini </option>
+																		<option value="o1-preview" <?php selected($openaiapimodel, 'o1-preview'); ?>> o1-preview </option>
+																		<option value="claude-3-5-sonnet-20241022" <?php selected($openaiapimodel, 'claude-3-5-sonnet-20241022'); ?>> claude-3-5-sonnet-20241022 </option>
+																		<option value="claude-3-5-haiku-20241022" <?php selected($openaiapimodel, 'claude-3-5-haiku-20241022'); ?>> claude-3-5-haiku-20241022 </option>
+																		<option value="deepseek-chat" <?php selected($openaiapimodel, 'deepseek-chat'); ?>> deepseek-chat </option>
 																	</select>
 																</td>
 															</tr>
