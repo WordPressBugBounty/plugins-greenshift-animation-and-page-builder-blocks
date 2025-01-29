@@ -554,7 +554,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 															</td>
 														</tr>
 														<tr>
-															<td> <label for="enable_head_inline"><?php esc_html_e("Try to merge all inline styles (Beta, works only in block themes)", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
+															<td> <label for="enable_head_inline"><?php esc_html_e("On-Fly Inline Merged CSS (Beta, works only in block themes)", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
 															<td>
 																<input type="checkbox" name="enable_head_inline" id="enable_head_inline" <?php echo $enable_head_inline == true ? 'checked' : ''; ?> />
 															</td>

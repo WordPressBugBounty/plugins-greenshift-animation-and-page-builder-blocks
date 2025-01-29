@@ -1550,7 +1550,7 @@ function gspb_greenShift_block_inline_styles($html, $block){
 			foreach ($block['attrs']['dynamicGClasses'] as $class) {
 				if(!empty($class['type'])){
 					$type = $class['type'];
-					if($type == 'preset' || $type == 'global'){
+					if($type == 'preset'){
 						$value = $class['value'];
 						$css = '';
 						if($type == 'preset' && (strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0)){
@@ -2021,11 +2021,11 @@ function gspb_exclude_specific_meta_field($metas, $sync, $from, $to) {
 }
 
 //////////////////////////////////////////////////////////////////
-// Global presets init
+// Global assets init
 //////////////////////////////////////////////////////////////////
 
-add_action('enqueue_block_assets', 'gspb_global_variables');
-function gspb_global_variables()
+add_action('enqueue_block_assets', 'gspb_global_assets');
+function gspb_global_assets()
 {
 
 	//root styles
@@ -2035,15 +2035,18 @@ function gspb_global_variables()
 	if (!is_admin()) {
 		//Front assets
 
+		//Custom CSS
 		if (!empty($options['custom_css'])) {
 			$custom_css = $options['custom_css'];
 			$gs_global_css = $gs_global_css . $custom_css;
 		}
 		
+		//Local fonts
 		if (!empty($options['localfontcss'])) {
 			$gs_global_css = $gs_global_css . $options['localfontcss'];
 		}
 
+		//Colors
 		if (!empty($options['colours'])) {
 			$color_css = ':root{';
 			foreach ($options['colours'] as $key=>$element) {
@@ -2055,6 +2058,7 @@ function gspb_global_variables()
 			$gs_global_css = $gs_global_css . $color_css;
 		}
 
+		//Dark mode colors
 		if (!empty($options['darkmodecolors'])) {
 			$dark_color_css = ':root[data-color-mode*="dark"], body.darkmode{';
 			foreach ($options['darkmodecolors'] as $key=>$element) {
@@ -2066,6 +2070,7 @@ function gspb_global_variables()
 			$gs_global_css = $gs_global_css . $dark_color_css;
 		}
 
+		//Gradients
 		if (!empty($options['gradients'])) {
 			$gradient_css = ':root{';
 			foreach ($options['gradients'] as $key=>$element) {
@@ -2077,6 +2082,7 @@ function gspb_global_variables()
 			$gs_global_css = $gs_global_css . $gradient_css;
 		}
 
+		//Elements
 		if (!empty($options['elements'])) {
 			foreach ($options['elements'] as $element) {
 				if (!empty($element['css'])) {
@@ -2085,6 +2091,7 @@ function gspb_global_variables()
 			}
 		}
 
+		//Variables
 		$variablearray = !empty($options['variables']) ? $options['variables'] : '';
 		$variables = greenshift_render_variables($variablearray);
 		if(!empty($variables)){
@@ -2099,6 +2106,28 @@ function gspb_global_variables()
 				$gs_global_css = $gs_global_css . $variables_css;
 			}
 		}
+
+		//Global classes if we don't use Merged Inline Option
+		$global_classes = !empty($options['global_classes']) ? $options['global_classes'] : '';
+		$enable_head_inline = !empty($options['enable_head_inline']) ? $options['enable_head_inline'] : '';
+		if(!empty($global_classes) && !$enable_head_inline){
+			$global_class_style = '';
+			foreach ($global_classes as $class) {
+				if(!empty($class['css'])){
+					$global_class_style .= $class['css'];
+				}
+				if(!empty($class['selectors'])){
+					foreach ($class['selectors'] as $selector) {
+						if(!empty($selector['css'])){
+							$global_class_style .= $selector['css'];
+						}
+					}
+				}
+			}
+			if($global_class_style){
+				$gs_global_css = $gs_global_css . $global_class_style;
+			}
+		}
 	
 		if ($gs_global_css) {
 			$gs_global_css = gspb_get_final_css($gs_global_css);
@@ -2107,7 +2136,7 @@ function gspb_global_variables()
 			wp_add_inline_style('greenshift-global-css', $gs_global_css);
 		}
 
-		//Style presets and global class render
+		//Style presets and global class render if we use Merged Inline Option
 		$styleStore = GreenShiftStyleStore::getInstance();
 		$styles = $styleStore->renderStyles();
 		$classstyles = $styleStore->renderClassStyles();
@@ -2300,35 +2329,6 @@ function gspb_global_variables()
 
 		if(!empty($options['dark_accent_scheme'])){
 			wp_enqueue_style('greenShift-dark-accent-css', GREENSHIFT_DIR_URL . 'templates/admin/dark_accent_ui.css', array(), '1.0');
-		}
-	}
-}
-
-//add_action('wp_head', 'gspb_global_variables_head');
-function gspb_global_variables_head(){
-	$options = get_option('gspb_global_settings');
-	$global_classes = !empty($options['global_classes']) ? $options['global_classes'] : '';
-	if(!empty($global_classes)){
-		foreach ($global_classes as $class) {
-			$global_class_style = '';
-			$global_class_value = '';
-			if(!empty($class['value'])){
-				$global_class_value = $class['value'];
-			}	
-			if(!empty($class['css'])){
-				$global_class_style .= $class['css'];
-			}
-			if(!empty($class['selectors'])){
-				foreach ($class['selectors'] as $selector) {
-					if(!empty($selector['css'])){
-						$global_class_style .= $selector['css'];
-					}
-				}
-			}
-			if(!empty($global_class_style) && $global_class_value){
-				$cleanTopvalue = preg_replace('/[^a-zA-Z]/', '', $global_class_value);
-				echo '<style id="gspb-global-class-id-'.$cleanTopvalue.'">' . $global_class_style .'</style>';
-			}
 		}
 	}
 }
