@@ -1569,22 +1569,6 @@ function gspb_greenShift_block_inline_styles($html, $block){
 			}
 		}
 
-		if( !empty($block['attrs']['className'])){
-			$classes = $block['attrs']['className'];
-			$classes = explode(' ', $classes);
-			foreach($classes as $value){
-				if(strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0){
-					$css = greenshift_get_style_from_class_array($value, 'preset', $inline = true);
-					if($css){
-						$class_style = '<style>' . wp_kses_post($css) . '</style>';
-						$class_style = gspb_get_final_css($class_style);
-						$class_style = htmlspecialchars_decode($class_style);
-						$html = $html . $class_style;
-					}
-				}
-			}
-		}
-
 		if (!empty($block['attrs']['inlineCssStyles']) || ($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])) ) {
 			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
 				$dynamic_style = get_post_meta((int)$block['attrs']['ref'], '_gspb_post_css', true);
@@ -1624,22 +1608,6 @@ function gspb_greenShift_block_inline_head($html, $block){
 							$class_style = htmlspecialchars_decode($class_style);
 							$html = $html . $class_style;
 						}
-					}
-				}
-			}
-		}
-
-		if( !empty($block['attrs']['className'])){
-			$classes = $block['attrs']['className'];
-			$classes = explode(' ', $classes);
-			foreach($classes as $value){
-				if(strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0){
-					$css = greenshift_get_style_from_class_array($value, 'preset', $inline = false);
-					if($css){
-						$class_style = '<style>' . wp_kses_post($css) . '</style>';
-						$class_style = gspb_get_final_css($class_style);
-						$class_style = htmlspecialchars_decode($class_style);
-						$html = $html . $class_style;
 					}
 				}
 			}
@@ -2131,6 +2099,8 @@ function gspb_global_assets()
 	
 		if ($gs_global_css) {
 			$gs_global_css = gspb_get_final_css($gs_global_css);
+			$gs_global_css = gspb_quick_minify_css($gs_global_css);
+			$gs_global_css = htmlspecialchars_decode($gs_global_css);
 			wp_register_style('greenshift-global-css', false);
 			wp_enqueue_style('greenshift-global-css');
 			wp_add_inline_style('greenshift-global-css', $gs_global_css);
