@@ -508,7 +508,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greenpanel',
 		GREENSHIFT_DIR_URL . 'libs/greenpanel/index.js',
 		array(),
-		'1.5',
+		'1.6',
 		true
 	);
 
@@ -642,25 +642,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'10.6.1'
+		'10.6.5'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'10.6.1'
+		'10.6.5'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'10.6.1	'
+		'10.6.5	'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'10.6.1'
+		'10.6.5'
 	);
 
 	//Script for ajax reusable loading

@@ -12,7 +12,7 @@
 
 
 .gspb-button.active,
-.gspb_markers li .default {
+.gspb_markers li .default, .gspb-field-button-list .gspb-button.active, .gspb_style_tabs_component .gspb-button.active, .gspb_style_tabs_component_wrapper>.gspb-field-radio-advanced .gspb-button.active:before {
     background-color: var(--gspb-accent-admin-colorbg) !important;
     color: #fff !important;
     border-color: var(--gspb-accent-admin-colorbg) !important;
