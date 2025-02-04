@@ -1550,14 +1550,8 @@ function gspb_greenShift_block_inline_styles($html, $block){
 			foreach ($block['attrs']['dynamicGClasses'] as $class) {
 				if(!empty($class['type'])){
 					$type = $class['type'];
-					if($type == 'preset'){
-						$value = $class['value'];
-						$css = '';
-						if($type == 'preset' && (strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0)){
-							// do nothing because we are handling this in the regular className loop below
-						}else{
-							$css = greenshift_get_style_from_class_array($class['value'], $type, $inline = true);
-						}
+					if($type == 'preset' && !empty($class['value'])){
+						$css = greenshift_get_style_from_class_array($class['value'], $type, $inline = true);
 						if($css){
 							$class_style = '<style>' . wp_kses_post($css) . '</style>';
 							$class_style = gspb_get_final_css($class_style);
@@ -1573,6 +1567,7 @@ function gspb_greenShift_block_inline_styles($html, $block){
 			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
 				$dynamic_style = get_post_meta((int)$block['attrs']['ref'], '_gspb_post_css', true);
 				$dynamic_style = '<style>' . wp_kses_post($dynamic_style) . '</style>';
+				$dynamic_style = apply_filters('gspb_reusable_inline_styles', $dynamic_style);
 			}else{
 				$dynamic_style = '<style>' . wp_kses_post($block['attrs']['inlineCssStyles']) . '</style>';
 			}
@@ -1594,14 +1589,8 @@ function gspb_greenShift_block_inline_head($html, $block){
 			foreach ($block['attrs']['dynamicGClasses'] as $class) {
 				if(!empty($class['type'])){
 					$type = $class['type'];
-					if($type == 'preset' || $type == 'global'){
-						$value = $class['value'];
-						$css = '';
-						if($type == 'preset' && (strpos($value, 'gs_') === 0 || strpos($value, 'gs-') === 0)){
-							// do nothing because we are handling this in the regular className loop below
-						}else{
-							$css = greenshift_get_style_from_class_array($class['value'], $type, $inline = false);
-						}
+					if(($type == 'preset' || $type == 'global') && !empty($class['value'])){
+						$css = greenshift_get_style_from_class_array($class['value'], $type, $inline = false);
 						if($css){
 							$class_style = '<style>' . wp_kses_post($css) . '</style>';
 							$class_style = gspb_get_final_css($class_style);
@@ -1627,7 +1616,7 @@ function gspb_greenShift_block_inline_head($html, $block){
 				$dynamic_style = GSPB_make_dynamic_image($dynamic_style, $block['attrs'], $block, $block['attrs']['background'], $block['attrs']['background']['image']);
 			}
 			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
-				$styleStore->addClassStyle($block['attrs']['ref'], $dynamic_style);
+				$styleStore->addClassStyle('ref_'.$block['attrs']['ref'], $dynamic_style);
 			}else{
 				$styleStore->addClassStyle($block['attrs']['id'], $dynamic_style);
 			}

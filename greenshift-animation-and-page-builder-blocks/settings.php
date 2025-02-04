@@ -1326,7 +1326,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				if (!is_object($content_post)) return false;
 				if($content_post->post_type != 'wp_block') return false;
 				$contentpost = $content_post->post_content;
-				if (has_blocks($contentpost)) {
+				if ($inlinestyle && has_blocks($contentpost)) {
 					$blocks = parse_blocks($contentpost);
 					$style .= '<style>';
 					$style .= gspb_get_inline_styles_blocks($blocks);
