@@ -1183,7 +1183,7 @@ function greenshift_get_wp_local_fonts(){
 		}
 		
 	}
-	return $fonts;
+	return apply_filters('greenshift_wp_fonts', $fonts);
 }
 
 
