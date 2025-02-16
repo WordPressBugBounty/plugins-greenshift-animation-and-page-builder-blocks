@@ -1226,7 +1226,7 @@ function greenshift_split_dynamic_text($content, $type = 'word') {
 // Generate Repeater
 //////////////////////////////////////////////////////////////////
 
-function GSPB_generate_dynamic_repeater($html, $block){
+function GSPB_generate_dynamic_repeater($html, $block, $extra_data = [], $runindex = 0){
 	if(class_exists('greenshiftquery\Blocks\RepeaterQuery')){
 		$settings = $block['attrs'];
 
@@ -1245,6 +1245,7 @@ function GSPB_generate_dynamic_repeater($html, $block){
 		if(!isset($settings['anchor'])) $settings['anchor'] = null;
 		if(!isset($settings['localId'])) $settings['localId'] = null;
 		if(!isset($settings['extra_filters'])) $settings['extra_filters'] = [];
+		if(!isset($settings['api_filters'])) $settings['api_filters'] = [];
 		if(!isset($settings['container_link'])) $settings['container_link'] = false;
 		if(!isset($settings['linkNewWindow'])) $settings['linkNewWindow'] = false;
 		if(!isset($settings['linkNoFollow'])) $settings['linkNoFollow'] = false;
@@ -1254,10 +1255,140 @@ function GSPB_generate_dynamic_repeater($html, $block){
 
 		$output = '';
 		$repeater = new \greenshiftquery\Blocks\RepeaterQuery;
-		$output .= $repeater->gspb_grid_constructor($settings, $html, $block, false);
+		$output .= $repeater->gspb_grid_constructor($settings, $html, $block, false, $extra_data, $runindex);
 		return $output;
 	}
 	return $html;
 }
 
+//////////////////////////////////////////////////////////////////
+// Dynamic Placeholders
+//////////////////////////////////////////////////////////////////
+
+function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0){
+	if($value && strpos($value, '{{') !== false){
+		if (strpos($value, '{{POST_ID}}') !== false){
+			global $post;
+			$value = str_replace('{{POST_ID}}', $post->ID, $value);
+		}
+		if (strpos($value, '{{POST_TITLE}}') !== false){
+			global $post;
+			$value = str_replace('{POST_TITLE}', $post->post_title, $value);
+		}
+		if (strpos($value, '{{POST_URL}}') !== false){
+			global $post;
+			$value = str_replace('{{POST_URL}}', get_permalink($post->ID), $value);
+		}
+		if (strpos($value, '{{AUTHOR_ID}}') !== false){
+			global $post;
+			$value = str_replace('{{AUTHOR_ID}}', $post->post_author, $value);
+		}
+		if (strpos($value, '{{AUTHOR_NAME}}') !== false){
+			global $post;
+			$value = str_replace('{{AUTHOR_NAME}}', get_the_author_meta('display_name', $post->post_author), $value);
+		}
+		if (strpos($value, '{{CURRENT_USER_ID}}') !== false){
+			$value = str_replace('{{CURRENT_USER_ID}}', get_current_user_id(), $value);
+		}
+		if (strpos($value, '{{CURRENT_USER_NAME}}') !== false){
+			$value = str_replace('{{CURRENT_USER_NAME}}', wp_get_current_user()->display_name, $value);
+		}
+		if (strpos($value, '{{CURRENT_OBJECT_ID}}') !== false){
+			$value = str_replace('{{CURRENT_OBJECT_ID}}', get_queried_object_id(), $value);
+		}
+		if (strpos($value, '{{CURRENT_OBJECT_NAME}}') !== false){
+			$value = str_replace('{{CURRENT_OBJECT_NAME}}', get_queried_object()->name, $value);
+		}
+		if (strpos($value, '{{INCREMENT:') !== false){
+			$pattern = '/\{INCREMENT:(.*?)\}/';
+			preg_match($pattern, $value, $matches);
+			$val = $matches[1];
+			if(is_numeric($val) && isset($runindex)){
+				$value = str_replace('{{INCREMENT:'.$val.'}}', $runindex * $val, $value);
+			}
+		}
+		if (strpos($value, '{{GET:') !== false){
+			$pattern = '/\{GET:(.*?)\}/';
+			preg_match($pattern, $value, $matches);
+			$val = $matches[1];
+			$value = str_replace('{{GET:'.$val.'}}', $_GET[$val], $value);
+		}
+		if (strpos($value, '{{SETTING:') !== false){
+			$pattern = '/\{SETTING:(.*?)\}/';
+			preg_match($pattern, $value, $matches);
+			$val = $matches[1];
+			$value = str_replace('{{SETTING:'.$val.'}}', get_option($val), $value);
+		}
+		if (strpos($value, '{{META:') !== false){
+			$pattern = '/\{META:(.*?)\}/';
+			preg_match($pattern, $value, $matches);
+			$val = $matches[1];
+			global $post;
+			$id = $post->ID;
+			$value = str_replace('{{META:'.$val.'}}', get_post_meta($id, $val, true), $value);
+		}
+		if (strpos($value, '{{TERM_META:') !== false){
+			$pattern = '/\{TERM_META:(.*?)\}/';
+			preg_match($pattern, $value, $matches);
+			$val = $matches[1];
+			$term_id = get_queried_object_id();
+			$value = str_replace('{{TERM_META:'.$val.'}}', get_term_meta($term_id, $val, true), $value);
+		}
+		if (strpos($value, '{{USER_META:') !== false){
+			$pattern = '/\{USER_META:(.*?)\}/';
+			preg_match($pattern, $value, $matches);
+			$val = $matches[1];
+			$user_id = get_current_user_id();
+			$value = str_replace('{{USER_META:'.$val.'}}', get_user_meta($user_id, $val, true), $value);
+		} 
+		if (strpos($value, '{{COOKIE:') !== false){
+			$pattern = '/\{COOKIE:(.*?)\}/';
+			preg_match($pattern, $value, $matches);
+			$val = $matches[1];
+			if(!empty($_COOKIE[$val])){
+				$value = str_replace('{{COOKIE:'.$val.'}}', $_COOKIE[$val], $value);
+			}
+		} 
+		if (strpos($value, '{{FORM:') !== false) {
+			$pattern = '/\{\{FORM:([^|}]+)(?:\|([^}]+))?\}\}/';
+			preg_match_all($pattern, $value, $matches, PREG_SET_ORDER);
+			foreach ($matches as $match) {
+				$field = $match[1];
+				$fallback = isset($match[2]) ? $match[2] : '';
+				$replacement = !empty($extra_data[$field]) ? $extra_data[$field] : $fallback;
+				$value = str_replace($match[0], $replacement, $value);
+			}
+		}
+		if (strpos($value, '{{RANDOM:') !== false) {
+			// Update regex to match the double curly syntax
+			$pattern = '/\{\{RANDOM:(.*?)\}\}/';
+			preg_match($pattern, $value, $matches);
+			if (!empty($matches[1])) {
+				$val = trim($matches[1]);
+				$replacement = $val; // default fallback
+
+				// If the value includes "-" (a range) then generate a random number between the two numbers.
+				if (strpos($val, '-') !== false) {
+					$range = explode('-', $val);
+					if (count($range) === 2 && is_numeric(trim($range[0])) && is_numeric(trim($range[1]))) {
+						$min = (float) trim($range[0]);
+						$max = (float) trim($range[1]);
+						$replacement = $min + (mt_rand() / mt_getrandmax()) * ($max - $min);
+					}
+				}
+				// If the value includes "|" then randomly select a value from the list.
+				elseif (strpos($val, '|') !== false) {
+					$choices = explode('|', $val);
+					// Remove any extra white space from each choice
+					$choices = array_map('trim', $choices);
+					$replacement = $choices[array_rand($choices)];
+				}
+				// Replace the placeholder with the generated random replacement.
+				$value = str_replace('{{RANDOM:' . $val . '}}', $replacement, $value);
+			}
+		}
+		
+	}
+	return $value;
+}
 //////////////////////////////////////////////////////////////////

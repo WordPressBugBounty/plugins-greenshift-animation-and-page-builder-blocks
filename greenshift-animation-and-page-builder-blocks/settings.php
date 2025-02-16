@@ -1046,7 +1046,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 															'charset' => [],
 															'defer' => [],
 															'src' => [],
-															'type' => []
+															'type' => [],
+															'data-project' => []
 														],
 														'link' => [
 															'href' => [],
@@ -1417,7 +1418,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 						'charset' => [],
 						'defer' => [],
 						'src' => [],
-						'type' => []
+						'type' => [],
+						'data-project' => []
 					],
 					'link' => [
 						'href' => [],

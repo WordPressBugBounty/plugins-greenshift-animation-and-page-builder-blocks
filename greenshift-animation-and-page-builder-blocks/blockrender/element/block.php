@@ -60,13 +60,42 @@ class Element
 			$pattern = '/<repeater>(.*?)<\/repeater>/s';
 			if (preg_match($pattern, $html, $matches)) {
 				$repeater = $matches[1];
+
+				if(!empty($block['attrs']['repeaterType']) && $block['attrs']['repeaterType'] == 'api_request' && !empty($block['attrs']['api_filters']) && !empty($block['attrs']['api_filters']['useAjax'])){
+					$p = new \WP_HTML_Tag_Processor( $html );
+					$p->next_tag();
+					$blockid = 'api_id_'.\greenshift_sanitize_id_key($block['attrs']['localId']);
+					$blockid = str_replace('-','_', $blockid);
+					$p->set_attribute( 'data-api-id', $blockid);
+					$p->set_attribute( 'data-dynamic-api', 'true');
+					$p->set_attribute( 'data-dynamic-api-trigger', !empty($block['attrs']['api_filters']['ajaxTrigger']) ? $block['attrs']['api_filters']['ajaxTrigger'] : 'load');
+					if(!empty($block['attrs']['api_filters']['ajaxTrigger']) && $block['attrs']['api_filters']['ajaxTrigger'] == 'form' && !empty($block['attrs']['api_filters']['ajaxSelector'])){
+						$p->set_attribute( 'api-form-selector', esc_attr($block['attrs']['api_filters']['ajaxSelector']));
+					}
+					if(!empty($block['attrs']['api_filters']['apiReplace'])){
+						$p->set_attribute( 'data-api-show-method', esc_attr($block['attrs']['api_filters']['apiReplace']));
+					}
+					$html = $p->get_updated_html();
+					set_transient($blockid, $block, 60 * 60 * 24 * 100);
+					$rest_vars = array(
+						'rest_url' => esc_url_raw(rest_url('greenshift/v1/api-connector/')),
+						'nonce' => wp_create_nonce('wp_rest'),
+					);
+					wp_localize_script('gspb-apiconnector', 'api_connector_vars', $rest_vars);
+					wp_enqueue_script('gspb-apiconnector');	
+
+					// We clean because it will be generated dynamically
+					$html = preg_replace($pattern, '', $html);
+
+				} else{
+					// Generate dynamic repeater content
+					$generated_content = GSPB_generate_dynamic_repeater($repeater, $block);
+					
+					// Replace the <repeater> tags and their content with the generated content
+					$html = preg_replace($pattern, $generated_content, $html);
+				}
 				
-				// Generate dynamic repeater content
-				$generated_content = GSPB_generate_dynamic_repeater($repeater, $block);
-				
-				// Replace the <repeater> tags and their content with the generated content
-				$html = preg_replace($pattern, $generated_content, $html);
-			}
+			} 
 		}
 		if(!empty($block['attrs']['isVariation'])){
 			if($block['attrs']['isVariation'] == 'marquee'){
@@ -168,8 +197,9 @@ class Element
 				if(!empty($value['dynamicEnable']) && function_exists('GSPB_make_dynamic_text')){
 					$dynamicAttributes[$index]['value'] = GSPB_make_dynamic_text($dynamicAttributes[$index]['value'], $block['attrs'], $block, $value);
 				}else{
-					$dynamicAttributes[$index]['value'] = sanitize_text_field($value['value']);
-					if(strpos($value['name'], 'on') === 0){
+					$value = sanitize_text_field($value['value']);
+					$dynamicAttributes[$index]['value'] = greenshift_dynamic_placeholders($value);
+					if(!empty($value['name']) && strpos($value['name'], 'on') === 0){
 						$dynamicAttributes[$index]['value'] = '';
 					}
 				}
@@ -221,7 +251,56 @@ class Element
 			$p->set_attribute( 'id', $anchor);
 			$html = $p->get_updated_html();
 		}
+		if(!empty($block['attrs']['dynamicIndexer'])){
+			$p = \WP_HTML_Processor::create_fragment( $html );
+			$index_current = $p->get_current_depth();
+			$index_current_tag = $index_current + 1;
+			$child = $index_current + 2;
+			$index = 0;
+			while ( $p->next_tag() ) {
+				if($p->get_current_depth() == $index_current_tag){
+					$p->set_bookmark('current');
+				}
+				if($p->get_current_depth() == $child){
+					if($p->get_tag() == 'STYLE'){
+						continue;
+					}
+					$style = $p->get_attribute( 'style' );
+					if(!empty($style)){
+						$style .= '--index: '.$index.';';
+					}else{
+						$style = '--index: '.$index.';';
+					}
+					$p->set_attribute( 'style', $style );
+					$index++;
+				}
+			}
 
+			$p->seek( 'current' );
+			$style = $p->get_attribute( 'style' );
+			if(!empty($style)){
+				$style .= '--total-items: '.$index.';';
+			}else{
+				$style = '--total-items: '.$index.';';
+			}
+			$p->set_attribute( 'style', $style );
+			$p->release_bookmark( 'current' );
+
+			$html = $p->get_updated_html();
+		}
+		if(!empty($block['attrs']['styleAttributes']['cssVars_Extra'])){
+			$p = new \WP_HTML_Tag_Processor( $html );
+			$p->next_tag();
+			$style = $p->get_attribute( 'style' );
+			if(!$style){
+				$style = '';
+			}
+			foreach($block['attrs']['styleAttributes']['cssVars_Extra'] as $index=>$value){
+				$style .= $value['name'].': '.greenshift_dynamic_placeholders($value['value']).';';
+			}
+			$p->set_attribute( 'style', $style );
+			$html = $p->get_updated_html();
+		}
 		return $html;
 	}
 }

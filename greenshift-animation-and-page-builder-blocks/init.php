@@ -133,15 +133,15 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-aos-lib',
 		GREENSHIFT_DIR_URL . 'libs/aos/aoslight.js',
 		array(),
-		'3.5',
+		'3.6',
 		true
 	);
 
 	wp_register_script(
-		'greenShift-aos-lib-full',
-		GREENSHIFT_DIR_URL . 'libs/aos/aos.js',
+		'greenShift-aos-lib-clip',
+		GREENSHIFT_DIR_URL . 'libs/aos/aoslightclip.js',
 		array(),
-		'3.1',
+		'3.6',
 		true
 	);
 
@@ -617,7 +617,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'3.8',
+		'4.0',
 		true
 	);
 
@@ -642,25 +642,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'10.7'
+		'10.8.1'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'10.7'
+		'10.8.1'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'10.7	'
+		'10.8.1	'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'10.7'
+		'10.8.1'
 	);
 
 	//Script for ajax reusable loading
@@ -1049,7 +1049,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				wp_enqueue_script('greenshift-drag-init');
 			}
 			if (!empty($block['attrs']['shapeDivider']['topShape']['animate']) || !empty($block['attrs']['shapeDivider']['bottomShape']['animate'])) {
-				wp_enqueue_script('greenShift-aos-lib-full');
+				wp_enqueue_script('greenShift-aos-lib');
 				// init aos library
 			}
 			if (function_exists('GSPB_make_dynamic_link') && !empty($block['attrs']['dynamicEnable'])) {
@@ -1083,7 +1083,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				wp_enqueue_script('greenShift-scrollable-init');
 			}
 			if (!empty($block['attrs']['shapeDivider']['topShape']['animate']) || !empty($block['attrs']['shapeDivider']['bottomShape']['animate'])) {
-				wp_enqueue_script('greenShift-aos-lib-full');
+				wp_enqueue_script('greenShift-aos-lib');
 				// init aos library
 			}
 		} else if ($blockname === 'greenshift-blocks/row-column') {
@@ -1417,7 +1417,11 @@ function gspb_greenShift_block_script_assets($html, $block)
 
 		// aos script
 		if (!empty($block['attrs']['animation']['type']) && empty($block['attrs']['animation']['usegsap']) && empty($block['attrs']['animation']['onclass_active'])) {
-			wp_enqueue_script('greenShift-aos-lib');
+			if(!empty($block['attrs']['animation']['type']) && ($block['attrs']['animation']['type'] == 'display-in' || $block['attrs']['animation']['type'] == 'display-in-slide' || $block['attrs']['animation']['type'] == 'display-in-zoom' || $block['attrs']['animation']['type'] == 'custom' || $block['attrs']['animation']['type'] == 'clip-down' || $block['attrs']['animation']['type'] == 'clip-up' || $block['attrs']['animation']['type'] == 'clip-left' || $block['attrs']['animation']['type'] == 'clip-right' )){
+				wp_enqueue_script('greenShift-aos-lib-clip');
+			}else{
+				wp_enqueue_script('greenShift-aos-lib');
+			}
 			if(!empty($block['attrs']['animation']['onscrub'])){
 				wp_enqueue_script('greenshift-scroll-scrub');
 			}
