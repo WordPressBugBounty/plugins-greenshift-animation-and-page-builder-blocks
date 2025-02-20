@@ -68,12 +68,18 @@ class Element
 					$blockid = str_replace('-','_', $blockid);
 					$p->set_attribute( 'data-api-id', $blockid);
 					$p->set_attribute( 'data-dynamic-api', 'true');
-					$p->set_attribute( 'data-dynamic-api-trigger', !empty($block['attrs']['api_filters']['ajaxTrigger']) ? $block['attrs']['api_filters']['ajaxTrigger'] : 'load');
+					$p->set_attribute( 'data-dynamic-api-trigger', !empty($block['attrs']['api_filters']['ajaxTrigger']) ? esc_attr($block['attrs']['api_filters']['ajaxTrigger']) : 'load');
 					if(!empty($block['attrs']['api_filters']['ajaxTrigger']) && $block['attrs']['api_filters']['ajaxTrigger'] == 'form' && !empty($block['attrs']['api_filters']['ajaxSelector'])){
 						$p->set_attribute( 'api-form-selector', esc_attr($block['attrs']['api_filters']['ajaxSelector']));
 					}
 					if(!empty($block['attrs']['api_filters']['apiReplace'])){
 						$p->set_attribute( 'data-api-show-method', esc_attr($block['attrs']['api_filters']['apiReplace']));
+					}
+					if(!empty($block['attrs']['api_filters']['loader_selector'])){
+						$p->set_attribute( 'data-api-loader-selector', esc_attr($block['attrs']['api_filters']['loader_selector']));
+					}
+					if(!empty($block['attrs']['api_filters']['pagination_selector'])){
+						$p->set_attribute( 'data-api-pagination-selector', esc_attr($block['attrs']['api_filters']['pagination_selector']));
 					}
 					$html = $p->get_updated_html();
 					set_transient($blockid, $block, 60 * 60 * 24 * 100);
@@ -146,8 +152,15 @@ class Element
 						if($block['attrs']['tag'] == 'video'){
 							$p->next_tag();
 						}
+						if(!empty($block['attrs']['dynamiclink']['fallbackValue'])){
+							$checklink = wp_check_filetype($value);
+							if(empty($checklink['type'])){
+								$value = esc_url($block['attrs']['dynamiclink']['fallbackValue']);
+							}
+						}
 						$p->set_attribute( 'src', $value);
-						if(!empty($block['attrs']['enableSrcSet'])){
+						
+						if(!empty($block['attrs']['enableSrcSet']) && !empty($type['type']) && $type['type'] == 'image'){
 							$id = attachment_url_to_postid($value);
 							if($id && $id > 0){
 								$size = 'full';
@@ -167,7 +180,7 @@ class Element
 				}else if(isset($block['attrs']['tag']) && $block['attrs']['tag'] == 'a'){
 					$p = new \WP_HTML_Tag_Processor( $html );
 					$p->next_tag();
-					$value = GSPB_make_dynamic_text($block['attrs']['href'], $block['attrs'], $block, $block['attrs']['dynamiclink']);
+					$value = GSPB_make_dynamic_text($block['attrs']['href'], $block['attrs'], $block, $block['attrs']['dynamiclink'], $block['attrs']['href']);
 					if($value){
 						$p->set_attribute( 'href', $value);
 						$html = $p->get_updated_html();

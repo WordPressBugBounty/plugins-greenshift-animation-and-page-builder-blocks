@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.7
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 10.8
+Stable tag: 10.9
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -112,6 +112,14 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 
 == Changelog ==
 
+= 10.9 =
+
+* Added: [Client Side and Server Side API connector for WordPress](https://greenshiftwp.com/api-connector/)
+* Added: Fix for absent styles for custom Post types that do not have custom field support
+* Added: Improved fallback image option for dynamic url for images
+* Added: Option to use pagination in API Connector
+* Added: Few performance, security, usability improvements according to reports
+
 = 10.8 =
 
 * Added: Query Args Type for Repeater block
@@ -120,7 +128,6 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 * Added: Set of quick dynamic placeholders for Dynamic Attributes
 * Added: Loop option for Interaction Layers
 * Added: Click action for Interaction Layers
-* Added: API connector call for Interaction Layers
 * Added: API Connector for Repeater/Dynamic content in Element block
 * Added: Dynamic styles for Element block 
 * Added: Dynamic Indexer for Element block

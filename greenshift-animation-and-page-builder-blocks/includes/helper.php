@@ -961,13 +961,13 @@ function greenshift_render_preset_classes(){
 			'options' => apply_filters('greenshift_background_preset_classes',array(
 				[
 					'value'=> 'hide_onfront',
-					'label'=> "0% opacity on Frontend",
-					'css'=> ".gspb-bodyfront .hide_onfront{opacity:0}",
+					'label'=> "Hide on Frontend",
+					'css'=> ".gspb-bodyfront .hide_onfront{display:none}",
 					'type' => "preset",
 					'style_store' => array(
 						array(
 							'selector'     => '.gspb-bodyfront .hide_onfront',
-							'css' => 'opacity: 0'
+							'css' => 'display: none'
 						),
 					),
 				],
@@ -1265,7 +1265,7 @@ function GSPB_generate_dynamic_repeater($html, $block, $extra_data = [], $runind
 // Dynamic Placeholders
 //////////////////////////////////////////////////////////////////
 
-function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0){
+function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0, $response = []){
 	if($value && strpos($value, '{{') !== false){
 		if (strpos($value, '{{POST_ID}}') !== false){
 			global $post;

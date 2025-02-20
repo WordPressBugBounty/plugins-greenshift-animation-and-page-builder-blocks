@@ -133,7 +133,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-aos-lib',
 		GREENSHIFT_DIR_URL . 'libs/aos/aoslight.js',
 		array(),
-		'3.6',
+		'3.7',
 		true
 	);
 
@@ -141,7 +141,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-aos-lib-clip',
 		GREENSHIFT_DIR_URL . 'libs/aos/aoslightclip.js',
 		array(),
-		'3.6',
+		'3.7',
 		true
 	);
 
@@ -476,7 +476,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-lightbox',
 		GREENSHIFT_DIR_URL . 'libs/greenlightbox/index.js',
 		array(),
-		'1.1',
+		'1.2',
 		true
 	);
 
@@ -614,10 +614,18 @@ function gspb_greenShift_register_scripts_blocks(){
 	);
 
 	wp_register_script(
+		'gspb_api',
+		GREENSHIFT_DIR_URL . 'libs/api/index.js',
+		array(),
+		'1.1',
+		true
+	);
+
+	wp_register_script(
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'4.0',
+		'4.1',
 		true
 	);
 
@@ -804,7 +812,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 			while ( $p->next_tag() ) {
 				// Skip an element if it's not supposed to be processed.
 				if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs-accordion-item__title' )) ) {
-					$p->set_attribute( 'id', 'gs-trigger-'.$block['attrs']['id'].'-'.$itrigger);
+					$p->set_attribute( 'id', 'gs-trigger-'.greenshift_sanitize_id_key($block['attrs']['id']).'-'.$itrigger);
 					$itrigger ++;
 				}
 			}
@@ -815,7 +823,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 			while ( $p->next_tag() ) {
 				// Skip an element if it's not supposed to be processed.
 				if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs-accordion-item__content' )) ) {
-					$p->set_attribute( 'aria-labelledby', 'gs-trigger-'.$block['attrs']['id'].'-'.$icontent);
+					$p->set_attribute( 'aria-labelledby', 'gs-trigger-'.greenshift_sanitize_id_key($block['attrs']['id']).'-'.$icontent);
 					$icontent ++;
 				}
 			}
@@ -859,9 +867,9 @@ function gspb_greenShift_block_script_assets($html, $block)
 		// looking for toggler
 		else if ($blockname === 'greenshift-blocks/toggler') {
 			wp_enqueue_script('gstoggler');
-			$id = !empty($block['attrs']['id']) ? 'gs-toggler'.$block['attrs']['id'] : '';
-			$openlabel = !empty($block['attrs']['openlabel']) ? $block['attrs']['openlabel'] : 'Show more';
-			$closelabel = !empty($block['attrs']['closelabel']) ? $block['attrs']['closelabel'] : 'Show less';
+			$id = !empty($block['attrs']['id']) ? 'gs-toggler'.greenshift_sanitize_id_key($block['attrs']['id']) : '';
+			$openlabel = !empty($block['attrs']['openlabel']) ? esc_attr($block['attrs']['openlabel']) : 'Show more';
+			$closelabel = !empty($block['attrs']['closelabel']) ? esc_attr($block['attrs']['closelabel']) : 'Show less';
 
 			$html = str_replace('class="gs-toggler-wrapper"', 'class="gs-toggler-wrapper"'. ' id="'.$id.'"', $html);
 			$html = str_replace('class="gs-tgl-show"', 'class="gs-tgl-show"'. ' tabindex="0" role="button" aria-label="'.$openlabel.'" aria-controls="'.$id.'"', $html);
@@ -947,8 +955,8 @@ function gspb_greenShift_block_script_assets($html, $block)
 				wp_enqueue_script('gsslidingpanel');
 				if($blockname == 'greenshift-blocks/button'){
 					$position = !empty($block['attrs']['slidePosition']) ? $block['attrs']['slidePosition'] : '';
-					$html = str_replace('id="gspb_button-id-' . $block['attrs']['id'], 'data-paneltype="' . $position . '" id="gspb_button-id-' . $block['attrs']['id'], $html);
-					$html = str_replace('class="gspb_slidingPanel"', 'data-panelid="gspb_button-id-' . $block['attrs']['id'] . '" class="gspb_slidingPanel"', $html);
+					$html = str_replace('id="gspb_button-id-' . $block['attrs']['id'], 'data-paneltype="' . $position . '" id="gspb_button-id-' . greenshift_sanitize_id_key($block['attrs']['id']), $html);
+					$html = str_replace('class="gspb_slidingPanel"', 'data-panelid="gspb_button-id-' . greenshift_sanitize_id_key($block['attrs']['id']) . '" class="gspb_slidingPanel"', $html);
 				}
 				if($blockname == 'greenshift-blocks/buttonbox'){
 					$html = str_replace('class="gspb_slidingPanel"', 'aria-hidden="true"  class="gspb_slidingPanel"', $html);
@@ -1241,8 +1249,8 @@ function gspb_greenShift_block_script_assets($html, $block)
 			while ( $p->next_tag() ) {
 				// Skip an element if it's not supposed to be processed.
 				if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && $p->has_class( 't-panel' ) ) {
-					$p->set_attribute( 'id', 'gspb-tab-item-content-'.$block['attrs']['id'].'-'.$itab);
-					$p->set_attribute( 'aria-labelledby', 'gspb-tab-item-btn-'.$block['attrs']['id'].'-'.$itab);
+					$p->set_attribute( 'id', 'gspb-tab-item-content-'.greenshift_sanitize_id_key($block['attrs']['id']).'-'.$itab);
+					$p->set_attribute( 'aria-labelledby', 'gspb-tab-item-btn-'.greenshift_sanitize_id_key($block['attrs']['id']).'-'.$itab);
 					$p->set_attribute( 'role', 'tabpanel');
 					$p->set_attribute( 'tabindex', '0');
 					$itab ++;
@@ -1417,7 +1425,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 
 		// aos script
 		if (!empty($block['attrs']['animation']['type']) && empty($block['attrs']['animation']['usegsap']) && empty($block['attrs']['animation']['onclass_active'])) {
-			if(!empty($block['attrs']['animation']['type']) && ($block['attrs']['animation']['type'] == 'display-in' || $block['attrs']['animation']['type'] == 'display-in-slide' || $block['attrs']['animation']['type'] == 'display-in-zoom' || $block['attrs']['animation']['type'] == 'custom' || $block['attrs']['animation']['type'] == 'clip-down' || $block['attrs']['animation']['type'] == 'clip-up' || $block['attrs']['animation']['type'] == 'clip-left' || $block['attrs']['animation']['type'] == 'clip-right' )){
+			if(!empty($block['attrs']['animation']['type']) && ($block['attrs']['animation']['type'] == 'display-in' || $block['attrs']['animation']['type'] == 'display-in-slide' || $block['attrs']['animation']['type'] == 'display-in-zoom' || $block['attrs']['animation']['type'] == 'custom' || $block['attrs']['animation']['type'] == 'clip-down' || $block['attrs']['animation']['type'] == 'clip-up' || $block['attrs']['animation']['type'] == 'clip-left' || $block['attrs']['animation']['type'] == 'clip-right' || $block['attrs']['animation']['type'] == 'slide-left' || $block['attrs']['animation']['type'] == 'slide-right' || $block['attrs']['animation']['type'] == 'slide-top' || $block['attrs']['animation']['type'] == 'slide-bottom' )){
 				wp_enqueue_script('greenShift-aos-lib-clip');
 			}else{
 				wp_enqueue_script('greenShift-aos-lib');
@@ -1468,6 +1476,9 @@ function gspb_greenShift_block_script_assets($html, $block)
 									}
 								}
 							}
+						}
+						if(!empty($action['actionname']) && $action['actionname'] == 'customapi'){
+							wp_enqueue_script('gspb_api');
 						}
 					}
 				}
@@ -1620,9 +1631,9 @@ function gspb_greenShift_block_inline_head($html, $block){
 				$dynamic_style = GSPB_make_dynamic_image($dynamic_style, $block['attrs'], $block, $block['attrs']['background'], $block['attrs']['background']['image']);
 			}
 			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
-				$styleStore->addClassStyle('ref_'.$block['attrs']['ref'], $dynamic_style);
+				$styleStore->addClassStyle('ref_'.greenshift_sanitize_id_key($block['attrs']['ref']), $dynamic_style);
 			}else{
-				$styleStore->addClassStyle($block['attrs']['id'], $dynamic_style);
+				$styleStore->addClassStyle(greenshift_sanitize_id_key($block['attrs']['id']), $dynamic_style);
 			}
 			//echo $styleStore->getStyles();
 		}
