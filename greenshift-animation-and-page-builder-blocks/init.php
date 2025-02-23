@@ -200,7 +200,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-swiper-init',
 		GREENSHIFT_DIR_URL . 'libs/swiper/init.js',
 		array(),
-		'8.9.9.2',
+		'8.9.9.3',
 		true
 	);
 	wp_localize_script(
@@ -428,6 +428,21 @@ function gspb_greenShift_register_scripts_blocks(){
 	wp_localize_script(
 		'gsmodelinit',
 		'gs_model_params',
+		array(
+			'pluginURL' => GREENSHIFT_DIR_URL
+		)
+	);
+
+	wp_register_script(
+		'gschartinit',
+		GREENSHIFT_DIR_URL . 'libs/apexchart/init.js',
+		array(),
+		'1.0',
+		true
+	);
+	wp_localize_script(
+		'gschartinit',
+		'gs_chart_params',
 		array(
 			'pluginURL' => GREENSHIFT_DIR_URL
 		)

@@ -182,7 +182,8 @@ class Element
 					$p->next_tag();
 					$value = GSPB_make_dynamic_text($block['attrs']['href'], $block['attrs'], $block, $block['attrs']['dynamiclink'], $block['attrs']['href']);
 					if($value){
-						$p->set_attribute( 'href', $value);
+						$linknew = apply_filters('greenshiftseo_url_filter', $value);
+						$p->set_attribute( 'href', $linknew);
 						$html = $p->get_updated_html();
 					}else{
 						return '';
@@ -313,6 +314,9 @@ class Element
 			}
 			$p->set_attribute( 'style', $style );
 			$html = $p->get_updated_html();
+		}
+		if(!empty($block['attrs']['chartData']) && !empty($block['attrs']['type']) && $block['attrs']['type'] == 'chart'){
+			wp_enqueue_script('gschartinit');
 		}
 		return $html;
 	}
