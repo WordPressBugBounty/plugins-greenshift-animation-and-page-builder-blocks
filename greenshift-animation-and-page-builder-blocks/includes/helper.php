@@ -1273,7 +1273,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		}
 		if (strpos($value, '{{POST_TITLE}}') !== false){
 			global $post;
-			$value = str_replace('{POST_TITLE}', $post->post_title, $value);
+			$value = str_replace('{{POST_TITLE}}', $post->post_title, $value);
 		}
 		if (strpos($value, '{{POST_URL}}') !== false){
 			global $post;
@@ -1334,6 +1334,19 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			$term_id = get_queried_object_id();
 			$value = str_replace('{{TERM_META:'.$val.'}}', get_term_meta($term_id, $val, true), $value);
 		}
+		if(strpos($value, '{{CURRENT_DATE_YMD}}') !== false){
+			$value = str_replace('{{CURRENT_DATE_YMD}}', date('Y-m-d'), $value);
+		}
+		if(strpos($value, '{{CURRENT_DATE_YMD_HMS}}') !== false){
+			$value = str_replace('{{CURRENT_DATE_YMD_HMS}}', date('Y-m-d H:i:s'), $value);
+		}
+		if(strpos($value, '{{TIMESTRING:') !== false){
+			$pattern = '/\{TIMESTRING:(.*?)\}/';
+			preg_match($pattern, $value, $matches);
+			$val = $matches[1];
+			$value = str_replace('{{TIMESTRING:'.$val.'}}', strtotime($val), $value);
+		}
+			
 		if (strpos($value, '{{USER_META:') !== false){
 			$pattern = '/\{USER_META:(.*?)\}/';
 			preg_match($pattern, $value, $matches);

@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.7
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 10.9.2
+Stable tag: 11.0.1
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -111,6 +111,13 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 11.0.1 =
+
+* Added: [Chart Element](https://greenshiftwp.com/dynamic-chart/)
+* Added: Convert to slider for Element block and reduced DOM size for Slider Query block
+* Added: Animation Effects panel has Keyframe Builder feature
+
 
 = 10.9.2 =
 
