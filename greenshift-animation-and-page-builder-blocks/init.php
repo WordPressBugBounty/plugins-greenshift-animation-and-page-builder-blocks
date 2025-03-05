@@ -632,7 +632,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_api',
 		GREENSHIFT_DIR_URL . 'libs/api/index.js',
 		array(),
-		'1.2',
+		'1.3',
 		true
 	);
 
@@ -640,7 +640,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'4.2',
+		'4.3',
 		true
 	);
 
@@ -1583,9 +1583,10 @@ function gspb_greenShift_block_inline_styles($html, $block){
 					if($type == 'preset' && !empty($class['value'])){
 						$css = greenshift_get_style_from_class_array($class['value'], $type, $inline = true);
 						if($css){
-							$class_style = '<style>' . wp_kses_post($css) . '</style>';
+							$class_style = $css;
 							$class_style = gspb_get_final_css($class_style);
 							$class_style = htmlspecialchars_decode($class_style);
+							$class_style = '<style>' . wp_strip_all_tags($class_style) . '</style>';
 							$html = $html . $class_style;
 						}
 					}
@@ -1596,10 +1597,9 @@ function gspb_greenShift_block_inline_styles($html, $block){
 		if (!empty($block['attrs']['inlineCssStyles']) || ($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])) ) {
 			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
 				$dynamic_style = get_post_meta((int)$block['attrs']['ref'], '_gspb_post_css', true);
-				$dynamic_style = '<style>' . wp_kses_post($dynamic_style) . '</style>';
 				$dynamic_style = apply_filters('gspb_reusable_inline_styles', $dynamic_style);
 			}else{
-				$dynamic_style = '<style>' . wp_kses_post($block['attrs']['inlineCssStyles']) . '</style>';
+				$dynamic_style = $block['attrs']['inlineCssStyles'];
 			}
 			$dynamic_style = gspb_get_final_css($dynamic_style);
 			$dynamic_style = gspb_quick_minify_css($dynamic_style);
@@ -1607,6 +1607,7 @@ function gspb_greenShift_block_inline_styles($html, $block){
 			if (function_exists('GSPB_make_dynamic_image') && !empty($block['attrs']['background']['dynamicEnable'])) {
 				$dynamic_style = GSPB_make_dynamic_image($dynamic_style, $block['attrs'], $block, $block['attrs']['background'], $block['attrs']['background']['image']);
 			}
+			$dynamic_style = '<style>' . wp_strip_all_tags($dynamic_style) . '</style>';
 			$html = $dynamic_style . $html;
 		}
 	}

@@ -5,10 +5,10 @@ Author: Wpsoul
 Author URI: https://greenshiftwp.com
 Plugin URI: https://greenshiftwp.com
 Requires at least: 6.6
-Tested up to: 6.7
-Requires PHP: 7.0
+Tested up to: 6.8
+Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 11.0.2
+Stable tag: 11.1
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -111,6 +111,12 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 11.1 =
+
+* Added: Taxonomy Meta Field option for Dynamic Type for Element block
+* Added: Inline style security improvements, thank to [Peter Thaleikis
+](https://patchstack.com/database/researcher/2e122e4c-5552-442b-98a0-b7fdf72c6976)
 
 = 11.0.2 =
 
