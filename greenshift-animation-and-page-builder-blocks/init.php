@@ -133,7 +133,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-aos-lib',
 		GREENSHIFT_DIR_URL . 'libs/aos/aoslight.js',
 		array(),
-		'3.7',
+		'3.8',
 		true
 	);
 
@@ -292,7 +292,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gscounter',
 		GREENSHIFT_DIR_URL . 'libs/counter/index.js',
 		array(),
-		'1.6',
+		'1.7',
 		true
 	);
 
@@ -437,7 +437,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gschartinit',
 		GREENSHIFT_DIR_URL . 'libs/apexchart/init.js',
 		array(),
-		'1.0',
+		'1.1',
 		true
 	);
 	wp_localize_script(
@@ -640,7 +640,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'4.3',
+		'4.4',
 		true
 	);
 
@@ -2464,6 +2464,27 @@ function gspb_register_route()
 		]
 	]);
 
+	register_rest_route('greenshift/v1', '/get-csv-to-json/', [
+		[
+			'methods' => 'GET',
+			'callback' => 'gspb_get_csv_to_json',
+			'permission_callback' => function () {
+				return true;
+			},
+			'args' => array(
+				'url' => array(
+					'type' => 'string',
+					'required' => true,
+				),
+				'type' => array(
+					'type' => 'string',
+					'required' => false,
+					'default' => 'row',
+				)
+			),
+		]
+	]);
+
 }
 
 function gspb_get_license_settings()
@@ -2851,6 +2872,294 @@ function gspb_convert_svgstring_from_svg_image(WP_REST_Request $request)
 
 }
 
+function gspb_get_csv_to_json(WP_REST_Request $request)
+{
+	$url = sanitize_text_field($request->get_param('url'));
+	$type = sanitize_text_field($request->get_param('type') ?: 'row');
+	$result = [];
+	
+	if($url){
+		// Check if the URL is URL-encoded and decode it if necessary
+		if(urldecode($url) !== $url && filter_var(urldecode($url), FILTER_VALIDATE_URL)) {
+			$url = urldecode($url);
+		}
+		
+		// Check if URL is a Google Sheets URL that needs conversion to CSV export format
+		if(strpos($url, 'docs.google.com/spreadsheets') !== false) {
+			// If it's not already in the CSV output format
+			if(strpos($url, 'output=csv') === false) {
+				// If it's a standard /d/ format URL
+				if(preg_match('/\/d\/(.*?)\//', $url, $matches)) {
+					$sheet_id = $matches[1];
+					// Convert to export URL (format: CSV)
+					$url = 'https://docs.google.com/spreadsheets/d/' . $sheet_id . '/export?format=csv';
+				}
+				// Otherwise, it might already be in the published format with /e/PACX-... structure
+				// which should work directly if output=csv is added
+				elseif(strpos($url, '/pub') !== false) {
+					// If it's published but missing output format
+					$url = add_query_arg('output', 'csv', $url);
+				}
+			}
+			// If already has output=csv, we'll use it as is
+		}
+		
+		$response = wp_safe_remote_get($url);
+		
+		if(!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+			$csv_content = wp_remote_retrieve_body($response);
+			
+			// For chart3, we'll always process all rows as data, never as headers
+			if($type === 'chart3') {
+				$lines = explode("\n", $csv_content);
+				$result = [
+					'series' => [],
+					'labels' => []
+				];
+				
+				// Process each line directly as a data row
+				foreach($lines as $line) {
+					$line = trim($line);
+					if(empty($line)) continue;
+					
+					// Parse this line as CSV
+					$row = str_getcsv($line);
+					
+					// We need at least 2 columns
+					if(count($row) >= 2) {
+						// First column is the label
+						$result['labels'][] = trim($row[0]);
+						
+						// Second column is the value - convert to float
+						$value = trim($row[1]);
+						if(is_string($value)) {
+							$value = str_replace(',', '.', $value);
+							$value = str_replace(' ', '', $value);
+						}
+						$result['series'][] = (float)$value;
+					}
+				}
+				
+				// Return immediately for chart3
+				return $result;
+			}
+			
+			// Regular CSV processing for other types
+			$lines = explode("\n", $csv_content);
+			$headers = [];
+			$data = [];
+			
+			// Process CSV into array
+			foreach($lines as $line_num => $line) {
+				if(empty(trim($line))) continue;
+				
+				// str_getcsv handles CSV parsing including quoted values with commas
+				$row = str_getcsv($line);
+				
+				if($line_num === 0) {
+					// First line contains headers
+					$headers = array_map('trim', $row);
+				} else {
+					// Data rows
+					$item = [];
+					foreach($row as $column_num => $cell) {
+						if(isset($headers[$column_num])) {
+							$item[$headers[$column_num]] = trim($cell);
+						}
+					}
+					if(!empty($item)) {
+						$data[] = $item;
+					}
+				}
+			}
+			
+			// Default row format
+			if($type === 'row') {
+				$result = $data;
+			}
+			// Column format - group each column as separate item
+			elseif($type === 'column' && !empty($data)) {
+				$result = [];
+				
+				// Create an array for each column starting with the header name
+				foreach($headers as $header) {
+					$columnData = [$header]; // Start with header as first element
+					
+					// Add all values from this column
+					foreach($data as $row) {
+						if(isset($row[$header])) {
+							$columnData[] = $row[$header];
+						}
+					}
+					
+					$result[] = $columnData;
+				}
+			}
+			// ApexChart format - Years on x-axis, Countries as series
+			elseif($type === 'chart1' && !empty($data)) {
+				$apexResult = [
+					'series' => [],
+					'xaxis' => [
+						'categories' => []
+					]
+				];
+				
+				// Get the first column name (assuming it's something like "Country")
+				$firstColumnName = $headers[0];
+				
+				// Extract years for xaxis categories (all headers except the first which is the country)
+				$yearColumns = array_slice($headers, 1);
+				$apexResult['xaxis']['categories'] = $yearColumns;
+				
+				// Create a series for each country
+				foreach($data as $row) {
+					$countryName = $row[$firstColumnName];
+					$countryData = [];
+					
+					// Get values for each year for this country
+					foreach($yearColumns as $year) {
+						// Convert string values to float for the chart
+						$countryData[] = (float)$row[$year];
+					}
+					
+					$apexResult['series'][] = [
+						'name' => $countryName,
+						'data' => $countryData
+					];
+				}
+				
+				$result = $apexResult;
+			}
+			// ApexChart format - First column as x-axis, other columns as series
+			elseif($type === 'chart2' && !empty($data)) {
+				$apexResult = [
+					'series' => [],
+					'xaxis' => [
+						'categories' => []
+					]
+				];
+				
+				// First column is used for x-axis categories
+				$entityColumn = $headers[0];
+				
+				// Get all entities for x-axis
+				$entities = [];
+				foreach($data as $row) {
+					if(isset($row[$entityColumn])) {
+						$entities[] = $row[$entityColumn];
+					}
+				}
+				
+				// Set x-axis categories
+				$apexResult['xaxis']['categories'] = $entities;
+				
+				// Create a series for each additional column (starting from index 1)
+				for($i = 1; $i < count($headers); $i++) {
+					$seriesName = $headers[$i];
+					$seriesData = [];
+					
+					// Get values for this column for each entity
+					foreach($data as $row) {
+						if(isset($row[$seriesName])) {
+							// Handle any decimal format (comma or point) and convert to float
+							$value = $row[$seriesName];
+							if(is_string($value)) {
+								$value = str_replace(',', '.', $value);
+								$value = str_replace(' ', '', $value); // Also remove any spaces
+							}
+							$seriesData[] = (float)$value;
+						} else {
+							$seriesData[] = null; // Use null for missing values
+						}
+					}
+					
+					$apexResult['series'][] = [
+						'name' => $seriesName,
+						'data' => $seriesData
+					];
+				}
+				
+				$result = $apexResult;
+			}
+			// Chart type 3 - Simple two-column format for any label-value pair data
+			// Outputs a format with separate 'series' and 'labels' arrays
+			elseif($type === 'chart3' && !empty($data)) {
+				$apexResult = [
+					'series' => [],
+					'labels' => []
+				];
+				
+				// For two-column data, it could either have headers or not have headers
+				// The example format is: "Label,Value" without explicit headers
+				// So we need to check if we're dealing with csv data without headers
+				
+				// If the first column header is numeric or looks like a value, assume no headers
+				$hasHeaders = true;
+				
+				// If there are only 2 columns and the first record looks like "Label,Value" format
+				if(count($headers) == 2) {
+					// Check if the first row's data matches what looks like a header pattern
+					// (this is a heuristic - if first row has label names and not numbers for first column)
+					$firstRowKey = isset($data[0][$headers[0]]) ? $data[0][$headers[0]] : '';
+					
+					// If first column of first row is numeric, likely no headers
+					if(is_numeric($firstRowKey)) {
+						$hasHeaders = false;
+					}
+				}
+				
+				if($hasHeaders) {
+					// Get the column names from headers
+					$labelColumn = $headers[0];
+					$valueColumn = $headers[1];
+					
+					// Extract labels and values from data
+					foreach($data as $row) {
+						if(isset($row[$labelColumn])) {
+							$apexResult['labels'][] = $row[$labelColumn];
+						}
+						
+						if(isset($row[$valueColumn])) {
+							// Handle any decimal format (comma or point) and convert to float
+							$value = $row[$valueColumn];
+							if(is_string($value)) {
+								$value = str_replace(',', '.', $value);
+								$value = str_replace(' ', '', $value); // Also remove any spaces
+							}
+							$apexResult['series'][] = (float)$value;
+						}
+					}
+				} else {
+					// No headers - each row is directly label,value
+					// In this case, the first item in each row is the label, second is the value
+					foreach($data as $row) {
+						$keys = array_keys($row);
+						if(count($keys) >= 2) {
+							$labelKey = $keys[0];
+							$valueKey = $keys[1];
+							
+							$apexResult['labels'][] = $row[$labelKey];
+							
+							// Handle any decimal format (comma or point) and convert to float
+							$value = $row[$valueKey];
+							if(is_string($value)) {
+								$value = str_replace(',', '.', $value);
+								$value = str_replace(' ', '', $value); // Also remove any spaces
+							}
+							$apexResult['series'][] = (float)$value;
+						}
+					}
+				}
+				
+				$result = $apexResult;
+			}
+		}
+	}
+
+	// Return the PHP array directly - WordPress REST API will handle JSON encoding
+	return $result;
+}
+
 //////////////////////////////////////////////////////////////////
 // USDZ support until WP will have it
 //////////////////////////////////////////////////////////////////
@@ -2892,7 +3201,7 @@ if (!function_exists('gspb_get_all_layouts')) {
 			$category = $term;
 		}
 
-		$apiUrl    = TEMPLATE_SERVER_URL . '/wp-json/wp/v2/posts/?_embed&categories=' . $category . '&per_page=' . $per_page . '&page=' . $page;
+		$apiUrl    = TEMPLATE_SERVER_URL . 'wp-json/wp/v2/posts/?_embed&categories=' . $category . '&per_page=' . $per_page . '&page=' . $page;
 		// Append tag to the API URL if it's available and not equal to "All"
 		if (!is_null($tag) && $tag !== '' && $tag !== 'All') {
 			$apiUrl .= '&tags=' . $tag;
@@ -2902,6 +3211,9 @@ if (!function_exists('gspb_get_all_layouts')) {
 		$body      = wp_remote_retrieve_body($response);
 		$headers   = wp_remote_retrieve_headers($response);
 		$request_result = $body;
+
+		error_log(json_encode($response));
+		error_log($body);
 
 
 		if ($request_result === '') {

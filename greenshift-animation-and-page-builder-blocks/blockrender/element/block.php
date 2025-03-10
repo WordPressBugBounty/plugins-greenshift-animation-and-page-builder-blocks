@@ -220,8 +220,8 @@ class Element
 			}
 			if(!empty($dynamicAttributes)){
 				$p = new \WP_HTML_Tag_Processor( $html );
+				$p->next_tag();
 				foreach($dynamicAttributes as $index=>$value){
-					$p->next_tag();
 					$p->set_attribute( $value['name'], $value['value']);
 				}
 				$html = $p->get_updated_html();
@@ -317,6 +317,33 @@ class Element
 		}
 		if(!empty($block['attrs']['chartData']) && !empty($block['attrs']['type']) && $block['attrs']['type'] == 'chart'){
 			wp_enqueue_script('gschartinit');
+			if(!empty($block['attrs']['chartData']['dynamic_loading']) && !empty($block['attrs']['chartData']['csv_link'])){
+				$json = $cache_time = '';
+				if(!empty($block['attrs']['chartData']['cache_time'])){
+					$cache_time = $block['attrs']['chartData']['cache_time'];
+				}
+				if($cache_time){
+					$transient_name = 'gspb_chart_data_'.greenshift_sanitize_id_key($block['attrs']['localId']);
+					$json = get_transient($transient_name);
+				}
+				if(empty($json)){
+					$siteurl = site_url();
+					$type = !empty($block['attrs']['chartData']['chart_type']) ? $block['attrs']['chartData']['chart_type'] : 'chart1';
+					$remote = wp_safe_remote_get($siteurl.'/wp-json/greenshift/v1/get-csv-to-json?type='.$type.'&url='.$block['attrs']['chartData']['csv_link']);
+					if(!is_wp_error($remote)){
+						$json = wp_remote_retrieve_body($remote);
+						if($cache_time){
+							set_transient($transient_name, $json, $cache_time);
+						}
+					}
+				}
+				if(!empty($json)){
+					$p = new \WP_HTML_Tag_Processor( $html );
+					$p->next_tag();
+					$p->set_attribute( 'data-extra-json', $json);
+					$html = $p->get_updated_html();
+				}
+			}
 		}
 		return $html;
 	}
