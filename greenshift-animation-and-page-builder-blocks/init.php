@@ -523,7 +523,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greenpanel',
 		GREENSHIFT_DIR_URL . 'libs/greenpanel/index.js',
 		array(),
-		'1.6',
+		'1.7',
 		true
 	);
 
@@ -645,7 +645,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'4.4',
+		'4.6',
 		true
 	);
 
