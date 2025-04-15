@@ -273,7 +273,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gsvideo',
 		GREENSHIFT_DIR_URL . 'libs/video/index.js',
 		array(),
-		'1.9.6',
+		'1.9.7',
 		true
 	);
 
@@ -424,13 +424,6 @@ function gspb_greenShift_register_scripts_blocks(){
 		array(),
 		'1.11.4',
 		true
-	);
-	wp_localize_script(
-		'gsmodelinit',
-		'gs_model_params',
-		array(
-			'pluginURL' => GREENSHIFT_DIR_URL
-		)
 	);
 
 	wp_register_script(
@@ -632,7 +625,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_api',
 		GREENSHIFT_DIR_URL . 'libs/api/index.js',
 		array(),
-		'1.7',
+		'1.8',
 		true
 	);
 
@@ -645,7 +638,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'4.6',
+		'4.7',
 		true
 	);
 
@@ -848,6 +841,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				}
 			}
 			$html = $p->get_updated_html();
+			$html = str_replace('itemscope itemtype=""', '', $html);
 
 		}else if ($blockname === 'greenshift-blocks/switchtoggle') {
 			$html = str_replace('class="gspb__switcher-element"', 'tabindex="0"  class="gspb__switcher-element"', $html);
@@ -1127,6 +1121,9 @@ function gspb_greenShift_block_script_assets($html, $block)
 		else if ($blockname === 'greenshift-blocks/countdown') {
 			if(!empty($block['attrs']['isWoo']) || (!empty($block['attrs']['type']) && $block['attrs']['type'] == 'woo')){
 				global $post;
+				if(!is_object($post)){
+					return '';
+				}
 				$endtime = get_post_meta($post->ID, '_sale_price_dates_to', true);
 				$starttime = get_post_meta($post->ID, '_sale_price_dates_from', true);
 				$currentDate = new DateTime();
@@ -1905,39 +1902,52 @@ function gspb_greenShift_editor_assets()
 	}
 
 	//$updatelink = str_replace('greenshift_dashboard-addons', 'greenshift_dashboard-pricing', $addonlink);
+	$localize_array = 		array(
+		'ajaxUrl' => admin_url('admin-ajax.php'),
+		'pluginURL' => GREENSHIFT_DIR_URL,
+		'rowDefault' => apply_filters('gspb_default_row_width_px', $row),
+		'theme' => $themename,
+		'isRehub' => ($themename == 'rehub-theme'),
+		'isSaveInline' => (!empty($gspb_css_save) && $gspb_css_save == 'inlineblock') ? '1' : '',
+		'default_attributes' => $default_attributes,
+		'addonLink' => $addonlink,
+		'updateLink' => $updatelink,
+		'localfont' => apply_filters('gspb_local_font_array', $localfont),
+		'googleapi' => apply_filters('gspb_google_api_key', $googleapi),
+		'global_classes' => apply_filters('gspb_global_classes', $global_classes),
+		'global_interactions' => apply_filters('gspb_global_interactions', $global_interactions),
+		'framework_classes' => apply_filters('gspb_framework_classes', $framework_classes),
+		'preset_classes' => $preset_classes,
+		'colours' => $colours,
+		'elements' => $elements,
+		'variables' => $variables,
+		'gradients' => $gradients,
+		'enabledcroll' => (function_exists('greenshift_check_cron_exec')) ? '1' : '',
+		'stylebook_url' => $stylebook_url,
+		'hide_local_styles' => $hide_local_styles,
+		'simplified_panels' => $simplified_panels,
+		'row_padding_disable' => $row_padding_disable,
+		'show_element_block' => $show_element_block,
+		'default_unit' => $default_unit,
+		'local_wp_fonts' => $local_wp_fonts,
+		'apis' => current_user_can('manage_options') ? array(
+			'openaiapi' => !empty($sitesettings['openaiapi']) ? $sitesettings['openaiapi'] : '',
+			'openaiapimodel' => !empty($sitesettings['openaiapimodel']) ? $sitesettings['openaiapimodel'] : '',
+			'claudeapi' => !empty($sitesettings['claudeapi']) ? $sitesettings['claudeapi'] : '',
+			'deepseekapi' => !empty($sitesettings['deepseekapi']) ? $sitesettings['deepseekapi'] : '',
+			'geminiapi' => !empty($sitesettings['geminiapi']) ? $sitesettings['geminiapi'] : '',
+			'aihelpermodel' => !empty($sitesettings['aihelpermodel']) ? $sitesettings['aihelpermodel'] : '',
+			'aiimagemodel' => !empty($sitesettings['aiimagemodel']) ? $sitesettings['aiimagemodel'] : '',
+			'aidesignmodel' => !empty($sitesettings['aidesignmodel']) ? $sitesettings['aidesignmodel'] : '',
+			'googleapi' => !empty($sitesettings['googleapi']) ? $sitesettings['googleapi'] : '',
+		) : array(),
+		'nonce' => wp_create_nonce('gspb_nonce'),
+	);
+	
 	wp_localize_script(
 		'greenShift-library-script',
 		'greenShift_params',
-		array(
-			'ajaxUrl' => admin_url('admin-ajax.php'),
-			'pluginURL' => GREENSHIFT_DIR_URL,
-			'rowDefault' => apply_filters('gspb_default_row_width_px', $row),
-			'theme' => $themename,
-			'isRehub' => ($themename == 'rehub-theme'),
-			'isSaveInline' => (!empty($gspb_css_save) && $gspb_css_save == 'inlineblock') ? '1' : '',
-			'default_attributes' => $default_attributes,
-			'addonLink' => $addonlink,
-			'updateLink' => $updatelink,
-			'localfont' => apply_filters('gspb_local_font_array', $localfont),
-			'googleapi' => apply_filters('gspb_google_api_key', $googleapi),
-			'global_classes' => apply_filters('gspb_global_classes', $global_classes),
-			'global_interactions' => apply_filters('gspb_global_interactions', $global_interactions),
-			'framework_classes' => apply_filters('gspb_framework_classes', $framework_classes),
-			'preset_classes' => $preset_classes,
-			'colours' => $colours,
-			'elements' => $elements,
-			'variables' => $variables,
-			'gradients' => $gradients,
-			'enabledcroll' => (function_exists('greenshift_check_cron_exec')) ? '1' : '',
-			'stylebook_url' => $stylebook_url,
-			'hide_local_styles' => $hide_local_styles,
-			'simplified_panels' => $simplified_panels,
-			'row_padding_disable' => $row_padding_disable,
-			'show_element_block' => $show_element_block,
-			'default_unit' => $default_unit,
-			'local_wp_fonts' => $local_wp_fonts,
-			'nonce' => wp_create_nonce('gspb_nonce'),
-		)
+		$localize_array
 	);
 
 	// Blocks Assets Scripts
@@ -3280,7 +3290,7 @@ function gspb_get_csv_to_json(WP_REST_Request $request)
 	}
 
 	// Return the PHP array directly - WordPress REST API will handle JSON encoding
-	return $result;
+	return apply_filters('gspb_csv_to_array', $result);
 }
 
 function gspb_make_proxy_api_request(WP_REST_Request $request)
@@ -3332,6 +3342,104 @@ function gspb_make_proxy_api_request(WP_REST_Request $request)
 		$headers = array(
 			'Authorization' => 'Bearer ' . $api_key,
 			'Content-Type' => 'application/json'
+		);
+	} else if($type === 'media_upload'){
+		// Verify if file was uploaded
+		if (empty($_FILES['file'])) {
+			return new WP_Error('no_file', 'No file was uploaded', array('status' => 400));
+		}
+
+		// Get WordPress upload directory
+		$upload_dir = wp_upload_dir();
+		$custom_dir = $upload_dir['basedir'] . '/api_upload';
+		
+		// Create custom upload directory if it doesn't exist
+		if (!file_exists($custom_dir)) {
+			wp_mkdir_p($custom_dir);
+			
+			// Create .htaccess to prevent directory listing but allow file access
+			$htaccess_content = "Options -Indexes\n";
+			file_put_contents($custom_dir . '/.htaccess', $htaccess_content);
+		}
+
+		// Get file details
+		$file = $_FILES['file'];
+		$filename = sanitize_file_name($file['name']);
+		$tmp_name = $file['tmp_name'];
+
+		// Enhanced security checks
+		$allowed_types = array(
+			'image/jpeg',
+			'image/jpg',
+			'image/png',
+			'image/gif',
+			'image/webp',
+			'image/heic',
+			'image/heif',
+			'application/pdf',
+			'application/text',
+		);
+
+		// Verify file type using WordPress function
+		$filetype = wp_check_filetype($filename);
+		$mime_type = !empty($filetype['ext']) ? $filetype['ext'] : '';
+		if (!$mime_type || !in_array($filetype['type'], $allowed_types)) {
+			return new WP_Error('invalid_file_type', 'File type not allowed', array('status' => 400));
+		}
+
+		// Check file size (limit to 10MB)
+		$max_size = 10 * 1024 * 1024;
+		if ($file['size'] > $max_size) {
+			return new WP_Error('file_too_large', 'File size exceeds limit of 10MB', array('status' => 400));
+		}
+
+		// Generate unique filename with timestamp
+		$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
+		$new_filename = sprintf(
+			'%s_%s.%s',
+			uniqid(),
+			time(),
+			$file_ext
+		);
+		$destination = $custom_dir . '/' . $new_filename;
+
+		// Move file to destination
+		if (!move_uploaded_file($tmp_name, $destination)) {
+			// Clean up on failure
+			if (file_exists($tmp_name)) {
+				unlink($tmp_name);
+			}
+			return new WP_Error('upload_failed', 'Failed to upload file', array('status' => 500));
+		}
+
+		// Add file to WordPress media library
+		$attachment = array(
+			'post_mime_type' => $mime_type,
+			'post_title' => sanitize_file_name($filename),
+			'post_content' => '',
+			'post_status' => 'inherit'
+		);
+
+		$attach_id = wp_insert_attachment($attachment, $destination);
+		if (is_wp_error($attach_id)) {
+			// Clean up on failure
+			unlink($destination);
+			return $attach_id;
+		}
+
+		// Generate metadata for the attachment
+		require_once(ABSPATH . 'wp-admin/includes/image.php');
+		$attach_data = wp_generate_attachment_metadata($attach_id, $destination);
+		wp_update_attachment_metadata($attach_id, $attach_data);
+
+		// Return success response with file details
+		return array(
+			'success' => true,
+			'file_url' => wp_get_attachment_url($attach_id),
+			'file_path' => $destination,
+			'attachment_id' => $attach_id,
+			'mime_type' => $mime_type,
+			'file_size' => $file['size']
 		);
 	} else {
 		return new WP_Error('invalid_type', 'Invalid API type specified', array('status' => 400));

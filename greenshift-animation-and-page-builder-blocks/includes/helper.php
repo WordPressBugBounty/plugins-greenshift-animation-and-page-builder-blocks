@@ -1301,38 +1301,56 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		}
 		if (strpos($value, '{{INCREMENT:') !== false){
 			$pattern = '/\{INCREMENT:(.*?)\}/';
-			preg_match($pattern, $value, $matches);
-			$val = $matches[1];
-			if(is_numeric($val) && isset($runindex)){
-				$value = str_replace('{{INCREMENT:'.$val.'}}', $runindex * $val, $value);
+			preg_match_all($pattern, $value, $matches);
+			if(!empty($matches[1])){
+				foreach($matches[1] as $val){
+					if(is_numeric($val) && isset($runindex)){
+						$value = str_replace('{{INCREMENT:'.$val.'}}', $runindex * $val, $value);
+					}
+				}
 			}
 		}
 		if (strpos($value, '{{GET:') !== false){
 			$pattern = '/\{GET:(.*?)\}/';
-			preg_match($pattern, $value, $matches);
-			$val = $matches[1];
-			$value = str_replace('{{GET:'.$val.'}}', $_GET[$val], $value);
+			preg_match_all($pattern, $value, $matches);
+			if(!empty($matches[1])){
+				foreach($matches[1] as $val){
+					if(isset($_GET[$val])){
+						$value = str_replace('{{GET:'.$val.'}}', $_GET[$val], $value);
+					}
+				}
+			}
 		}
 		if (strpos($value, '{{SETTING:') !== false){
 			$pattern = '/\{SETTING:(.*?)\}/';
-			preg_match($pattern, $value, $matches);
-			$val = $matches[1];
-			$value = str_replace('{{SETTING:'.$val.'}}', get_option($val), $value);
+			preg_match_all($pattern, $value, $matches);
+			if(!empty($matches[1])){
+				foreach($matches[1] as $val){
+					$value = str_replace('{{SETTING:'.$val.'}}', get_option($val), $value);
+				}
+			}
 		}
 		if (strpos($value, '{{META:') !== false){
-			$pattern = '/\{META:(.*?)\}/';
-			preg_match($pattern, $value, $matches);
-			$val = $matches[1];
-			global $post;
-			$id = $post->ID;
-			$value = str_replace('{{META:'.$val.'}}', get_post_meta($id, $val, true), $value);
+			$pattern = '/\{\{META:(.*?)\}\}/';
+			preg_match_all($pattern, $value, $matches);
+			if(!empty($matches[1])){
+				global $post;
+				$id = $post->ID;
+				foreach($matches[1] as $meta_key){
+					$meta_value = get_post_meta($id, $meta_key, true);
+					$value = str_replace('{{META:'.$meta_key.'}}', $meta_value, $value);
+				}
+			}
 		}
 		if (strpos($value, '{{TERM_META:') !== false){
 			$pattern = '/\{TERM_META:(.*?)\}/';
-			preg_match($pattern, $value, $matches);
-			$val = $matches[1];
-			$term_id = get_queried_object_id();
-			$value = str_replace('{{TERM_META:'.$val.'}}', get_term_meta($term_id, $val, true), $value);
+			preg_match_all($pattern, $value, $matches);
+			if(!empty($matches[1])){
+				$term_id = get_queried_object_id();
+				foreach($matches[1] as $val){
+					$value = str_replace('{{TERM_META:'.$val.'}}', get_term_meta($term_id, $val, true), $value);
+				}
+			}
 		}
 		if(strpos($value, '{{CURRENT_DATE_YMD}}') !== false){
 			$value = str_replace('{{CURRENT_DATE_YMD}}', date('Y-m-d'), $value);
@@ -1342,24 +1360,33 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		}
 		if(strpos($value, '{{TIMESTRING:') !== false){
 			$pattern = '/\{TIMESTRING:(.*?)\}/';
-			preg_match($pattern, $value, $matches);
-			$val = $matches[1];
-			$value = str_replace('{{TIMESTRING:'.$val.'}}', strtotime($val), $value);
+			preg_match_all($pattern, $value, $matches);
+			if(!empty($matches[1])){
+				foreach($matches[1] as $val){
+					$value = str_replace('{{TIMESTRING:'.$val.'}}', strtotime($val), $value);
+				}
+			}
 		}
 			
 		if (strpos($value, '{{USER_META:') !== false){
 			$pattern = '/\{USER_META:(.*?)\}/';
-			preg_match($pattern, $value, $matches);
-			$val = $matches[1];
-			$user_id = get_current_user_id();
-			$value = str_replace('{{USER_META:'.$val.'}}', get_user_meta($user_id, $val, true), $value);
+			preg_match_all($pattern, $value, $matches);
+			if(!empty($matches[1])){
+				$user_id = get_current_user_id();
+				foreach($matches[1] as $val){
+					$value = str_replace('{{USER_META:'.$val.'}}', get_user_meta($user_id, $val, true), $value);
+				}
+			}
 		} 
 		if (strpos($value, '{{COOKIE:') !== false){
 			$pattern = '/\{COOKIE:(.*?)\}/';
-			preg_match($pattern, $value, $matches);
-			$val = $matches[1];
-			if(!empty($_COOKIE[$val])){
-				$value = str_replace('{{COOKIE:'.$val.'}}', $_COOKIE[$val], $value);
+			preg_match_all($pattern, $value, $matches);
+			if(!empty($matches[1])){
+				foreach($matches[1] as $val){
+					if(!empty($_COOKIE[$val])){
+						$value = str_replace('{{COOKIE:'.$val.'}}', $_COOKIE[$val], $value);
+					}
+				}
 			}
 		} 
 		if (strpos($value, '{{FORM:') !== false) {
@@ -1373,31 +1400,32 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			}
 		}
 		if (strpos($value, '{{RANDOM:') !== false) {
-			// Update regex to match the double curly syntax
 			$pattern = '/\{\{RANDOM:(.*?)\}\}/';
-			preg_match($pattern, $value, $matches);
-			if (!empty($matches[1])) {
-				$val = trim($matches[1]);
-				$replacement = $val; // default fallback
+			preg_match_all($pattern, $value, $matches);
+			if(!empty($matches[1])){
+				foreach($matches[1] as $val){
+					$val = trim($val);
+					$replacement = $val; // default fallback
 
-				// If the value includes "-" (a range) then generate a random number between the two numbers.
-				if (strpos($val, '-') !== false) {
-					$range = explode('-', $val);
-					if (count($range) === 2 && is_numeric(trim($range[0])) && is_numeric(trim($range[1]))) {
-						$min = (float) trim($range[0]);
-						$max = (float) trim($range[1]);
-						$replacement = $min + (mt_rand() / mt_getrandmax()) * ($max - $min);
+					// If the value includes "-" (a range) then generate a random number between the two numbers.
+					if (strpos($val, '-') !== false) {
+						$range = explode('-', $val);
+						if (count($range) === 2 && is_numeric(trim($range[0])) && is_numeric(trim($range[1]))) {
+							$min = (float) trim($range[0]);
+							$max = (float) trim($range[1]);
+							$replacement = $min + (mt_rand() / mt_getrandmax()) * ($max - $min);
+						}
 					}
+					// If the value includes "|" then randomly select a value from the list.
+					elseif (strpos($val, '|') !== false) {
+						$choices = explode('|', $val);
+						// Remove any extra white space from each choice
+						$choices = array_map('trim', $choices);
+						$replacement = $choices[array_rand($choices)];
+					}
+					// Replace the placeholder with the generated random replacement.
+					$value = str_replace('{{RANDOM:' . $val . '}}', $replacement, $value);
 				}
-				// If the value includes "|" then randomly select a value from the list.
-				elseif (strpos($val, '|') !== false) {
-					$choices = explode('|', $val);
-					// Remove any extra white space from each choice
-					$choices = array_map('trim', $choices);
-					$replacement = $choices[array_rand($choices)];
-				}
-				// Replace the placeholder with the generated random replacement.
-				$value = str_replace('{{RANDOM:' . $val . '}}', $replacement, $value);
 			}
 		}
 		

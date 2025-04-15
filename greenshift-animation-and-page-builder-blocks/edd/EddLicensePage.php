@@ -759,15 +759,6 @@ function greenshift_check_cron_exec()
 function greenshift_add_cron_event()
 {
 	if (!wp_next_scheduled('greenshift_check_cron_hook')) {
-		// Register a custom cron schedule for every 3 days
-		add_filter('cron_schedules', function($schedules) {
-			$schedules['every_three_days'] = array(
-				'interval' => 3 * DAY_IN_SECONDS,
-				'display'  => __('Every 3 days', 'greenshift-animation-and-page-builder-blocks')
-			);
-			return $schedules;
-		});
-		
-		wp_schedule_event(time(), 'every_three_days', 'greenshift_check_cron_hook');
+		wp_schedule_event(time(), 'daily', 'greenshift_check_cron_hook');
 	}
 }

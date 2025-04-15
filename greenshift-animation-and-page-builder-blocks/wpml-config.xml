@@ -103,8 +103,8 @@
 			</key>
 		</gutenberg-block>
 
-		<gutenberg-block
-			type="greenshift-blocks/element" translate="1" label="Elements">
+		<gutenberg-block type="greenshift-blocks/element" translate="1" label="Elements">
+			<xpath>//*[text()]/text()</xpath>
 			<key name="textContent" />
 			<key name="tooltipText" />
 			<key name="alt" />

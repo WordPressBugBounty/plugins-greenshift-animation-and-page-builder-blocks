@@ -492,23 +492,14 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											$default_settings = get_option('gspb_global_settings');
 
 											$sanitised = array();
-											if (!empty($_POST['reusablestyles'])) {
-												foreach ($_POST['reusablestyles'] as $key => $value) {
-													$sanitised['reusablestyles'][$key] = array(
-														"style" => sanitize_textarea_field($value['style']),
-														"blockname" =>  sanitize_text_field($value['blockname']),
-													);
-												}
-												$newargs = wp_parse_args($sanitised, $default_settings);
-												update_option('gspb_global_settings', $newargs);
-											}
 											if (isset($_POST['dark_mode_on'])) {
-												$newargs = wp_parse_args(array('dark_mode_on' => true), $default_settings);
-												update_option('gspb_global_settings', $newargs);
+												$default_settings['dark_mode_on'] = true;
 											} else {
-												$newargs = wp_parse_args(array('dark_mode_on' => false), $default_settings);
-												update_option('gspb_global_settings', $newargs);
+												if(isset($default_settings['dark_mode_on'])){
+													unset($default_settings['dark_mode_on']);
+												}
 											}
+											update_option('gspb_global_settings', $default_settings);
 											if (isset($_POST['enable_head_inline'])) {
 												$newargs = wp_parse_args(array('enable_head_inline' => true), $default_settings);
 												update_option('gspb_global_settings', $newargs);
@@ -879,7 +870,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											}
 											$sanitised = array();
 
-											if (isset($_POST['googleapi']) || isset($_POST['openaiapi']) || isset($_POST['openaiapimodel']) || isset($_POST['claudeapi']) || isset($_POST['deepseekapi'])) {
+											if (isset($_POST['googleapi']) || isset($_POST['openaiapi']) || isset($_POST['openaiapimodel']) || isset($_POST['claudeapi']) || isset($_POST['deepseekapi']) || isset($_POST['geminiapi']) || isset($_POST['aihelpermodel']) || isset($_POST['aiimagemodel']) || isset($_POST['aidesignmodel'])) {
 												$global_settings = get_option('gspb_global_settings');
 												if (isset($_POST['googleapi'])) {
 													$sanitised['googleapi'] = sanitize_text_field($_POST['googleapi']);
@@ -896,6 +887,19 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												if (isset($_POST['deepseekapi'])) {
 													$sanitised['deepseekapi'] = sanitize_text_field($_POST['deepseekapi']);
 												}
+												if (isset($_POST['geminiapi'])) {
+													$sanitised['geminiapi'] = sanitize_text_field($_POST['geminiapi']);
+												}
+												if (isset($_POST['aihelpermodel'])) {
+													$sanitised['aihelpermodel'] = sanitize_text_field($_POST['aihelpermodel']);
+												}
+												if (isset($_POST['aiimagemodel'])) {
+													$sanitised['aiimagemodel'] = sanitize_text_field($_POST['aiimagemodel']);
+												}
+												if (isset($_POST['aidesignmodel'])) {
+													$sanitised['aidesignmodel'] = sanitize_text_field($_POST['aidesignmodel']);
+												}
+												
 												$newargs = wp_parse_args($sanitised, $global_settings);
 												update_option('gspb_global_settings', $newargs);
 											}
@@ -907,7 +911,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										$openaiapimodel = !empty($global_settings['openaiapimodel']) ? $global_settings['openaiapimodel'] : '';
 										$claudeapi = !empty($global_settings['claudeapi']) ? $global_settings['claudeapi'] : '';
 										$deepseekapi = !empty($global_settings['deepseekapi']) ? $global_settings['deepseekapi'] : '';
-
+										$geminiapi = !empty($global_settings['geminiapi']) ? $global_settings['geminiapi'] : '';
+										$aihelpermodel = !empty($global_settings['aihelpermodel']) ? $global_settings['aihelpermodel'] : '';
+										$aiimagemodel = !empty($global_settings['aiimagemodel']) ? $global_settings['aiimagemodel'] : '';
+										$aidesignmodel = !empty($global_settings['aidesignmodel']) ? $global_settings['aidesignmodel'] : '';
 									?>
 										<div class="gspb_settings_form">
 											<form method="POST">
@@ -951,24 +958,73 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<div style="margin-bottom:15px"><a href="https://platform.deepseek.com/api_keys"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
 																</td>
 															</tr>
+															<tr class="geminiapikey">
+																<td>
+																	<label for="geminiapi"><?php esc_html_e("Gemini API Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+																</td>
+																<td>
+																	<textarea style="width:100%; min-height:50px;border-color:#ddd" id="geminiapi" name="geminiapi"><?php echo esc_html($geminiapi); ?></textarea>
+																	<div style="margin-bottom:15px"><a href="https://aistudio.google.com/apikey"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
+																</td>
+															</tr>
 															<tr class="openaiapimodel">
 																<td>
-																	<label for="openaiapimodel"><?php esc_html_e("Select Model for AI", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+																	<label for="openaiapimodel"><?php esc_html_e("Select Model for Smart Code AI Block", 'greenshift-animation-and-page-builder-blocks'); ?></label>
 																</td>
 																<td>
 																	<select name="openaiapimodel">
-																		<option value="gpt-3.5-turbo" <?php selected($openaiapimodel, 'gpt-3.5-turbo'); ?>> gpt-3.5-turbo </option>
-																		<option value="gpt-4" <?php selected($openaiapimodel, 'gpt-4'); ?>> gpt-4 </option>
-																		<option value="gpt-4-turbo" <?php selected($openaiapimodel, 'gpt-4-turbo'); ?>> gpt-4-turbo </option>
-																		<option value="gpt-4-32k" <?php selected($openaiapimodel, 'gpt-4-32k'); ?>> gpt-4-32k </option>
+																		<option value="gpt-4.1" <?php selected($openaiapimodel, 'gpt-4.1'); ?>> gpt-4.1 </option>
+																		<option value="gpt-4.1-mini" <?php selected($openaiapimodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
 																		<option value="gpt-4o" <?php selected($openaiapimodel, 'gpt-4o'); ?>> gpt-4o </option>
 																		<option value="gpt-4o-mini" <?php selected($openaiapimodel, 'gpt-4o-mini'); ?>> gpt-4o-mini </option>
 																		<option value="o1" <?php selected($openaiapimodel, 'o1'); ?>> o1 </option>
 																		<option value="o1-mini" <?php selected($openaiapimodel, 'o1-mini'); ?>> o1-mini </option>
-																		<option value="o1-preview" <?php selected($openaiapimodel, 'o1-preview'); ?>> o1-preview </option>
+																		<option value="o1-pro" <?php selected($openaiapimodel, 'o1-pro'); ?>> o1-pro </option>
+																		<option value="o3-mini" <?php selected($openaiapimodel, 'o3-mini'); ?>> o3-mini </option>
+																		<option value="gemini-2.5-pro-exp-03-25" <?php selected($openaiapimodel, 'gemini-2.5-pro-exp-03-25'); ?>> gemini-2.5-pro-exp-03-25 </option>
+																		<option value="gemini-2.0-flash" <?php selected($openaiapimodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
+																		<option value="claude-3-7-sonnet-latest" <?php selected($openaiapimodel, 'claude-3-7-sonnet-latest'); ?>> claude-3-7-sonnet-latest </option>
 																		<option value="claude-3-5-sonnet-20241022" <?php selected($openaiapimodel, 'claude-3-5-sonnet-20241022'); ?>> claude-3-5-sonnet-20241022 </option>
 																		<option value="claude-3-5-haiku-20241022" <?php selected($openaiapimodel, 'claude-3-5-haiku-20241022'); ?>> claude-3-5-haiku-20241022 </option>
 																		<option value="deepseek-chat" <?php selected($openaiapimodel, 'deepseek-chat'); ?>> deepseek-chat </option>
+																	</select>
+																</td>
+															</tr>
+															<tr class="aihelpermodel">
+																<td>
+																	<label for="aihelpermodel"><?php esc_html_e("AI General Model", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+																</td>
+																<td>
+																	<select name="aihelpermodel">
+																		<option value="gpt-4.1" <?php selected($aihelpermodel, 'gpt-4.1'); ?>> gpt-4.1 </option>
+																		<option value="gpt-4.1-mini" <?php selected($aihelpermodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
+																		<option value="gemini-2.5-pro-exp-03-25" <?php selected($aihelpermodel, 'gemini-2.5-pro-exp-03-25'); ?>> gemini-2.5-pro-exp-03-25 </option>
+																		<option value="gemini-2.0-flash" <?php selected($aihelpermodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
+
+																	</select>
+																</td>
+															</tr>
+															<tr class="aiimagemodel">
+																<td>
+																	<label for="aiimagemodel"><?php esc_html_e("AI Image Model", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+																</td>
+																<td>
+																	<select name="aiimagemodel">
+																		<option value="gemini-2.0-flash" <?php selected($aiimagemodel, 'gemini-2.0-flash'); ?>> Google Flash 2 </option>
+																		<option value="dalle-e-3" <?php selected($aiimagemodel, 'dalle-e-3'); ?>> DALL-E 3 </option>
+																		
+																	</select>
+																</td>
+															</tr>
+															<tr class="aidesignmodel">
+																<td>
+																	<label for="aidesignmodel"><?php esc_html_e("AI Design Model", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+																</td>
+																<td>
+																	<select name="aidesignmodel">
+																		<option value="claude-3-7-sonnet-latest" <?php selected($aidesignmodel, 'claude-3-7-sonnet-latest'); ?>> claude-3-7-sonnet-latest </option>
+																		
+																		
 																	</select>
 																</td>
 															</tr>

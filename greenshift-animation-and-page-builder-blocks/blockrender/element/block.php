@@ -125,6 +125,19 @@ class Element
 				if(!empty($block['attrs']['enableScrollButtons'])){
 					wp_enqueue_script('greenShift-scrollable-init');
 				}
+			} else if($block['attrs']['isVariation'] == 'dropzone'){
+				wp_enqueue_script(
+					'gs-dropzone',
+					GREENSHIFT_DIR_URL . 'libs/api/dropzone.js',
+					array(),
+					'1.0',
+					true
+				);
+				// Add nonce to gspb_api script
+				wp_localize_script('gs-dropzone', 'gspbDropzoneApiSettings', array(
+					'nonce' => wp_create_nonce('wp_rest'),
+					'rest_url' => esc_url_raw(rest_url('greenshift/v1/proxy-api/')),
+				));
 			}
 		}
 		if(!empty($block['attrs']['enableTooltip'])){
@@ -195,7 +208,7 @@ class Element
 				if($block['attrs']['tag'] == 'video'){
 					$p = new \WP_HTML_Tag_Processor( $html );
 					$p->next_tag();
-					$value = GSPB_make_dynamic_text($block['attrs']['poster'], $block['attrs'], $block, $block['attrs']['dynamiclink']);
+					$value = GSPB_make_dynamic_text($block['attrs']['poster'], $block['attrs'], $block, $block['attrs']['dynamicextra']);
 					if($value){
 						$p->set_attribute( 'poster', $value);
 						$html = $p->get_updated_html();

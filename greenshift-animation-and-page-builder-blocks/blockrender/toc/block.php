@@ -91,7 +91,54 @@ class GSToc{
                                 $subheadingclass = ($headingSecTag == 'h'.$heading['tag']) ? " gs_sub_heading": "";
                                 $out .= '<div class="gs-autolist-item'.esc_attr($subheadingclass).'"'.($seoschema ? $schematype : "").'>';
                                     if($enablenumbers) {
-                                        $out .= '<span class="gs-autolist-number">'.($key+1).'</span>';
+                                        $number = '';
+                                        if($subheadingclass) {
+                                            $parentIndex = -1;
+                                            $subCount = 0;
+                                            
+                                            // Find the parent heading index
+                                            for($i = $key - 1; $i >= 0; $i--) {
+                                                $prevHeading = $headings[$i];
+                                                // Check if this is a main heading (not a subheading)
+                                                if('h'.$prevHeading['tag'] != $headingSecTag) {
+                                                    $parentIndex = $i;
+                                                    break;
+                                                }
+                                            }
+                                            
+                                            // Count how many subheadings are before this one under the same parent
+                                            for($i = $key - 1; $i > $parentIndex; $i--) {
+                                                $prevHeading = $headings[$i];
+                                                if('h'.$prevHeading['tag'] == $headingSecTag) {
+                                                    $subCount++;
+                                                }
+                                            }
+                                            
+                                            // Calculate the parent heading number (not using index directly)
+                                            $parentHeadingNumber = 0;
+                                            for($i = 0; $i <= $parentIndex; $i++) {
+                                                $item = $headings[$i];
+                                                // Check if this is a main heading (not a subheading)
+                                                if('h'.$item['tag'] != $headingSecTag) {
+                                                    $parentHeadingNumber++;
+                                                }
+                                            }
+                                            
+                                            $number = $parentHeadingNumber . '.' . ($subCount + 1);
+                                        } else {
+                                            // For main headings, count only main headings up to this index
+                                            $mainHeadingCount = 0;
+                                            for($i = 0; $i <= $key; $i++) {
+                                                $item = $headings[$i];
+                                                // Check if this is a main heading (not a subheading)
+                                                if('h'.$item['tag'] != $headingSecTag) {
+                                                    $mainHeadingCount++;
+                                                }
+                                            }
+                                            $number = $mainHeadingCount;
+                                        }
+                                        
+                                        $out .= '<span class="gs-autolist-number">'.esc_html($number).'</span>';
                                     }
                                     $out .= '<span class="gs-autolist-title">';
                                         if($seoschema){
