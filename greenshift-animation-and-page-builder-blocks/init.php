@@ -663,25 +663,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'11.3'
+		'11.4'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'11.3'
+		'11.4'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'11.3'
+		'11.4'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'11.3'
+		'11.4'
 	);
 
 	//Script for ajax reusable loading
@@ -3344,6 +3344,16 @@ function gspb_make_proxy_api_request(WP_REST_Request $request)
 			'Content-Type' => 'application/json'
 		);
 	} else if($type === 'media_upload'){
+		// Check if user is logged in
+		if (!is_user_logged_in()) {
+			return new WP_Error('unauthorized', 'User must be logged in to upload files', array('status' => 401));
+		}
+
+		// Check if user has upload capabilities
+		if (!current_user_can('upload_files')) {
+			return new WP_Error('forbidden', 'User does not have permission to upload files', array('status' => 403));
+		}
+
 		// Verify if file was uploaded
 		if (empty($_FILES['file'])) {
 			return new WP_Error('no_file', 'No file was uploaded', array('status' => 400));

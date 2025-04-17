@@ -466,13 +466,13 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 						</div>
 
 						<div class="class-tabs-gs wp-block-greenshift-blocks-container gspb_container gspb_container-gsbp-01099b45-f36b" id="gspb_container-id-gsbp-01099b45-f36b">
-							<a href="?page=greenshift" id="gspb_text-id-gsbp-2c96ad79-8324" class="gspb_text gspb_text-id-gsbp-2c96ad79-8324 <?php if ($tab === null) : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("Font Options", 'greenshift-animation-and-page-builder-blocks'); ?></a>
+							<a href="?page=greenshift" id="gspb_text-id-gsbp-2c96ad79-8324" class="gspb_text gspb_text-id-gsbp-2c96ad79-8324 <?php if ($tab === null) : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("Fonts", 'greenshift-animation-and-page-builder-blocks'); ?></a>
 							<a href="?page=greenshift&tab=breakpoints" id="gspb_text-id-gsbp-557ed921-38fe" class="gspb_text gspb_text-id-gsbp-557ed921-38fe <?php if ($tab === 'breakpoints') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("Breakpoints", 'greenshift-animation-and-page-builder-blocks'); ?></a>
 							<a href="?page=greenshift&tab=save_css" id="gspb_text-id-gsbp-94bd1cf0-c77b" class="gspb_text gspb_text-id-gsbp-94bd1cf0-c77b <?php if ($tab === 'save_css') : ?>gs-tab-active<?php endif; ?> "><?php esc_html_e("CSS Options", 'greenshift-animation-and-page-builder-blocks'); ?></a>
 							<a href="?page=greenshift&tab=scripts" id="gspb_text-id-gsbp-f27becf0-4d87" class="gspb_text gspb_text-id-gsbp-f27becf0-4d87   <?php if ($tab === 'scripts') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("Script Options", 'greenshift-animation-and-page-builder-blocks'); ?></a>
 							<a href="?page=greenshift&tab=header" id="gspb_text-id-gsbp-f27becf0-4d87" class="gspb_text gspb_text-id-gsbp-f27becf0-4d87   <?php if ($tab === 'header') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("Header/Footer code", 'greenshift-animation-and-page-builder-blocks'); ?></a>
 							<a href="?page=greenshift&tab=interface" id="gspb_text-id-gsbp-f27becf0-4d87" class="gspb_text gspb_text-id-gsbp-f27becf0-4d87   <?php if ($tab === 'interface') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("Interface", 'greenshift-animation-and-page-builder-blocks'); ?></a>
-							<a href="?page=greenshift&tab=keys" id="gspb_text-id-gsbp-f27becf0-4d87" class="gspb_text gspb_text-id-gsbp-f27becf0-4d87   <?php if ($tab === 'keys') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("API Keys", 'greenshift-animation-and-page-builder-blocks'); ?></a>
+							<a href="?page=greenshift&tab=keys" id="gspb_text-id-gsbp-f27becf0-4d87" class="gspb_text gspb_text-id-gsbp-f27becf0-4d87   <?php if ($tab === 'keys') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("API Keys & AI", 'greenshift-animation-and-page-builder-blocks'); ?></a>
 						</div>
 
 
