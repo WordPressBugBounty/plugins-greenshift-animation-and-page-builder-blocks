@@ -976,11 +976,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="gpt-4.1" <?php selected($openaiapimodel, 'gpt-4.1'); ?>> gpt-4.1 </option>
 																		<option value="gpt-4.1-mini" <?php selected($openaiapimodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
 																		<option value="gpt-4o" <?php selected($openaiapimodel, 'gpt-4o'); ?>> gpt-4o </option>
-																		<option value="gpt-4o-mini" <?php selected($openaiapimodel, 'gpt-4o-mini'); ?>> gpt-4o-mini </option>
 																		<option value="o1" <?php selected($openaiapimodel, 'o1'); ?>> o1 </option>
 																		<option value="o1-mini" <?php selected($openaiapimodel, 'o1-mini'); ?>> o1-mini </option>
 																		<option value="o1-pro" <?php selected($openaiapimodel, 'o1-pro'); ?>> o1-pro </option>
-																		<option value="o3-mini" <?php selected($openaiapimodel, 'o3-mini'); ?>> o3-mini </option>
+																		<option value="o4-mini" <?php selected($openaiapimodel, 'o4-mini'); ?>> o4-mini </option>
 																		<option value="gemini-2.5-pro-exp-03-25" <?php selected($openaiapimodel, 'gemini-2.5-pro-exp-03-25'); ?>> gemini-2.5-pro-exp-03-25 </option>
 																		<option value="gemini-2.0-flash" <?php selected($openaiapimodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
 																		<option value="claude-3-7-sonnet-latest" <?php selected($openaiapimodel, 'claude-3-7-sonnet-latest'); ?>> claude-3-7-sonnet-latest </option>
@@ -998,6 +997,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<select name="aihelpermodel">
 																		<option value="gpt-4.1" <?php selected($aihelpermodel, 'gpt-4.1'); ?>> gpt-4.1 </option>
 																		<option value="gpt-4.1-mini" <?php selected($aihelpermodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
+																		<option value="o4-mini" <?php selected($aihelpermodel, 'o4-mini'); ?>> o4-mini </option>
 																		<option value="gemini-2.5-pro-exp-03-25" <?php selected($aihelpermodel, 'gemini-2.5-pro-exp-03-25'); ?>> gemini-2.5-pro-exp-03-25 </option>
 																		<option value="gemini-2.0-flash" <?php selected($aihelpermodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
 

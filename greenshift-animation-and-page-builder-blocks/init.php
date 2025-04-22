@@ -75,7 +75,7 @@ function gspb_get_final_css($gspb_css_content)
 		$gspb_css_content = str_replace('@media (max-width: 991.98px)', '@media (max-width: ' . $get_breakpoints["desktop_down"] . 'px)', $gspb_css_content);
 	}
 
-	return $gspb_css_content;
+	return apply_filters('gspb_get_final_css', $gspb_css_content);
 }
 
 //////////////////////////////////////////////////////////////////
@@ -200,7 +200,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-swiper-init',
 		GREENSHIFT_DIR_URL . 'libs/swiper/init.js',
 		array(),
-		'8.9.9.3',
+		'8.9.9.4',
 		true
 	);
 	wp_localize_script(
@@ -638,7 +638,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'4.7',
+		'4.8',
 		true
 	);
 
