@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 11.5
+Stable tag: 11.5.1
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -112,7 +112,7 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 
 == Changelog ==
 
-= 11.5 =
+= 11.5.1 =
 
 * Added: [AI Helper tools](https://youtu.be/PpGeRu0mZy0)
 
