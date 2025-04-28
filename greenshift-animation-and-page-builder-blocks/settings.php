@@ -981,6 +981,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="o1-pro" <?php selected($openaiapimodel, 'o1-pro'); ?>> o1-pro </option>
 																		<option value="o4-mini" <?php selected($openaiapimodel, 'o4-mini'); ?>> o4-mini </option>
 																		<option value="gemini-2.5-pro-exp-03-25" <?php selected($openaiapimodel, 'gemini-2.5-pro-exp-03-25'); ?>> gemini-2.5-pro-exp-03-25 </option>
+																		<option value="gemini-2.5-flash-preview-04-17" <?php selected($openaiapimodel, 'gemini-2.5-flash-preview-04-17'); ?>> gemini-2.5-flash-preview-04-17 </option>
 																		<option value="gemini-2.0-flash" <?php selected($openaiapimodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
 																		<option value="claude-3-7-sonnet-latest" <?php selected($openaiapimodel, 'claude-3-7-sonnet-latest'); ?>> claude-3-7-sonnet-latest </option>
 																		<option value="claude-3-5-sonnet-20241022" <?php selected($openaiapimodel, 'claude-3-5-sonnet-20241022'); ?>> claude-3-5-sonnet-20241022 </option>
@@ -1000,6 +1001,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="o4-mini" <?php selected($aihelpermodel, 'o4-mini'); ?>> o4-mini </option>
 																		<option value="gemini-2.5-pro-exp-03-25" <?php selected($aihelpermodel, 'gemini-2.5-pro-exp-03-25'); ?>> gemini-2.5-pro-exp-03-25 </option>
 																		<option value="gemini-2.0-flash" <?php selected($aihelpermodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
+																		<option value="gemini-2.5-flash-preview-04-17" <?php selected($aihelpermodel, 'gemini-2.5-flash-preview-04-17'); ?>> gemini-2.5-flash-preview-04-17 </option>
 
 																	</select>
 																</td>
@@ -1011,7 +1013,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																<td>
 																	<select name="aiimagemodel">
 																		<option value="gemini-2.0-flash" <?php selected($aiimagemodel, 'gemini-2.0-flash'); ?>> Google Flash 2 </option>
-																		<option value="dalle-e-3" <?php selected($aiimagemodel, 'dalle-e-3'); ?>> DALL-E 3 </option>
+																		<option value="gpt-image-1" <?php selected($aiimagemodel, 'gpt-image-1'); ?>> GPT Image 1 </option>
 																		
 																	</select>
 																</td>
@@ -1023,6 +1025,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																<td>
 																	<select name="aidesignmodel">
 																		<option value="claude-3-7-sonnet-latest" <?php selected($aidesignmodel, 'claude-3-7-sonnet-latest'); ?>> claude-3-7-sonnet-latest </option>
+
 																		
 																		
 																	</select>

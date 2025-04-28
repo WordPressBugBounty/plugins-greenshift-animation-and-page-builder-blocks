@@ -516,7 +516,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greenpanel',
 		GREENSHIFT_DIR_URL . 'libs/greenpanel/index.js',
 		array(),
-		'1.7',
+		'1.8',
 		true
 	);
 
@@ -1566,6 +1566,23 @@ function gspb_greenShift_block_script_assets($html, $block)
 								});
 							}
 							');
+						}
+						if(!empty($action['selector']) && $blockname != 'greenshift-blocks/element'){
+							$name = $action['selector'];
+							
+							if(strpos($name, 'ref-') !== false){
+								$id = str_replace('ref-', '', $name);
+								$id = (int)$id;
+								$post = get_post($id);
+								if($post){
+									$settings = new GSPB_GreenShift_Settings;
+									$post_content = $settings->gspb_template_shortcode_function(array('id' => $id));
+									$random_id = 'gspb'.wp_generate_uuid4();
+									$html = str_replace($name, '#'.$random_id, $html);
+									$post_content = str_replace($name, $random_id, $post_content);
+									$html = $html . $post_content;
+								}
+							}
 						}
 					}
 				}

@@ -157,13 +157,13 @@ class Element
 				}
 			}
 			if(!empty($block['attrs']['dynamiclink']['dynamicEnable'])){
-				if(isset($block['attrs']['tag']) && ($block['attrs']['tag'] == 'img' || $block['attrs']['tag'] == 'video')){
+				if(isset($block['attrs']['tag']) && ($block['attrs']['tag'] == 'img' || $block['attrs']['tag'] == 'video' || $block['attrs']['tag'] == 'audio')){
 					$src = !empty($block['attrs']['src']) ? $block['attrs']['src'] : '';
 					$p = new \WP_HTML_Tag_Processor( $html );
 					$p->next_tag();
 					$value = GSPB_make_dynamic_text($src, $block['attrs'], $block, $block['attrs']['dynamiclink']);
 					if($value){
-						if($block['attrs']['tag'] == 'video'){
+						if($block['attrs']['tag'] == 'video' || $block['attrs']['tag'] == 'audio'){
 							$p->next_tag();
 						}
 						if(!empty($block['attrs']['dynamiclink']['fallbackValue'])){
@@ -269,7 +269,6 @@ class Element
 			}
 			$html = $p->get_updated_html();
 		}
-
 		if(!empty($block['attrs']['anchor']) && strpos($block['attrs']['anchor'], '{POST_ID}') != false){
 			global $post;
 			$post_id = $post->ID;
@@ -359,6 +358,37 @@ class Element
 				}
 			}
 		}
+		if(!empty($block['attrs']['textContent'])){
+			if(strpos($block['attrs']['textContent'], '{{') !== false){
+				$html = greenshift_dynamic_placeholders($html);
+			}
+		}
+		if(!empty($block['attrs']['interactionLayers'])){
+			foreach($block['attrs']['interactionLayers'] as $layer){
+				if(!empty($layer['actions'])){
+					foreach($layer['actions'] as $action){
+						if(!empty($action['selector'])){
+							$name = $action['selector'];
+							
+							if(strpos($name, 'ref-') !== false){
+								$id = str_replace('ref-', '', $name);
+								$id = (int)$id;
+								$post = get_post($id);
+								if($post){
+									$settings = new \GSPB_GreenShift_Settings;
+									$post_content = $settings->gspb_template_shortcode_function(array('id' => $id));
+									$random_id = 'gspb'.wp_generate_uuid4();
+									$html = str_replace($name, '#'.$random_id, $html);
+									$post_content = str_replace($name, $random_id, $post_content);
+									$html = $html . $post_content;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
 		return $html;
 	}
 }
