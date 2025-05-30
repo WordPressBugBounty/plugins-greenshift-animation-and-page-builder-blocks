@@ -975,7 +975,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 			if (!empty($block['attrs']['slidingPanel'])) {
 				wp_enqueue_script('gsslidingpanel');
 				if($blockname == 'greenshift-blocks/button'){
-					$position = !empty($block['attrs']['slidePosition']) ? $block['attrs']['slidePosition'] : '';
+					$position = !empty($block['attrs']['slidePosition']) ? esc_attr($block['attrs']['slidePosition']) : '';
 					$html = str_replace('id="gspb_button-id-' . $block['attrs']['id'], 'data-paneltype="' . $position . '" id="gspb_button-id-' . greenshift_sanitize_id_key($block['attrs']['id']), $html);
 					$html = str_replace('class="gspb_slidingPanel"', 'data-panelid="gspb_button-id-' . greenshift_sanitize_id_key($block['attrs']['id']) . '" class="gspb_slidingPanel"', $html);
 				}
