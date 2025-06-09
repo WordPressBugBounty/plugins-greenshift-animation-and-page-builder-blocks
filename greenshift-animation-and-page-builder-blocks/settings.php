@@ -594,6 +594,11 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											} else {
 												$default_settings['dark_accent_scheme'] = false;
 											}
+											if (isset($_POST['dark_mode'])) {
+												$default_settings['dark_mode'] = true;
+											} else {
+												$default_settings['dark_mode'] = false;
+											}
 											if (isset($_POST['hide_local_styles'])) {
 												$default_settings['hide_local_styles'] = true;
 											} else {
@@ -617,6 +622,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										$cf_utility_on = !empty($global_settings['cf_utility_on']) ? $global_settings['cf_utility_on'] : '';
 										$anchors_disable = !empty($global_settings['anchors_disable']) ? $global_settings['anchors_disable'] : '';
 										$dark_accent_scheme = !empty($global_settings['dark_accent_scheme']) ? $global_settings['dark_accent_scheme'] : '';
+										$dark_mode = !empty($global_settings['dark_mode']) ? $global_settings['dark_mode'] : '';
 										$hide_local_styles = !empty($global_settings['hide_local_styles']) ? $global_settings['hide_local_styles'] : '';
 										$simplified_panels = !empty($global_settings['simplified_panels']) ? $global_settings['simplified_panels'] : '';
 										$show_element_block = !empty($global_settings['show_element_block']) ? $global_settings['show_element_block'] : '';
@@ -661,6 +667,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 															<td> <label for="dark_accent_scheme"><?php esc_html_e("Dark Accent UI for block panels", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
 															<td>
 																<input type="checkbox" name="dark_accent_scheme" id="dark_accent_scheme" <?php echo $dark_accent_scheme == true ? 'checked' : ''; ?> />
+															</td>
+														</tr>
+														<tr>
+															<td> <label for="dark_mode"><?php esc_html_e("Dark Mode for Editor page", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
+															<td>
+																<input type="checkbox" name="dark_mode" id="dark_mode" <?php echo $dark_mode == true ? 'checked' : ''; ?> />
 															</td>
 														</tr>
 														<tr>

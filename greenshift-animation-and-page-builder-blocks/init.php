@@ -200,7 +200,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-swiper-init',
 		GREENSHIFT_DIR_URL . 'libs/swiper/init.js',
 		array(),
-		'8.9.9.4',
+		'8.9.9.5',
 		true
 	);
 	wp_localize_script(
@@ -418,19 +418,19 @@ function gspb_greenShift_register_scripts_blocks(){
 		'3.1.3',
 		true
 	);
-	wp_localize_script(
-		'gsmodelviewer',
-		'gs_model_params',
-		array(
-			'pluginURL' => GREENSHIFT_DIR_URL
-		)
-	);
 	wp_register_script(
 		'gsmodelinit',
 		GREENSHIFT_DIR_URL . 'libs/modelviewer/index.js',
 		array(),
 		'1.11.4',
 		true
+	);
+	wp_localize_script(
+		'gsmodelinit',
+		'gs_model_params',
+		array(
+			'pluginURL' => GREENSHIFT_DIR_URL
+		)
 	);
 
 	wp_register_script(
@@ -1965,6 +1965,7 @@ function gspb_greenShift_editor_assets()
 			'aidesignmodel' => !empty($sitesettings['aidesignmodel']) ? $sitesettings['aidesignmodel'] : '',
 			'googleapi' => !empty($sitesettings['googleapi']) ? $sitesettings['googleapi'] : '',
 		) : array(),
+		'isDarkMode' => !empty($sitesettings['dark_mode']) ? $sitesettings['dark_mode'] : '',
 		'nonce' => wp_create_nonce('gspb_nonce'),
 	);
 	
@@ -2359,6 +2360,10 @@ function gspb_global_assets()
 		if(!empty($options['dark_accent_scheme'])){
 			wp_enqueue_style('greenShift-dark-accent-css', GREENSHIFT_DIR_URL . 'templates/admin/dark_accent_ui.css', array(), '1.0');
 		}
+		if(!empty($options['dark_mode'])){
+			wp_enqueue_style('greenShift-dark-mode-css', GREENSHIFT_DIR_URL . 'templates/admin/black.css', array(), '1.0');
+		}
+
 	}
 }
 

@@ -147,8 +147,9 @@ class Element
 			wp_enqueue_script('gs-textanimate');
 		}
 		if (function_exists('GSPB_make_dynamic_text')) {
-			if(!empty($block['attrs']['dynamictext']['dynamicEnable']) && !empty($block['attrs']['textContent'])){
-				$html = GSPB_make_dynamic_text($html, $block['attrs'], $block, $block['attrs']['dynamictext'], $block['attrs']['textContent']);
+			if(!empty($block['attrs']['dynamictext']['dynamicEnable'])){
+				$content = !empty($block['attrs']['textContent']) ? $block['attrs']['textContent'] : '';
+				$html = GSPB_make_dynamic_text($html, $block['attrs'], $block, $block['attrs']['dynamictext'], $content);
 				
 				if(!empty($block['attrs']['splitText'])){
 					//ensure to split also dynamic text
