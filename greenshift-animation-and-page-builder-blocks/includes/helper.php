@@ -1456,8 +1456,33 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 				}
 			}
 		}
+		if(strpos($value, '{{SITE_URL}}') !== false){
+			$value = str_replace('{{SITE_URL}}', home_url(), $value);
+		}
 		
 	}
 	return $value;
 }
 //////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////
+// Script Delay
+//////////////////////////////////////////////////////////////////
+
+function gsbp_script_delay($js,  $random_id, $random_function){
+	return '
+	var '.$random_id.' = false;
+	const '.$random_function.' = (init = false) => {
+		if ('.$random_id.' === true) {
+			return;
+		}
+		'.$random_id.' = true;
+		' . $js . '
+	};
+
+	document.body.addEventListener("mouseover", '.$random_function.', {once:true});
+	document.body.addEventListener("touchmove", '.$random_function.', {once:true});
+	window.addEventListener("scroll", '.$random_function.', {once:true});
+	document.body.addEventListener("keydown", '.$random_function.', {once:true});
+	';
+}

@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.9
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 11.6
+Stable tag: 11.7
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -111,6 +111,14 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 11.7 =
+
+* Added: [Custom JS panel for Element block](https://greenshiftwp.com/custom-js-for-blocks/)
+* Added: AI Helper for Custom CSS panel for Element block
+* Added: Dark mode switcher available in editor panel (click on G icon in top right corner) + improvements for dark mode
+* Added: Some variables for Lightbox, Panels inside CSS variable framework
+* Fixes: Fix for slider, interactions and other user reported issues
 
 = 11.6 =
 

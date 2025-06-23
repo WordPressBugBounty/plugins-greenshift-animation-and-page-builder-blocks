@@ -112,6 +112,8 @@ if($enable_head_inline){
 
 function gspb_greenShift_register_scripts_blocks(){
 
+	wp_register_script( 'gspb-js-blocks', '', array(), '1.0', true );
+
 	//lazyload
 	wp_register_script(
 		'gs-lazyload',
@@ -120,6 +122,31 @@ function gspb_greenShift_register_scripts_blocks(){
 		'5.3.2',
 		true
 	);
+
+	wp_register_script(
+		'gspb-canvas-rive',
+		GREENSHIFT_DIR_URL . 'libs/canvas/rive.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
+		'gspb-canvas-spline',
+		GREENSHIFT_DIR_URL . 'libs/canvas/spline.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
+		'gspb-canvas-lottie',
+		GREENSHIFT_DIR_URL . 'libs/canvas/lottie.js',
+		array(),
+		'1.0',
+		true
+	);
+
 	wp_register_script(
 		'jslazyload',
 		GREENSHIFT_DIR_URL . 'libs/lazyloadjs/lazyload-scripts.min.js',
@@ -653,7 +680,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_motion_spring',
 		GREENSHIFT_DIR_URL . 'build/gspbMotionSpring.js',
 		array(),
-		'10.18',
+		'12.6',
 		true
 	);
 
@@ -661,7 +688,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_motion_one',
 		GREENSHIFT_DIR_URL . 'build/gspbMotion.js',
 		array(),
-		'10.3',
+		'12.6',
 		true
 	);
 
@@ -2361,7 +2388,7 @@ function gspb_global_assets()
 			wp_enqueue_style('greenShift-dark-accent-css', GREENSHIFT_DIR_URL . 'templates/admin/dark_accent_ui.css', array(), '1.0');
 		}
 		if(!empty($options['dark_mode'])){
-			wp_enqueue_style('greenShift-dark-mode-css', GREENSHIFT_DIR_URL . 'templates/admin/black.css', array(), '1.0');
+			wp_enqueue_style('greenShift-dark-mode-css', GREENSHIFT_DIR_URL . 'templates/admin/black.css', array(), '1.3');
 		}
 
 	}
@@ -2550,6 +2577,44 @@ function gspb_register_route()
 			),
 		]
 	]);
+
+	register_rest_route('greenshift/v1', '/update-custom-js', [
+        'methods' => 'POST',
+        'callback' => function(WP_REST_Request $request) {
+            $data = $request->get_params();
+			if(!empty($data) && is_array($data) && !empty($data['js'])){
+				$js = get_option('gspb_block_js');
+				if(!empty($js) && is_array($js)){
+					foreach($data['js'] as $item){
+						foreach($item as $key=>$value){
+							if(!empty($value)){
+								$js[$key] = $value;
+							} else {
+								unset($js[$key]);
+							}
+						}
+					}
+					update_option('gspb_block_js', $js);
+				} else {
+					$js = [];
+					foreach($data['js'] as $item){
+						foreach($item as $key=>$value){
+							if(!empty($value)){
+								$js[$key] = $value;
+							}
+						}
+					}
+					update_option('gspb_block_js', $js);
+				}
+				return rest_ensure_response(['success' => true, 'message' => 'Custom JS updated!']);
+			}else{
+				return rest_ensure_response(['success' => false, 'message' => 'No data to update']);
+			}
+        },
+        'permission_callback' => function () {
+            return current_user_can('manage_options');
+        }
+    ]);
 
 }
 
