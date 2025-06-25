@@ -1459,7 +1459,9 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		if(strpos($value, '{{SITE_URL}}') !== false){
 			$value = str_replace('{{SITE_URL}}', home_url(), $value);
 		}
-		
+		if(strpos($value, '{{PLUGIN_URL}}') !== false){
+			$value = str_replace('{{PLUGIN_URL}}', GREENSHIFT_DIR_URL, $value);
+		}
 	}
 	return $value;
 }
