@@ -31,6 +31,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			add_action('admin_enqueue_scripts', array($this, 'greenshift_admin_enqueue_scripts'));
 			add_filter('block_categories_all', array($this, 'gspb_greenShift_category'), 11, 2);
 			add_filter('block_editor_settings_all', array($this, 'gspb_generate_custom_block_settings'), 10, 2);
+
 			if (!defined('REHUB_ADMIN_DIR')) {
 				//Show Reusable blocks column
 				add_filter('manage_wp_block_posts_columns', array($this, 'gspb_template_screen_add_column'));
@@ -72,9 +73,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			if (empty($global_settings['anchors_disable'])) {
 				$settings['generateAnchors'] = true;
 			}
-			if (!empty($global_settings['simplified_panels'])) {
+			if (!empty($global_settings['block_manager'])) {
 				$settings['canLockBlocks'] = current_user_can( 'manage_options' );
-			}
+			}	
 			return $settings;
 		}
 
@@ -241,6 +242,14 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				'greenshift_demo',
 				array($this, 'import_demo')
 			);
+			add_submenu_page(
+				$parent_slug,
+				esc_html__('Block Manager', 'greenshift-animation-and-page-builder-blocks'),
+				esc_html__('Block Manager', 'greenshift-animation-and-page-builder-blocks'),
+				'manage_options',
+				'greenshift_block_manager',
+				array($this, 'block_manager_page')
+			);
 
 			$stylebook_post_id = get_option('gspb_stylebook_id');
 
@@ -296,6 +305,11 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 		public function upgrade_page()
 		{
 			require_once GREENSHIFT_DIR_PATH . 'templates/admin/upgrade-page.php';
+		}
+
+		public function block_manager_page()
+		{
+			require_once GREENSHIFT_DIR_PATH . 'templates/admin/block-manager-page.php';
 		}
 
 		public function stylebook_page_callback()
@@ -604,11 +618,6 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											} else {
 												$default_settings['hide_local_styles'] = false;
 											}
-											if (isset($_POST['simplified_panels'])) {
-												$default_settings['simplified_panels'] = true;
-											} else {
-												$default_settings['simplified_panels'] = false;
-											}
 											if (isset($_POST['show_element_block'])) {
 												$default_settings['show_element_block'] = sanitize_text_field($_POST['show_element_block']);
 											}
@@ -624,7 +633,6 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										$dark_accent_scheme = !empty($global_settings['dark_accent_scheme']) ? $global_settings['dark_accent_scheme'] : '';
 										$dark_mode = !empty($global_settings['dark_mode']) ? $global_settings['dark_mode'] : '';
 										$hide_local_styles = !empty($global_settings['hide_local_styles']) ? $global_settings['hide_local_styles'] : '';
-										$simplified_panels = !empty($global_settings['simplified_panels']) ? $global_settings['simplified_panels'] : '';
 										$show_element_block = !empty($global_settings['show_element_block']) ? $global_settings['show_element_block'] : '';
 										$default_unit = !empty($global_settings['default_unit']) ? $global_settings['default_unit'] : '';
 										$row_padding_disable = !empty($global_settings['row_padding_disable']) ? $global_settings['row_padding_disable'] : '';
@@ -700,12 +708,6 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 															<td> <label for="hide_local_styles"><?php esc_html_e("Close Local style option in Element block by default", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
 															<td>
 																<input type="checkbox" name="hide_local_styles" id="hide_local_styles" <?php echo $hide_local_styles == true ? 'checked' : ''; ?> />
-															</td>
-														</tr>
-														<tr>
-															<td> <label for="simplified_panels"><?php esc_html_e("Simplified panels for non admin user roles", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
-															<td>
-																<input type="checkbox" name="simplified_panels" id="simplified_panels" <?php echo $simplified_panels == true ? 'checked' : ''; ?> />
 															</td>
 														</tr>
 													</table>

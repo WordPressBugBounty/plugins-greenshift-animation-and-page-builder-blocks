@@ -696,7 +696,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_motion_one',
 		GREENSHIFT_DIR_URL . 'build/gspbMotion.js',
 		array(),
-		'12.6',
+		'12.6.2',
 		true
 	);
 
@@ -1960,6 +1960,22 @@ function gspb_greenShift_editor_assets()
 		$stylebook_url = admin_url('admin.php?page=greenshift_stylebook');
 	}
 
+	$current_user = wp_get_current_user();
+	$current_user_roles = $current_user->roles;
+	$block_manager_settings = isset($sitesettings['block_manager']) ? $sitesettings['block_manager'] : array();
+	$disabled_blocks = array();
+	$disabled_variations = array();
+	$simplified_panels = false;
+	foreach($current_user_roles as $current_user_role){
+		if(!empty($block_manager_settings[$current_user_role])){
+			$disabled_blocks = (isset($block_manager_settings[$current_user_role]['disabled_blocks'])) ? array_merge($disabled_blocks, $block_manager_settings[$current_user_role]['disabled_blocks']) : $disabled_blocks;
+			$disabled_variations = (isset($block_manager_settings[$current_user_role]['disabled_variations'])) ? array_merge($disabled_variations, $block_manager_settings[$current_user_role]['disabled_variations']) : $disabled_variations;
+			$simplified_panels = (!empty($block_manager_settings[$current_user_role]['simplified_panels'])) ? true : false;
+		}
+	}
+	$disabled_blocks = array_unique($disabled_blocks);
+	$disabled_variations = array_unique($disabled_variations);
+
 	//$updatelink = str_replace('greenshift_dashboard-addons', 'greenshift_dashboard-pricing', $addonlink);
 	$localize_array = 		array(
 		'ajaxUrl' => admin_url('admin-ajax.php'),
@@ -1984,7 +2000,6 @@ function gspb_greenShift_editor_assets()
 		'enabledcroll' => (function_exists('greenshift_check_cron_exec')) ? '1' : '',
 		'stylebook_url' => $stylebook_url,
 		'hide_local_styles' => $hide_local_styles,
-		'simplified_panels' => $simplified_panels,
 		'row_padding_disable' => $row_padding_disable,
 		'show_element_block' => $show_element_block,
 		'default_unit' => $default_unit,
@@ -2002,7 +2017,11 @@ function gspb_greenShift_editor_assets()
 		) : array(),
 		'isDarkMode' => !empty($sitesettings['dark_mode']) ? $sitesettings['dark_mode'] : '',
 		'nonce' => wp_create_nonce('gspb_nonce'),
+		'disabled_blocks' => $disabled_blocks,
+		'disabled_variations' => $disabled_variations,
+		'simplified_panels' => $simplified_panels,
 	);
+
 	
 	wp_localize_script(
 		'greenShift-library-script',
