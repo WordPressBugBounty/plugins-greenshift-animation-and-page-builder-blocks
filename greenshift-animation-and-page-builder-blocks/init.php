@@ -156,6 +156,14 @@ function gspb_greenShift_register_scripts_blocks(){
 	);
 
 	wp_register_script(
+		'gs-menu',
+		GREENSHIFT_DIR_URL . 'libs/menu/menu.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
 		'jslazyload',
 		GREENSHIFT_DIR_URL . 'libs/lazyloadjs/lazyload-scripts.min.js',
 		array(),
@@ -2415,7 +2423,7 @@ function gspb_global_assets()
 			wp_enqueue_style('greenShift-dark-accent-css', GREENSHIFT_DIR_URL . 'templates/admin/dark_accent_ui.css', array(), '1.0');
 		}
 		if(!empty($options['dark_mode'])){
-			wp_enqueue_style('greenShift-dark-mode-css', GREENSHIFT_DIR_URL . 'templates/admin/black.css', array(), '1.3');
+			wp_enqueue_style('greenShift-dark-mode-css', GREENSHIFT_DIR_URL . 'templates/admin/black.css', array(), '1.4');
 		}
 
 	}

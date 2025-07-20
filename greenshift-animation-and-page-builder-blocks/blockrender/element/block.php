@@ -125,7 +125,7 @@ class Element
 				if(!empty($block['attrs']['enableScrollButtons'])){
 					wp_enqueue_script('greenShift-scrollable-init');
 				}
-			} else if($block['attrs']['isVariation'] == 'dropzone'){
+			}else if($block['attrs']['isVariation'] == 'dropzone'){
 				wp_enqueue_script(
 					'gs-dropzone',
 					GREENSHIFT_DIR_URL . 'libs/api/dropzone.js',
@@ -138,6 +138,30 @@ class Element
 					'nonce' => wp_create_nonce('wp_rest'),
 					'rest_url' => esc_url_raw(rest_url('greenshift/v1/proxy-api/')),
 				));
+			}else if($block['attrs']['isVariation'] == 'navigation'){
+				wp_enqueue_script('gs-menu');
+				wp_enqueue_script('gs-greenpanel');
+			}
+			if($block['attrs']['isVariation'] == 'menu_item_link'){
+				// Check if current link matches the page URL
+				if(!empty($block['attrs']['href'])){
+					$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+					$link_url = $block['attrs']['href'];
+					
+					// Remove trailing slashes for comparison
+					$current_url = rtrim($current_url, '/');
+					$link_url = rtrim($link_url, '/');
+					
+					// Check if URLs match
+					if($current_url === $link_url || home_url($link_url) === $current_url){
+						$p = new \WP_HTML_Tag_Processor( $html );
+						$p->next_tag();
+						$current_class = $p->get_attribute( 'class' );
+						$new_class = $current_class ? $current_class . ' current_item' : 'current_item';
+						$p->set_attribute( 'class', $new_class );
+						$html = $p->get_updated_html();
+					}
+				}
 			}
 		}
 		if(!empty($block['attrs']['enableTooltip'])){
