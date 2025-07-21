@@ -3710,9 +3710,6 @@ if (!function_exists('gspb_get_all_layouts')) {
 		$headers   = wp_remote_retrieve_headers($response);
 		$request_result = $body;
 
-		error_log(json_encode($response));
-		error_log($body);
-
 
 		if ($request_result === '') {
 			return false;
