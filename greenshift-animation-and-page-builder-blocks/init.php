@@ -159,7 +159,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-menu',
 		GREENSHIFT_DIR_URL . 'libs/menu/menu.js',
 		array(),
-		'1.0',
+		'1.1',
 		true
 	);
 

@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.9
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 11.9.2
+Stable tag: 11.9.3
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -112,6 +112,10 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 
 == Changelog ==
 
+= 11.9.3 =
+
+* Added: Improvements for menu block
+
 = 11.9.2 =
 
 * Added: Auto Conversion for Image Element block dynamic links if it has file ID instead of URL
@@ -119,7 +123,7 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 
 = 11.9 =
 
-* Added: [Navigation menu Element block](https://www.youtube.com/watch?v=tPzKXQMorxQ) 
+* Added: [Navigation menu Element block](https://www.youtube.com/watch?v=EsZkg_cHroY) 
 * Added: Dark mode improvements
 
 = 11.8.1 =
