@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.9
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 11.9.4
+Stable tag: 12.0
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -111,6 +111,18 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 12.0 =
+
+* Added: Youtube AutoPlay element
+* Added: Iframe element
+* Added: Dynamic placeholders support for href, title, src attributes of A and Iframe elements
+* Added: Switcher Element
+* Added: Social Share Element
+* Added: Section Element has also default variables for top and bottom spacing which you can overwrite in StyleBook - Variables - Variable presets
+* Added: Button Component Element and separate variables for button component (you can overwrite them in Stylebook - Variables - Variable presets)
+* Added: When you save default attributes for block, classes will be also saved
+
 
 = 11.9.3 =
 

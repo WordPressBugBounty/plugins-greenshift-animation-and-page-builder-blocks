@@ -50,8 +50,30 @@ class Element
 		if(!empty($block['attrs']['styleAttributes']['anchorName'])){
 			wp_enqueue_script('anchor-polyfill');
 		}
-		if (isset($block['attrs']['tag']) && $block['attrs']['tag'] == 'table' && (!empty($block['attrs']['tableAttributes']['table']['sortable']) || !empty($block['attrs']['tableStyles']['table']['style']))) {
-			wp_enqueue_script('gstablesort');
+		if (isset($block['attrs']['tag'])) {
+			if($block['attrs']['tag'] == 'table' && (!empty($block['attrs']['tableAttributes']['table']['sortable']) || !empty($block['attrs']['tableStyles']['table']['style']))){
+				wp_enqueue_script('gstablesort');
+			}else if($block['attrs']['tag'] == 'iframe'){
+				if(!empty($block['attrs']['src']) && strpos($block['attrs']['src'], '{{') !== false){
+					$p = new \WP_HTML_Tag_Processor( $html );
+					$p->next_tag();
+					$p->set_attribute( 'src', greenshift_dynamic_placeholders(esc_attr($block['attrs']['src'])));
+					$html = $p->get_updated_html();
+				}
+			} else if($block['attrs']['tag'] == 'a'){
+				if(!empty($block['attrs']['href']) && strpos($block['attrs']['href'], '{{') !== false){
+					$p = new \WP_HTML_Tag_Processor( $html );
+					$p->next_tag();
+					$p->set_attribute( 'href', greenshift_dynamic_placeholders(esc_attr($block['attrs']['href'])));
+					$html = $p->get_updated_html();
+				}
+				if(!empty($block['attrs']['title']) && strpos($block['attrs']['title'], '{{') !== false){
+					$p = new \WP_HTML_Tag_Processor( $html );
+					$p->next_tag();
+					$p->set_attribute( 'title', greenshift_dynamic_placeholders(esc_attr($block['attrs']['title'])));
+					$html = $p->get_updated_html();
+				}
+			}
 		}
 
 		if (!empty($block['attrs']['type']) && $block['attrs']['type'] == 'repeater') {
@@ -141,8 +163,7 @@ class Element
 			}else if($block['attrs']['isVariation'] == 'navigation'){
 				wp_enqueue_script('gs-menu');
 				wp_enqueue_script('gs-greenpanel');
-			}
-			if($block['attrs']['isVariation'] == 'menu_item_link'){
+			}else if($block['attrs']['isVariation'] == 'menu_item_link'){
 				// Check if current link matches the page URL
 				if(!empty($block['attrs']['href'])){
 					$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -162,6 +183,163 @@ class Element
 						$html = $p->get_updated_html();
 					}
 				}
+			}else if($block['attrs']['isVariation'] == 'darkmode-switcher'){
+				wp_enqueue_script('gspbcook');
+				wp_enqueue_script('gs-darkmode');
+			}else if($block['attrs']['isVariation'] == 'social-share-icon'){
+				wp_enqueue_script(
+					'gspb-social-share',
+					GREENSHIFT_DIR_URL . 'libs/social-share/social.js',
+					array(),
+					'1.0',
+					true
+				);
+				$p = new \WP_HTML_Tag_Processor( $html );
+				$p->next_tag();
+				$service = esc_attr($block['attrs']['alt']);
+				$p->set_attribute( 'data-social-service', $service);
+				if($service == 'facebook'){
+					global $post;
+					$link = get_permalink($post->ID);
+					$p->set_attribute( 'data-href', 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode($link));
+				}else if($service == 'twitter'){
+					global $post;
+					$link = get_permalink($post->ID);
+					$title = $post->post_title;
+					$p->set_attribute( 'data-href', 'https://twitter.com/share?url=' . urlencode($link) . '&text=' . urlencode(html_entity_decode($title, ENT_COMPAT, 'UTF-8')));
+				}else if($service == 'linkedin'){
+					global $post;
+					$link = get_permalink($post->ID);
+					$title = $post->post_title;
+					$p->set_attribute( 'data-href', 'https://www.linkedin.com/shareArticle?mini=true&url=' . urlencode($link) . '&title=' . urlencode(html_entity_decode($title, ENT_COMPAT, 'UTF-8')) . '&source=' . urlencode(html_entity_decode(get_bloginfo("name"), ENT_COMPAT, 'UTF-8')));
+				}else if($service == 'whatsapp'){
+					global $post;
+					$link = get_permalink($post->ID);
+					$title = $post->post_title;
+					$p->set_attribute( 'data-href', 'whatsapp://send?&text=' . urlencode(html_entity_decode($title, ENT_COMPAT, 'UTF-8')) . ' - ' . urlencode($link));
+				}else if($service == 'pinterest'){
+					global $post;
+					$link = get_permalink($post->ID);
+					$title = $post->post_title;
+					$image = wp_get_attachment_url(get_post_thumbnail_id($post->ID));
+					$p->set_attribute( 'data-href', 'https://pinterest.com/pin/create/button/?url=' . urlencode($link) . '&media=' . urlencode($image) . '&description=' . urlencode($title));
+				}else if($service == 'telegram'){
+					global $post;
+					$link = get_permalink($post->ID);
+					$title = $post->post_title;
+					$p->set_attribute( 'data-href', 'https://t.me/share/url?url=' . urlencode($link) . '&text=' . urlencode(html_entity_decode($title, ENT_COMPAT, 'UTF-8')));
+				}else if($service == 'email'){
+					global $post;
+					$link = get_permalink($post->ID);
+					$title = $post->post_title;
+					$p->set_attribute( 'data-href', 'mailto:?subject=' . rawurlencode(html_entity_decode($title, ENT_COMPAT, 'UTF-8')) . '&body=' . urlencode($link) . ' - ' . rawurlencode(html_entity_decode(get_bloginfo("name"), ENT_COMPAT, 'UTF-8')));
+				}else if($service == 'bluesky'){
+					global $post;
+					$link = get_permalink($post->ID);
+					$title = $post->post_title;
+					$p->set_attribute( 'data-href', 'https://bsky.app/intent/compose?text=' . urlencode(html_entity_decode($title, ENT_COMPAT, 'UTF-8')));
+				}
+				
+				$html = $p->get_updated_html();
+			}else if($block['attrs']['isVariation'] == 'accordion' || $block['attrs']['isVariation'] == 'tabs'){
+
+				wp_enqueue_script('gs-greensyncpanels');
+	
+				$p = new \WP_HTML_Tag_Processor( $html );
+				$itrigger = 0;
+				while ( $p->next_tag() ) {
+					// Skip an element if it's not supposed to be processed.
+					if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs_click_sync' ) || $p->has_class( 'gs_hover_sync' )) ) {
+						$p->set_attribute( 'id', 'gs-trigger-'.$block['attrs']['id'].'-'.$itrigger);
+						$p->set_attribute( 'aria-controls', 'gs-content-'.$block['attrs']['id'].'-'.$itrigger);
+						$itrigger ++;
+					}
+				}
+				$html = $p->get_updated_html();
+	
+				$p = new \WP_HTML_Tag_Processor( $html );
+				$icontent = 0;
+				while ( $p->next_tag() ) {
+					// Skip an element if it's not supposed to be processed.
+					if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs_content' )) ) {
+						$p->set_attribute( 'id', 'gs-content-'.$block['attrs']['id'].'-'.$icontent);
+						$p->set_attribute( 'aria-labelledby', 'gs-trigger-'.$block['attrs']['id'].'-'.$icontent);
+						$icontent ++;
+					}
+				}
+				$html = $p->get_updated_html();
+			}else if($block['attrs']['isVariation'] == 'splittest'){
+				$p = \WP_HTML_Processor::create_fragment( $html );
+				$index_current = $p->get_current_depth();
+				$index_current_tag = $index_current + 1;
+				$child = $index_current + 2;
+				$child_count = 0;
+				$child_indices = array();
+				
+				// First pass: count direct child items and store their positions
+				while ( $p->next_tag() ) {
+					if($p->get_current_depth() == $index_current_tag){
+						$p->set_bookmark('current');
+					}
+					if($p->get_current_depth() == $child){
+						if($p->get_tag() == 'STYLE'){
+							continue;
+						}
+						$child_indices[] = $child_count;
+						$child_count++;
+					}
+				}
+				
+				// If we have child items, rotate through them on each page load
+				if($child_count > 0){
+					// Use a combination of block ID, current timestamp, and request count for rotation
+					$block_id = !empty($block['attrs']['id']) ? $block['attrs']['id'] : 'default';
+					
+					// Get current timestamp (changes every second)
+					$timestamp = time();
+					
+					// Get request count from transient (increments on each request)
+					$request_count_key = 'gspb_request_count_' . $block_id;
+					$request_count = get_transient($request_count_key);
+					if($request_count === false) {
+						$request_count = 0;
+					}
+					
+					// Increment request count for next time
+					set_transient($request_count_key, $request_count + 1, 200000); // Expires in 1 hour
+					
+					// Calculate rotation index
+					$selected_index = ($request_count) % $child_count;
+					
+					// Reset to beginning and process again
+					$p->seek( 'current' );
+					$current_child = 0;
+					
+					while ( $p->next_tag() ) {
+						if($p->get_current_depth() == $child){
+							if($p->get_tag() == 'STYLE'){
+								continue;
+							}
+							
+							// Hide all children except the selected one
+							if($current_child != $selected_index){
+								$style = $p->get_attribute( 'style' );
+								if(!empty($style)){
+									$style .= 'display: none !important;';
+								}else{
+									$style = 'display: none !important;';
+								}
+								$p->set_attribute( 'style', $style );
+							}
+							
+							$current_child++;
+						}
+					}
+					
+					$p->release_bookmark( 'current' );
+				}
+				
+				$html = $p->get_updated_html();
 			}
 		}
 		if(!empty($block['attrs']['enableTooltip'])){
@@ -266,34 +444,6 @@ class Element
 				}
 				$html = $p->get_updated_html();
 			}
-		}
-		if(!empty($block['attrs']['isVariation']) && ($block['attrs']['isVariation'] == 'accordion' || $block['attrs']['isVariation'] == 'tabs')){
-
-			wp_enqueue_script('gs-greensyncpanels');
-
-			$p = new \WP_HTML_Tag_Processor( $html );
-			$itrigger = 0;
-			while ( $p->next_tag() ) {
-				// Skip an element if it's not supposed to be processed.
-				if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs_click_sync' ) || $p->has_class( 'gs_hover_sync' )) ) {
-					$p->set_attribute( 'id', 'gs-trigger-'.$block['attrs']['id'].'-'.$itrigger);
-					$p->set_attribute( 'aria-controls', 'gs-content-'.$block['attrs']['id'].'-'.$itrigger);
-					$itrigger ++;
-				}
-			}
-			$html = $p->get_updated_html();
-
-			$p = new \WP_HTML_Tag_Processor( $html );
-			$icontent = 0;
-			while ( $p->next_tag() ) {
-				// Skip an element if it's not supposed to be processed.
-				if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs_content' )) ) {
-					$p->set_attribute( 'id', 'gs-content-'.$block['attrs']['id'].'-'.$icontent);
-					$p->set_attribute( 'aria-labelledby', 'gs-trigger-'.$block['attrs']['id'].'-'.$icontent);
-					$icontent ++;
-				}
-			}
-			$html = $p->get_updated_html();
 		}
 		if(!empty($block['attrs']['anchor']) && strpos($block['attrs']['anchor'], '{POST_ID}') != false){
 			global $post;
@@ -414,7 +564,7 @@ class Element
 				}
 			}
 		}
-		if(!empty($block['attrs']['type']) && ($block['attrs']['type'] == 'rive' || $block['attrs']['type'] == 'spline' || $block['attrs']['type'] == 'lottie' || $block['attrs']['type'] == 'unicorn')){
+		if(!empty($block['attrs']['type']) && ($block['attrs']['type'] == 'rive' || $block['attrs']['type'] == 'spline' || $block['attrs']['type'] == 'lottie' || $block['attrs']['type'] == 'unicorn' || $block['attrs']['type'] == 'scrollyvideo')){
 
 			if(!empty($block['attrs']['customCanvasControllers'])){
 				$p = new \WP_HTML_Tag_Processor( $html );
@@ -440,6 +590,9 @@ class Element
 			}
 			if($block['attrs']['type'] == 'unicorn'){
 				wp_enqueue_script('gspb-canvas-unicorn');
+			}
+			if($block['attrs']['type'] == 'scrollyvideo'){
+				wp_enqueue_script('gspb-canvas-scrollyvideo');
 			}
 		}
 

@@ -16,7 +16,7 @@ body{
 .block-editor-block-inspector, .editor-editor-interface .entities-saved-states__panel-header, .components-base-control div[class$="-control"], .gspb_style-container{
     background-color: #2C2C2C !important;
 }
-.components-base-control div[class$="-singleValue"], .components-color-palette__custom-color-name, .components-base-control__label, .components-input-control__label {
+.components-base-control div[class$="-singleValue"], .components-color-palette__custom-color-name, .components-base-control__label, .components-input-control__label, .components-tools-panel-item label {
     color: #BFBFBF !important;
 }
 

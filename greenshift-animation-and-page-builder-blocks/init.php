@@ -156,6 +156,14 @@ function gspb_greenShift_register_scripts_blocks(){
 	);
 
 	wp_register_script(
+		'gspb-canvas-scrollyvideo',
+		GREENSHIFT_DIR_URL . 'libs/canvas/scrollyvideo.js',
+		array(),
+		'1.0',
+		true
+	);
+
+	wp_register_script(
 		'gs-menu',
 		GREENSHIFT_DIR_URL . 'libs/menu/menu.js',
 		array(),
@@ -316,7 +324,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gsvideo',
 		GREENSHIFT_DIR_URL . 'libs/video/index.js',
 		array(),
-		'1.9.7',
+		'1.9.8',
 		true
 	);
 
@@ -496,6 +504,14 @@ function gspb_greenShift_register_scripts_blocks(){
 		GREENSHIFT_DIR_URL . 'libs/scrollto/index.css',
 		array(),
 		'1.0'
+	);
+
+	wp_register_script(
+		'gs-darkmode',
+		GREENSHIFT_DIR_URL . 'libs/switcher/darkmode.js',
+		array(),
+		'1.1',
+		true
 	);
 
 	wp_register_script(
@@ -2192,7 +2208,7 @@ function gspb_global_assets()
 				}
 			}
 			if($variables_css){
-				$variables_css = ':root{'.$variables_css.'}';
+				$variables_css = 'body{'.$variables_css.'}';
 				$gs_global_css = $gs_global_css . $variables_css;
 			}
 		}
@@ -2388,7 +2404,7 @@ function gspb_global_assets()
 				}
 			}
 			if($variables_css){
-				$variables_css = ':root{'.$variables_css.'}';
+				$variables_css = 'body{'.$variables_css.'}';
 				wp_register_style('greenshift-global-variables', false);
 				wp_enqueue_style('greenshift-global-variables');
 				wp_add_inline_style('greenshift-global-variables', $variables_css);
@@ -2608,6 +2624,14 @@ function gspb_register_route()
 				'type' => array(
 					'type' => 'string',
 					'required' => true,
+				),
+				'taxonomy' => array(
+					'type' => 'string',
+					'required' => false,
+				),
+				'post_type' => array(
+					'type' => 'string',
+					'required' => false,
 				),
 			),
 		]

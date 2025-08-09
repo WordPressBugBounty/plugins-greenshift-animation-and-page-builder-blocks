@@ -181,8 +181,8 @@ Determines how the block's content is handled:
     -   *Example (Two Columns):* Use `isVariation: "contentcolumns"` on the outer section and `isVariation: "contentarea"` on the inner flex container. Configure `flexColumns_Extra` and `flexWidths_Extra`.
 
     ```html
-    <!-- wp:greenshift-blocks/element {"id":"gsbp-e7ebc80","tag":"section","type":"inner","localId":"gsbp-e7ebc80","align":"full","styleAttributes":{"display":["flex"],"justifyContent":["center"],"flexDirection":["column"],"alignItems":["center"],"paddingRight":["min(3vw, 20px)"],"paddingLeft":["min(3vw, 20px)"],"marginTop":["0px"],"marginBottom":["0px"],"paddingLink_Extra":"lr","position":["relative"]},"isVariation":"contentcolumns"} -->
-    <section class="gsbp-e7ebc80 alignfull"><!-- wp:greenshift-blocks/element {"id":"gsbp-96ba582","type":"inner","localId":"gsbp-96ba582","styleAttributes":{"maxWidth":["100%"],"width":["var(\u002d\u002dwp\u002d\u002dstyle\u002d\u002dglobal\u002d\u002dwide-size, 1200px)"],"display":["flex"],"flexColumns_Extra":2,"flexWidths_Extra":{"desktop":{"name":"50/50","widths":[50,50]},"tablet":{"name":"50/50","widths":[50,50]},"mobile":{"name":"100/100","widths":[100,100]}},"flexDirection":["row"],"columnGap":["25px"],"rowGap":["25px"],"flexWrap":["wrap"]},"isVariation":"contentarea","metadata":{"name":"Content Area"}} -->
+    <!-- wp:greenshift-blocks/element {"id":"gsbp-e7ebc80","tag":"section","type":"inner","localId":"gsbp-e7ebc80","align":"full","styleAttributes":{"display":["flex"],"justifyContent":["center"],"flexDirection":["column"],"alignItems":["center"],"paddingRight":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"paddingLeft":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"marginTop":["0px"],"marginBottom":["0px"],"position":["relative"], "paddingTop":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dtop, 0px)"], "paddingBottom":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dbottom, 0px)"]},"isVariation":"contentcolumns","dynamicAttributes":[{"name": "data-type", "value":"section-component"}]} -->
+    <section class="gsbp-e7ebc80 alignfull"><!-- wp:greenshift-blocks/element {"id":"gsbp-96ba582","type":"inner","localId":"gsbp-96ba582","styleAttributes":{"maxWidth":["100%"],"width":["var(\u002d\u002dwp\u002d\u002dstyle\u002d\u002dglobal\u002d\u002dwide-size, 1200px)"],"display":["flex"],"flexColumns_Extra":2,"flexWidths_Extra":{"desktop":{"name":"50/50","widths":[50,50]},"tablet":{"name":"50/50","widths":[50,50]},"mobile":{"name":"100/100","widths":[100,100]}},"flexDirection":["row"],"columnGap":["25px"],"rowGap":["25px"],"flexWrap":["wrap"]},"isVariation":"contentarea","metadata":{"name":"Content Area"},"dynamicAttributes":[{"name": "data-type", "value":"content-area-component"}]} -->
     <div class="gsbp-96ba582"><!-- wp:greenshift-blocks/element {"id":"gsbp-72676cb","type":"inner","localId":"gsbp-72676cb"} -->
     <div></div>
     <!-- /wp:greenshift-blocks/element -->
@@ -196,8 +196,8 @@ Determines how the block's content is handled:
 
  - **Section** For full width sections with centered content use `align: "full"` and next example.
     ```html
-    <!-- wp:greenshift-blocks/element {"id":"gsbp-bed93f7","tag":"section","type":"inner","localId":"gsbp-bed93f7","align":"full","styleAttributes":{"display":["flex"],"justifyContent":["center"],"flexDirection":["column"],"alignItems":["center"],"paddingRight":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"paddingLeft":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"marginTop":["0px"],"marginBottom":["0px"],"paddingLink_Extra":"lr","position":["relative"]},"isVariation":"contentwrapper"} -->
-    <section class="gsbp-bed93f7 alignfull"><!-- wp:greenshift-blocks/element {"id":"gsbp-2900b2c","type":"inner","localId":"gsbp-2900b2c","styleAttributes":{"maxWidth":["100%"],"width":["var(\u002d\u002dwp\u002d\u002dstyle\u002d\u002dglobal\u002d\u002dwide-size, 1200px)"]},"isVariation":"nocolumncontent","metadata":{"name":"Content Area"}} -->
+    <!-- wp:greenshift-blocks/element {"id":"gsbp-bed93f7","tag":"section","type":"inner","localId":"gsbp-bed93f7","align":"full","styleAttributes":{"display":["flex"],"justifyContent":["center"],"flexDirection":["column"],"alignItems":["center"],"paddingRight":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"paddingLeft":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"marginTop":["0px"],"marginBottom":["0px"],"position":["relative"],"paddingTop":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dtop, 0px)"],"paddingBottom":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dbottom, 0px)"]},"isVariation":"contentwrapper","dynamicAttributes": [{"name": "data-type", "value":"section-component"}]} -->
+    <section class="gsbp-bed93f7 alignfull"><!-- wp:greenshift-blocks/element {"id":"gsbp-2900b2c","type":"inner","localId":"gsbp-2900b2c","styleAttributes":{"maxWidth":["100%"],"width":["var(\u002d\u002dwp\u002d\u002dstyle\u002d\u002dglobal\u002d\u002dwide-size, 1200px)"]},"isVariation":"nocolumncontent","metadata":{"name":"Content Area"},"dynamicAttributes":[{"name": "data-type", "value":"content-area-component"}]} -->
     <div class="gsbp-2900b2c"></div>
     <!-- /wp:greenshift-blocks/element --></section>
     <!-- /wp:greenshift-blocks/element -->
@@ -333,7 +333,7 @@ There are some special interactive blocks that have additional rules and attribu
 **Accordion Element**
 
 ```html
-<!-- wp:greenshift-blocks/element {"id":"gsbp-4893b17","dynamicGClasses":[{"value":"gs_accordion_273","type":"local","label":"gs_accordion_273","localed":false,"css":"","attributes":{"styleAttributes":{}},"originalBlock":"greenshift-blocks/element","selectors":[{"value":" \u003e .gs_item","attributes":{"styleAttributes":{"borderRadiusLink_Extra":true,"borderTopLeftRadius":["8px"],"borderBottomLeftRadius":["8px"],"borderTopRightRadius":["8px"],"borderBottomRightRadius":["8px"],"overflow":["hidden"],"borderWidth":["1px"],"borderStyle":["solid"],"borderColor":["#00000012"],"borderCustom_Extra":false,"borderLink_Extra":false}},"css":".gs_accordion_273 \u003e .gs_item{border-top-left-radius:8px;border-bottom-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;overflow:hidden;border-width:1px;border-style:solid;border-color:#00000012;}"},{"value":" .gs_title","attributes":{"styleAttributes":{"marginTop":["0px"],"marginRight":["0px"],"marginBottom":["0px"],"marginLeft":["0px"],"paddingTop":["0px"],"paddingRight":["0px"],"paddingBottom":["0px"],"paddingLeft":["0px"]}},"css":".gs_accordion_273 .gs_title{margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;}"},{"value":" .gs_title button","attributes":{"styleAttributes":{"fontSize":["1rem"],"backgroundColor":["#0000000d"],"borderCustom_Extra":true,"border":["none"],"paddingTop":["1rem"],"paddingBottom":["1rem"],"paddingRight":["1.5rem"],"paddingLeft":["1.5rem"],"fontWeight":["normal"],"textDecoration":["none"],"display":["flex"],"justifyContent":["space-between"],"alignItems":["center"],"width":["100%"],"color":["#000000"],"cursor":["pointer"],"columnGap":["5px"]}},"css":".gs_accordion_273 .gs_title button{font-size:1rem;background-color:#0000000d;border:none;padding-top:1rem;padding-bottom:1rem;padding-right:1.5rem;padding-left:1.5rem;font-weight:normal;text-decoration:none;display:flex;justify-content:space-between;align-items:center;width:100%;color:#000000;cursor:pointer;column-gap:5px;}"},{"value":" .gs_title .gs_icon","attributes":{"styleAttributes":{"width":["17px"],"height":["17px"],"transition":["all 0.5s ease"]}},"css":".gs_accordion_273 .gs_title .gs_icon{width:17px;height:17px;transition:all 0.5s ease;}"},{"value":"\u003e .gs_item \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["0px"],"overflow":["hidden"],"transition":["max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1)"],"opacity":["0"]}},"css":".gs_accordion_273 \u003e .gs_item \u003e .gs_content{max-height:0px;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);opacity:0;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["5000px"],"opacity":["1"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_content{max-height:5000px;opacity:1;}"},{"value":" .gs_content \u003e .gs_content_inner","attributes":{"styleAttributes":{"paddingTop":["25px"],"paddingRight":["25px"],"paddingBottom":["25px"],"paddingLeft":["25px"],"fontSize":["1rem"],"lineHeight":["1.3rem"]}},"css":".gs_accordion_273 .gs_content \u003e .gs_content_inner{padding-top:25px;padding-right:25px;padding-bottom:25px;padding-left:25px;font-size:1rem;line-height:1.3rem;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_title .gs_icon","attributes":{"styleAttributes":{"transform":["rotate(90deg)"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_title .gs_icon{transform:rotate(90deg);}"}]}],"type":"inner","className":"gs_accordion_273","localId":"gsbp-4893b17","styleAttributes":{"position":["relative"],"display":["flex"],"flexDirection":["column"],"rowGap":["15px"],"columnGap":["15px"],"alignItems":["stretch"],"justifyContent":["flex-start"]},"isVariation":"accordion"} -->
+<!-- wp:greenshift-blocks/element {"id":"gsbp-4893b17","dynamicGClasses":[{"value":"gs_accordion_273","type":"local","label":"gs_accordion_273","localed":false,"css":"","attributes":{"styleAttributes":{}},"originalBlock":"greenshift-blocks/element","selectors":[{"value":" \u003e .gs_item","attributes":{"styleAttributes":{"borderRadiusLink_Extra":true,"borderTopLeftRadius":["8px"],"borderBottomLeftRadius":["8px"],"borderTopRightRadius":["8px"],"borderBottomRightRadius":["8px"],"overflow":["hidden"],"borderWidth":["1px"],"borderStyle":["solid"],"borderColor":["#00000012"],"borderCustom_Extra":false,"borderLink_Extra":false}},"css":".gs_accordion_273 \u003e .gs_item{border-top-left-radius:8px;border-bottom-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;overflow:hidden;border-width:1px;border-style:solid;border-color:#00000012;}"},{"value":" .gs_title","attributes":{"styleAttributes":{"marginTop":["0px"],"marginRight":["0px"],"marginBottom":["0px"],"marginLeft":["0px"],"paddingTop":["0px"],"paddingRight":["0px"],"paddingBottom":["0px"],"paddingLeft":["0px"]}},"css":".gs_accordion_273 .gs_title{margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;}"},{"value":" .gs_title button","attributes":{"styleAttributes":{"fontSize":["1rem"],"backgroundColor":["#0000000d"],"borderCustom_Extra":true,"border":["none"],"paddingTop":["1rem"],"paddingBottom":["1rem"],"paddingRight":["1.5rem"],"paddingLeft":["1.5rem"],"fontWeight":["normal"],"textDecoration":["none"],"display":["flex"],"justifyContent":["space-between"],"alignItems":["center"],"width":["100%"],"color":["#000000"],"cursor":["pointer"],"columnGap":["5px"]}},"css":".gs_accordion_273 .gs_title button{font-size:1rem;background-color:#0000000d;border:none;padding-top:1rem;padding-bottom:1rem;padding-right:1.5rem;padding-left:1.5rem;font-weight:normal;text-decoration:none;display:flex;justify-content:space-between;align-items:center;width:100%;color:#000000;cursor:pointer;column-gap:5px;}"},{"value":" .gs_title .gs_icon","attributes":{"styleAttributes":{"width":["17px"],"height":["17px"],"transition":["all 0.5s ease"]}},"css":".gs_accordion_273 .gs_title .gs_icon{width:17px;height:17px;transition:all 0.5s ease;}"},{"value":"\u003e .gs_item \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["0px"],"overflow":["hidden"],"transition":["max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1)"],"opacity":["0"]}},"css":".gs_accordion_273 \u003e .gs_item \u003e .gs_content{max-height:0px;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);opacity:0;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["5000px"],"opacity":["1"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_content{max-height:5000px;opacity:1;}"},{"value":" .gs_content \u003e .gs_content_inner","attributes":{"styleAttributes":{"paddingTop":["25px"],"paddingRight":["25px"],"paddingBottom":["25px"],"paddingLeft":["25px"],"fontSize":["1rem"],"lineHeight":["1.3rem"]}},"css":".gs_accordion_273 .gs_content \u003e .gs_content_inner{padding-top:25px;padding-right:25px;padding-bottom:25px;padding-left:25px;font-size:1rem;line-height:1.3rem;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_title .gs_icon","attributes":{"styleAttributes":{"transform":["rotate(90deg)"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_title .gs_icon{transform:rotate(90deg);}"}]}],"type":"inner","className":"gs_accordion_273","localId":"gsbp-4893b17","styleAttributes":{"position":["relative"],"display":["flex"],"flexDirection":["column"],"rowGap":["15px"],"columnGap":["15px"],"alignItems":["stretch"],"justifyContent":["flex-start"]},"isVariation":"accordion","dynamicAttributes":[{"name": "data-type", "value":"accordion-component"}]} -->
 <div class="gs_accordion_273 gsbp-4893b17"><!-- wp:greenshift-blocks/element {"id":"gsbp-1d542bc","type":"inner","className":"gs_item","localId":"gsbp-1d542bc","metadata":{"name":"Accordion Item"}} -->
 <div class="gs_item"><!-- wp:greenshift-blocks/element {"id":"gsbp-792c75d","tag":"h3","type":"inner","className":"gs_title","localId":"gsbp-792c75d","metadata":{"name":"Accordion Title"}} -->
 <h3 class="gs_title"><!-- wp:greenshift-blocks/element {"id":"gsbp-594799c","tag":"button","type":"inner","className":"gs_click_sync","localId":"gsbp-594799c","formAttributes":{"type":"button"},"dynamicAttributes":[{"name":"aria-expanded","value":"false"}]} -->
@@ -359,7 +359,7 @@ There are some special interactive blocks that have additional rules and attribu
 **Tabs Element**
 
 ```html
-<!-- wp:greenshift-blocks/element {"id":"gsbp-286838a","dynamicGClasses":[{"value":"gs_tabs_517","type":"local","label":"gs_tabs_517","localed":false,"css":"","attributes":{"styleAttributes":{}},"originalBlock":"greenshift-blocks/element","selectors":[{"value":" .gs_tab","attributes":{"styleAttributes":{"fontSize":["1rem"],"backgroundColor":["#0000000d"],"borderCustom_Extra":true,"border":["none"],"paddingTop":["1rem"],"paddingBottom":["1rem"],"paddingRight":["1.5rem"],"paddingLeft":["1.5rem"],"fontWeight":["normal"],"textDecoration":["none"],"display":["flex"],"justifyContent":["center"],"alignItems":["center"],"color":["#000000"],"cursor":["pointer"],"columnGap":["10px"],"transition":["all 0.5s ease"]}},"css":".gs_tabs_517 .gs_tab{font-size:1rem;background-color:#0000000d;border:none;padding-top:1rem;padding-bottom:1rem;padding-right:1.5rem;padding-left:1.5rem;font-weight:normal;text-decoration:none;display:flex;justify-content:center;align-items:center;color:#000000;cursor:pointer;column-gap:10px;transition:all 0.5s ease;}"},{"value":" .gs_tab.active","attributes":{"styleAttributes":{"backgroundColor":["#000000"],"color":["#fff"]}},"css":".gs_tabs_517 .gs_tab.active{background-color:#000000;color:#fff;}"},{"value":" .gs_tab svg","attributes":{"styleAttributes":{"fill":["currentColor"],"width":["17px"],"height":["17px"]}},"css":".gs_tabs_517 .gs_tab svg{fill:currentColor;width:17px;height:17px;}"},{"value":" .gs_tab.active svg","attributes":{"styleAttributes":{"fill":["currentColor"]}},"css":".gs_tabs_517 .gs_tab.active svg{fill:currentColor;}"},{"value":" .gs_content","attributes":{"styleAttributes":{"overflow":["hidden"],"opacity":["0"],"maxHeight":["0px"],"transition":["opacity 0.5s cubic-bezier(0.42, 0, 0.58, 1), max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1)"]}},"css":".gs_tabs_517 .gs_content{overflow:hidden;opacity:0;max-height:0px;transition:opacity 0.5s cubic-bezier(0.42, 0, 0.58, 1), max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1);}"},{"value":" .gs_content.active","attributes":{"styleAttributes":{"opacity":["1"],"maxHeight":["5000px"]}},"css":".gs_tabs_517 .gs_content.active{opacity:1;max-height:5000px;}"},{"value":" .gs_content \u003e .gs_content_inner","attributes":{"styleAttributes":{"paddingTop":["25px"],"paddingRight":["25px"],"paddingBottom":["25px"],"paddingLeft":["25px"],"fontSize":["1rem"],"lineHeight":["1.3rem"]}},"css":".gs_tabs_517 .gs_content \u003e .gs_content_inner{padding-top:25px;padding-right:25px;padding-bottom:25px;padding-left:25px;font-size:1rem;line-height:1.3rem;}"}]}],"type":"inner","className":"gs_tabs_517 gs_root","localId":"gsbp-286838a","styleAttributes":{"position":["relative"],"display":["flex"],"flexDirection":["column"],"alignItems":["stretch"],"justifyContent":["flex-start"]},"isVariation":"tabs"} -->
+<!-- wp:greenshift-blocks/element {"id":"gsbp-286838a","dynamicGClasses":[{"value":"gs_tabs_517","type":"local","label":"gs_tabs_517","localed":false,"css":"","attributes":{"styleAttributes":{}},"originalBlock":"greenshift-blocks/element","selectors":[{"value":" .gs_tab","attributes":{"styleAttributes":{"fontSize":["1rem"],"backgroundColor":["#0000000d"],"borderCustom_Extra":true,"border":["none"],"paddingTop":["1rem"],"paddingBottom":["1rem"],"paddingRight":["1.5rem"],"paddingLeft":["1.5rem"],"fontWeight":["normal"],"textDecoration":["none"],"display":["flex"],"justifyContent":["center"],"alignItems":["center"],"color":["#000000"],"cursor":["pointer"],"columnGap":["10px"],"transition":["all 0.5s ease"]}},"css":".gs_tabs_517 .gs_tab{font-size:1rem;background-color:#0000000d;border:none;padding-top:1rem;padding-bottom:1rem;padding-right:1.5rem;padding-left:1.5rem;font-weight:normal;text-decoration:none;display:flex;justify-content:center;align-items:center;color:#000000;cursor:pointer;column-gap:10px;transition:all 0.5s ease;}"},{"value":" .gs_tab.active","attributes":{"styleAttributes":{"backgroundColor":["#000000"],"color":["#fff"]}},"css":".gs_tabs_517 .gs_tab.active{background-color:#000000;color:#fff;}"},{"value":" .gs_tab svg","attributes":{"styleAttributes":{"fill":["currentColor"],"width":["17px"],"height":["17px"]}},"css":".gs_tabs_517 .gs_tab svg{fill:currentColor;width:17px;height:17px;}"},{"value":" .gs_tab.active svg","attributes":{"styleAttributes":{"fill":["currentColor"]}},"css":".gs_tabs_517 .gs_tab.active svg{fill:currentColor;}"},{"value":" .gs_content","attributes":{"styleAttributes":{"overflow":["hidden"],"opacity":["0"],"maxHeight":["0px"],"transition":["opacity 0.5s cubic-bezier(0.42, 0, 0.58, 1), max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1)"]}},"css":".gs_tabs_517 .gs_content{overflow:hidden;opacity:0;max-height:0px;transition:opacity 0.5s cubic-bezier(0.42, 0, 0.58, 1), max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1);}"},{"value":" .gs_content.active","attributes":{"styleAttributes":{"opacity":["1"],"maxHeight":["5000px"]}},"css":".gs_tabs_517 .gs_content.active{opacity:1;max-height:5000px;}"},{"value":" .gs_content \u003e .gs_content_inner","attributes":{"styleAttributes":{"paddingTop":["25px"],"paddingRight":["25px"],"paddingBottom":["25px"],"paddingLeft":["25px"],"fontSize":["1rem"],"lineHeight":["1.3rem"]}},"css":".gs_tabs_517 .gs_content \u003e .gs_content_inner{padding-top:25px;padding-right:25px;padding-bottom:25px;padding-left:25px;font-size:1rem;line-height:1.3rem;}"}]}],"type":"inner","className":"gs_tabs_517 gs_root","localId":"gsbp-286838a","styleAttributes":{"position":["relative"],"display":["flex"],"flexDirection":["column"],"alignItems":["stretch"],"justifyContent":["flex-start"]},"isVariation":"tabs","dynamicAttributes":[{"name": "data-type", "value":"tabs-component"}]} -->
 <div class="gs_tabs_517 gs_root gsbp-286838a"><!-- wp:greenshift-blocks/element {"id":"gsbp-bd7643f","type":"inner","className":"gs_tabs_list","localId":"gsbp-bd7643f","dynamicAttributes":[{"name":"role","value":"tablist"}],"styleAttributes":{"display":["flex"],"flexDirection":["row"],"columnGap":["15px"],"rowGap":["15px"],"flexWrap":["wrap"]},"isVariation":"tablist","metadata":{"name":"Tabs List Container"}} -->
 <div class="gs_tabs_list gsbp-bd7643f" role="tablist"><!-- wp:greenshift-blocks/element {"id":"gsbp-1cdb7ec","tag":"button","type":"inner","className":"gs_click_sync gs_tab active","localId":"gsbp-1cdb7ec","formAttributes":{"type":"button"},"dynamicAttributes":[{"name":"role","value":"tab"},{"name":"aria-selected","value":"true"}]} -->
 <button class="gs_click_sync gs_tab active" type="button" role="tab" aria-selected="true"><!-- wp:greenshift-blocks/element {"id":"gsbp-ffc0456","textContent":"Tab Title 1","tag":"span","className":"gs_name","localId":"gsbp-ffc0456"} -->
@@ -486,6 +486,17 @@ Tables have extra tableStyles attribute where we have styles for table, td, th e
 <!-- /wp:greenshift-blocks/element -->
 ```
 
+**Button Component Element**
+
+If user don't have specific requirement for button, use next button component.
+
+```html
+<!-- wp:greenshift-blocks/element {"id":"gsbp-b65d91f","inlineCssStyles":".gs_button{text-decoration:none;display:inline-block;position:relative;overflow:hidden;border-bottom-left-radius:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px));border-bottom-right-radius:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px));border-top-left-radius:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px));border-top-right-radius:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px));padding-top:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dvertical, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d40, 1rem));padding-bottom:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dvertical, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d40, 1rem));padding-right:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dhorizontal, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d60, 2.25rem));padding-left:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dhorizontal, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d60, 2.25rem));background-color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dbackground, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dbrand, #33EFAB));color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dtext, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dtext-on-brand, #000002));}.gs_button:hover{color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dtext-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dtext-on-brand-hover, #000003));background-color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dbackground-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dbrand-hover, #7AFFCE));}.gs_button.gs_button_secondary{background-color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-background, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dsecondary, #340fa0));color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-text, #ffffff);}.gs_button.gs_button_secondary:hover{background-color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-background-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dsecondary-hover, #441999)); color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-text-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dtext-on-secondary-hover, #fffffd));}.gs_button.gs_button_custom_color{background-color:#1A3138;color:#ffffff;}.gs_button.gs_button_custom_color:hover{background-color:#000000;}","dynamicGClasses":[{"value":"gs-parent-hover","type":"preset","label":"gs-parent-hover"},{"value":"gs_button","type":"local","label":"gs_button","localed":false,"css":".gs_button{text-decoration:none;display:inline-block;position:relative;overflow:hidden;border-bottom-left-radius:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px));border-bottom-right-radius:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px));border-top-left-radius:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px));border-top-right-radius:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px));padding-top:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dvertical, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d40, 1rem));padding-bottom:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dvertical, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d40, 1rem));padding-right:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dhorizontal, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d60, 2.25rem));padding-left:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dhorizontal, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d60, 2.25rem));background-color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dbackground, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dbrand, #33EFAB));color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dtext, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dtext-on-brand, #000002));}.gs_button:hover{color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dtext-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dtext-on-brand-hover, #000003));background-color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dbackground-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dbrand-hover, #7AFFCE));}","attributes":{"styleAttributes":{"textDecoration":["none"],"display":["inline-block"],"position":["relative"],"overflow":["hidden"],"color_hover":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dtext-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dtext-on-brand-hover, #000003))"],"borderBottomLeftRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px))"],"borderBottomRightRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px))"],"borderTopLeftRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px))"],"borderTopRightRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dborder-radius, var(\u002d\u002dwp-custom\u002d\u002dborder-radius\u002d\u002dmedium, 15px))"],"borderRadiusCustom_Extra":false,"borderRadiusLink_Extra":true,"paddingTop":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dvertical, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d40, 1rem))"],"paddingBottom":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dvertical, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d40, 1rem))"],"paddingRight":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dhorizontal, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d60, 2.25rem))"],"paddingLeft":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dspacing\u002d\u002dhorizontal, var(\u002d\u002dwp-preset\u002d\u002dspacing\u002d\u002d60, 2.25rem))"],"backgroundColor":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dbackground, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dbrand, #33EFAB))"],"backgroundColor_hover":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dbackground-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dbrand-hover, #7AFFCE))"],"color":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dtext, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dtext-on-brand, #000002))"]}},"originalBlock":"greenshift-blocks/element","selectors":[{"value":".gs_button_secondary","attributes":{"styleAttributes":{"backgroundColor":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-background, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dsecondary, #340fa0))"],"color":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-text, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dtext-on-secondary, #fffffc))"],"backgroundColor_hover":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-background-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dsecondary-hover, #340fa0))"],"color_hover":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-text-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dtext-on-secondary-hover, #fffffd))"]}},"css":".gs_button.gs_button_secondary{background-color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-background, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dsecondary, #340fa0));color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-text, #ffffff);}.gs_button.gs_button_secondary:hover{background-color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-background-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dsecondary-hover, #441999)); color:var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dbutton\u002d\u002dsecondary-text-hover, var(\u002d\u002dwp-preset\u002d\u002dcolor\u002d\u002dtext-on-secondary-hover, #fffffd));}"},{"value":".gs_button_custom_color","attributes":{"styleAttributes":{"backgroundColor":["#1A3138"],"color":["#ffffff"],"backgroundColor_hover":["#000000"]}},"css":".gs_button.gs_button_custom_color{background-color:#1A3138;color:#ffffff;}.gs_button.gs_button_custom_color:hover{background-color:#000000;}"}]}],"textContent":"Download for Free!","tag":"a","className":"gs-parent-hover gs_button","localId":"gsbp-b65d91f","href":"#","dynamicAttributes":[{"name":"data-type","value":"button-component"}],"isVariation":"buttoncomponent"} -->
+<a class="gs-parent-hover gs_button" href="#" data-type="button-component">Download for Free!</a>
+<!-- /wp:greenshift-blocks/element -->
+```
+
+
 **Marquee block**
 
 ```html
@@ -559,6 +570,155 @@ There are several types of charts. Here are examples, follow them when you do co
 -   **Links (`<a>`):** If using `target="_blank"` (via `linkNewWindow: true`), ensure `rel="noopener"` is present.
 -   **SVG:** Remove `xmlns="..."` attributes from `<svg>` and `<path>` tags in the final HTML.
 -   **Buttons:** Prefer `<a>` tags styled as buttons unless a `<button>` element is functionally required (e.g., form submit/reset).
+
+
+#### Available CSS Variables
+
+The plugin includes a comprehensive set of predefined CSS variables organized by categories. When setting values in `styleAttributes`, prioritize using these variables over hardcoded values:
+
+**Font Sizes:**
+- `var(--wp--preset--font-size--mini, 11px)` = 11px
+- `var(--wp--preset--font-size--xs, 0.85rem)` = 0.85rem
+- `var(--wp--preset--font-size--s, 1rem)` = 1rem
+- `var(--wp--preset--font-size--r, 1.2rem)` = 1.2rem
+- `var(--wp--preset--font-size--m, 1.35rem)` = 1.35rem
+- `var(--wp--preset--font-size--l, 1.55rem)` = 1.55rem
+- `var(--wp--preset--font-size--xl, clamp(1.6rem, 2.75vw, 1.9rem))` = clamp(1.6rem, 2.75vw, 1.9rem)
+- `var(--wp--preset--font-size--xxl, clamp(1.75rem, 3vw, 2.2rem))` = clamp(1.75rem, 3vw, 2.2rem)
+- `var(--wp--preset--font-size--high, clamp(1.9rem, 3.2vw, 2.4rem))` = clamp(1.9rem, 3.2vw, 2.4rem)
+- `var(--wp--preset--font-size--grand, clamp(2.2rem, 4vw, 2.8rem))` = clamp(2.2rem, 4vw, 2.8rem)
+- `var(--wp--preset--font-size--giga, clamp(3rem, 5vw, 4.5rem))` = clamp(3rem, 5vw, 4.5rem)
+- `var(--wp--preset--font-size--giant, clamp(3.2rem, 6.2vw, 6.5rem))` = clamp(3.2rem, 6.2vw, 6.5rem)
+- `var(--wp--preset--font-size--colossal, clamp(3.4rem, 9vw, 12rem))` = clamp(3.4rem, 9vw, 12rem)
+- `var(--wp--preset--font-size--god, clamp(3.5rem, 12vw, 15rem))` = clamp(3.5rem, 12vw, 15rem)
+
+**Line Heights:**
+- `var(--wp--custom--line-height--mini, 14px)` = 14px
+- `var(--wp--custom--line-height--xs, 1.15rem)` = 1.15rem
+- `var(--wp--custom--line-height--s, 1.4rem)` = 1.4rem
+- `var(--wp--custom--line-height--r, 1.9rem)` = 1.9rem
+- `var(--wp--custom--line-height--m, 2.1rem)` = 2.1rem
+- `var(--wp--custom--line-height--l, 2.37rem)` = 2.37rem
+- `var(--wp--custom--line-height--xl, clamp(2.3rem, 3.45vw, 2.6rem))` = clamp(2.3rem, 3.45vw, 2.6rem)
+- `var(--wp--custom--line-height--xxl, clamp(2.4rem, 3.55vw, 2.75rem))` = clamp(2.4rem, 3.55vw, 2.75rem)
+- `var(--wp--custom--line-height--high, clamp(2.5rem, 3.7vw, 3rem))` = clamp(2.5rem, 3.7vw, 3rem)
+- `var(--wp--custom--line-height--grand, clamp(2.75rem, 4.7vw, 3.5rem))` = clamp(2.75rem, 4.7vw, 3.5rem)
+- `var(--wp--custom--line-height--giga, clamp(4rem, 6vw, 5rem))` = clamp(4rem, 6vw, 5rem)
+- `var(--wp--custom--line-height--giant, clamp(4.2rem, 6.2vw, 7rem))` = clamp(4.2rem, 6.2vw, 7rem)
+- `var(--wp--custom--line-height--colossal, clamp(4.1rem, 9.35vw, 17rem))` = clamp(4.1rem, 9.35vw, 17rem)
+- `var(--wp--custom--line-height--god, clamp(4.2rem, 12.2vw, 20rem))` = clamp(4.2rem, 12.2vw, 20rem)
+
+**Spacing:**
+- `var(--wp--preset--spacing--20, 0.44rem)` = 0.44rem
+- `var(--wp--preset--spacing--30, 0.67rem)` = 0.67rem
+- `var(--wp--preset--spacing--40, 1rem)` = 1rem
+- `var(--wp--preset--spacing--50, 1.5rem)` = 1.5rem
+- `var(--wp--preset--spacing--60, 2.25rem)` = 2.25rem
+- `var(--wp--preset--spacing--70, 3.38rem)` = 3.38rem
+- `var(--wp--preset--spacing--80, 5.06rem)` = 5.06rem
+- `var(--wp--preset--spacing--90, 7.59rem)` = 7.59rem
+- `var(--wp--preset--spacing--100, 11.39rem)` = 11.39rem
+- `var(--wp--preset--spacing--110, 17.09rem)` = 17.09rem
+- `var(--wp--preset--spacing--110, 17.09rem)` = 17.09rem
+- `var(--wp--custom--button--spacing--horizontal, 2.25rem)` = 2.25rem
+- `var(--wp--custom--button--spacing--vertical, 1rem)` = 1rem
+
+
+**Shadows:**
+- `var(--wp--preset--shadow--accent, 0px 15px 25px 0px rgba(0, 0, 0, 0.1))` = 0px 15px 25px 0px rgba(0, 0, 0, 0.1)
+- `var(--wp--preset--shadow--mild, 0px 5px 20px 0px rgba(0, 0, 0, 0.03))` = 0px 5px 20px 0px rgba(0, 0, 0, 0.03)
+- `var(--wp--preset--shadow--soft, 0px 15px 30px 0px rgba(119, 123, 146, 0.1))` = 0px 15px 30px 0px rgba(119, 123, 146, 0.1)
+- `var(--wp--preset--shadow--elegant, 0px 5px 23px 0px rgba(188, 207, 219, 0.35))` = 0px 5px 23px 0px rgba(188, 207, 219, 0.35)
+- `var(--wp--preset--shadow--focus, 0px 2px 4px 0px rgba(0, 0, 0, 0.07))` = 0px 2px 4px 0px rgba(0, 0, 0, 0.07)
+- `var(--wp--preset--shadow--highlight, 0px 32px 48px 0px rgba(0, 0, 0, 0.15))` = 0px 32px 48px 0px rgba(0, 0, 0, 0.15)
+
+**Border Radius:**
+- `var(--wp--custom--border-radius--mini, 5px)` = 5px
+- `var(--wp--custom--border-radius--small, 10px)` = 10px
+- `var(--wp--custom--border-radius--medium, 15px)` = 15px
+- `var(--wp--custom--border-radius--large, 20px)` = 20px
+- `var(--wp--custom--border-radius--xlarge, 35px)` = 35px
+- `var(--wp--custom--border-radius--circle, 50%)` = 50%
+- `var(--wp--custom--button--border-radius, 15px)` = 15px
+
+
+**Transitions:**
+- `var(--wp--custom--transition--ease, all 0.5s ease)` = all 0.5s ease
+- `var(--wp--custom--transition--ease-in-out, all 0.3s ease-in-out)` = all 0.3s ease-in-out
+- `var(--wp--custom--transition--creative, all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1))` = all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1)
+- `var(--wp--custom--transition--soft, all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1))` = all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1)
+- `var(--wp--custom--transition--mild, all 0.5s cubic-bezier(0.47, 0, 0.07, 1))` = all 0.5s cubic-bezier(0.47, 0, 0.07, 1)
+- `var(--wp--custom--transition--elegant, all 0.5s cubic-bezier(0.35, 0.11, 0.22, 1.16))` = all 0.5s cubic-bezier(0.35, 0.11, 0.22, 1.16)
+- `var(--wp--custom--transition--smooth, all 1s cubic-bezier(0.66,0,0.34,1))` = all 1s cubic-bezier(0.66,0,0.34,1)
+- `var(--wp--custom--transition--accent, all 1s cubic-bezier(0.48,0.04,0.52,0.96))` = all 1s cubic-bezier(0.48,0.04,0.52,0.96)
+- `var(--wp--custom--transition--motion, all 1s cubic-bezier(0.84,0,0.16,1))` = all 1s cubic-bezier(0.84,0,0.16,1)
+- `var(--wp--custom--transition--light, all 1s cubic-bezier(0.4,0.8,0.74,1))` = all 1s cubic-bezier(0.4,0.8,0.74,1)
+
+**Animation:**
+- `var(--gs-root-animation-easing, cubic-bezier(0.42, 0, 0.58, 1))` = cubic-bezier(0.42, 0, 0.58, 1)
+
+**Width/Height Sizes:**
+- `var(--wp--custom--size--dot, 6px)` = 6px
+- `var(--wp--custom--size--mini, 11px)` = 11px
+- `var(--wp--custom--size--xs, 17px)` = 17px
+- `var(--wp--custom--size--s, 26px)` = 26px
+- `var(--wp--custom--size--r, 40px)` = 40px
+- `var(--wp--custom--size--m, 56px)` = 56px
+- `var(--wp--custom--size--l, 74px)` = 74px
+- `var(--wp--custom--size--xl, 100px)` = 100px
+- `var(--wp--custom--size--xxl, 150px)` = 150px
+- `var(--wp--custom--size--high, 220px)` = 220px
+- `var(--wp--custom--size--grand, 300px)` = 300px
+- `var(--wp--custom--size--huge, 385px)` = 385px
+- `var(--wp--custom--size--giant, 500px)` = 500px
+- `var(--wp--custom--size--colossal, 700px)` = 700px
+- `var(--wp--custom--size--god, 1000px)` = 1000px
+
+**Colors:**
+- `var(--wp--preset--color--brand, #33EFAB)` = #33EFAB
+- `var(--wp--preset--color--brand-hover, #15BA3F)` = #15BA3F
+- `var(--wp--preset--color--text-on-brand, #000002)` = #000002
+- `var(--wp--preset--color--text-on-brand-hover, #000003)` = #000003
+- `var(--wp--preset--color--secondary, #340fa0)` = #340fa0
+- `var(--wp--preset--color--secondary-hover, #441999)` = #441999
+- `var(--wp--preset--color--text-on-secondary, #fffffc)` = #fffffc
+- `var(--wp--preset--color--text-on-secondary-hover, #fffffd)` = #fffffd
+- `var(--wp--preset--color--textcolor, #333333)` = #333333
+- `var(--wp--preset--color--heading, #111111)` = #111111
+- `var(--wp--preset--color--border, #00000012)` = #00000012
+- `var(--wp--preset--color--background, #f9f9f9)` = #f9f9f9
+- `var(--wp--preset--color--card-base, #FFFEFE)` = #FFFEFE
+- `var(--wp--preset--color--card-border, #f0f0f0)` = #f0f0f0
+- `var(--wp--preset--color--card-text, #333333)` = #333333
+
+**Gradients:**
+- `var(--wp--preset--gradient--creative-primary, linear-gradient(196deg, rgb(74, 234, 220) 0%, rgb(151, 120, 209) 20%, rgb(207, 42, 186) 40%, rgb(238, 44, 130) 60%, rgb(251, 105, 98) 80%, rgb(254, 248, 76) 100%))` = linear-gradient(196deg, rgb(74, 234, 220) 0%, rgb(151, 120, 209) 20%, rgb(207, 42, 186) 40%, rgb(238, 44, 130) 60%, rgb(251, 105, 98) 80%, rgb(254, 248, 76) 100%)
+- `var(--wp--preset--gradient--creative-secondary, linear-gradient(70deg, #FF8813 0%, #FF0000 40%, #EE0EBD 100%))` = linear-gradient(70deg, #FF8813 0%, #FF0000 40%, #EE0EBD 100%)
+
+**Layout:**
+- `var(--wp--style--global--wide-size, 1200px)` = 1200px
+
+**Extra Variables:**
+- `var(--wp--custom--lightbox--background-color, rgba(0, 0, 0, 0.8))` = rgba(0, 0, 0, 0.8)
+- `var(--wp--custom--lightbox--close-button--background-color, rgba(0, 0, 0, 0.5))` = rgba(0, 0, 0, 0.5)
+- `var(--wp--custom--close-button--color, #ffffff)` = #ffffff
+- `var(--wp--custom--panel--background-color, #000)` = #000
+- `var(--wp--custom--panel--color, #ffffff)` = #ffffff
+- `var(--wp--custom--panel--color-a, #ffffff)` = #ffffff
+- `var(--wp--custom--spacing--side, min(3vw, 20px))` = min(3vw, 20px)
+- `var(--wp--custom--spacing--top, 0px)` = 0px
+- `var(--wp--custom--spacing--bottom, 0px)` = 0px
+
+**Usage Example:**
+```html
+<!-- wp:greenshift-blocks/element {"id":"gsbp-example","textContent":"Variable Example","localId":"gsbp-example","styleAttributes":{"fontSize":["var(--wp--preset--font-size--l, 1.55rem)"],"lineHeight":["var(--wp--custom--line-height--l, 2.37rem)"],"paddingTop":["var(--wp--preset--spacing--50, 1.5rem)"],"backgroundColor":["var(--wp--preset--color--brand, #33EFAB)"]}} -->
+<div class="gsbp-example">Variable Example</div>
+<!-- /wp:greenshift-blocks/element -->
+```
+
+#### Colors
+
+If user didn't specify required colors, give priority to colors from CSS variables. Brand color is used for accents and buttons, secondary color can be used for secondary buttons and accented links, text color is for color of regular content, heading color is for color of headings, card colors are for styling grouped card boxes, etc. If you add custom colors to background or text, try to match it with colors of buttons, headings, text
 
 ### Output Requirements
 

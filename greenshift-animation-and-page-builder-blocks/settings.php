@@ -989,6 +989,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<select name="openaiapimodel">
 																		<option value="gpt-4.1" <?php selected($openaiapimodel, 'gpt-4.1'); ?>> gpt-4.1 </option>
 																		<option value="gpt-4.1-mini" <?php selected($openaiapimodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
+																		<option value="gpt-5" <?php selected($openaiapimodel, 'gpt-5'); ?>> gpt-5 </option>
+																		<option value="gpt-5-mini" <?php selected($openaiapimodel, 'gpt-5-mini'); ?>> gpt-5-mini </option>
+																		<option value="gpt-5-nano" <?php selected($openaiapimodel, 'gpt-5-nano'); ?>> gpt-5-nano </option>
 																		<option value="gpt-4o" <?php selected($openaiapimodel, 'gpt-4o'); ?>> gpt-4o </option>
 																		<option value="o1" <?php selected($openaiapimodel, 'o1'); ?>> o1 </option>
 																		<option value="o1-mini" <?php selected($openaiapimodel, 'o1-mini'); ?>> o1-mini </option>
@@ -1013,6 +1016,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<select name="aihelpermodel">
 																		<option value="gpt-4.1" <?php selected($aihelpermodel, 'gpt-4.1'); ?>> gpt-4.1 </option>
 																		<option value="gpt-4.1-mini" <?php selected($aihelpermodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
+																		<option value="gpt-5" <?php selected($aihelpermodel, 'gpt-5'); ?>> gpt-5 </option>
+																		<option value="gpt-5-mini" <?php selected($aihelpermodel, 'gpt-5-mini'); ?>> gpt-5-mini </option>
+																		<option value="gpt-5-nano" <?php selected($aihelpermodel, 'gpt-5-nano'); ?>> gpt-5-nano </option>
 																		<option value="o3" <?php selected($aihelpermodel, 'o3'); ?>> o3 </option>
 																		<option value="o4-mini" <?php selected($aihelpermodel, 'o4-mini'); ?>> o4-mini </option>
 																		<option value="gemini-2.5-pro" <?php selected($aihelpermodel, 'gemini-2.5-pro'); ?>> gemini-2.5-pro </option>
