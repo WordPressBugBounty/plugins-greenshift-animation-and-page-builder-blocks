@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.9
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 12.0
+Stable tag: 12.1
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -111,6 +111,24 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 12.1 =
+
+* Added: Youtube Inline element (previous Youtube Autoplay element was refactored)
+* Added: Vimeo Inline element
+* Added: Iframe element supports dynamic placeholders for URL (as well as Youtube and Vimeo Elements)
+* Added: Text Split Element supports dynamic values
+* Added: Improved accessability for Panel scripts
+* Added: Video Element has Lazy load option
+* Added: Style Manager Element
+* Added: General AI models now supports Claude models
+* Added: Isolation parameter to Position panel
+* Added: AI models will use now inner css variables from presets with more priority
+* Added: Block building models have option to use site branding colors and variables
+* Fix: Hue rotate filter fix in Effect panel
+* Fix: Site Identity fix when saving empty values
+* Fix: Site Identity fix when saving empty values
+* Fix: Security fix for contributor roles when they can save css for other posts
 
 = 12.0 =
 

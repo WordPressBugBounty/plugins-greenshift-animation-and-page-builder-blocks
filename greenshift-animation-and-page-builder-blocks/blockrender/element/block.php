@@ -13,6 +13,111 @@ class Element
 		add_action('init', array($this, 'init_handler'));
 	}
 
+	/**
+	 * Convert YouTube and Vimeo URLs to embed format with customizable settings
+	 * 
+	 * @param string $src The source URL
+	 * @param array $extra_filters Additional filter options for embed parameters
+	 * @return string The embed URL with applied settings
+	 */
+	private function embedsrc($src, $extra_filters = array()) {
+		// If src already contains 'embed', return as is
+		if ($src && strpos($src, 'embed') !== false) {
+			return $src;
+		}
+
+		// Check if it's a YouTube link
+		if ($src && (strpos($src, 'youtube.com') !== false || strpos($src, 'youtu.be') !== false)) {
+			$videoId = null;
+			
+			// Extract video ID from different YouTube URL formats
+			if (strpos($src, 'youtu.be/') !== false) {
+				// Format: https://youtu.be/jyUpZ6Unpq4?si=HKt3SYuJxhefRfR0
+				$parts = explode('youtu.be/', $src);
+				if (isset($parts[1])) {
+					$videoId = explode('?', $parts[1])[0];
+				}
+			} elseif (strpos($src, 'youtube.com/watch?v=') !== false) {
+				// Format: https://www.youtube.com/watch?v=k4pL1i4sF7c
+				$parts = explode('v=', $src);
+				if (isset($parts[1])) {
+					$videoId = explode('&', $parts[1])[0];
+				}
+			}
+			
+			// If we found a video ID, convert to embed format
+			if ($videoId) {
+				$embedUrl = 'https://www.youtube.com/embed/' . $videoId;
+				$params = array();
+				
+				// Apply parameters based on extra_filters
+				if (!empty($extra_filters['enableAutoplay'])) {
+					$params[] = 'autoplay=1';
+					$params[] = 'mute=1';
+				}
+				if (!empty($extra_filters['disableControls'])) {
+					$params[] = 'controls=0';
+				} else {
+					$params[] = 'controls=1';
+				}
+				if (!empty($extra_filters['disableInformation'])) {
+					$params[] = 'showinfo=0';
+				}
+				if (!empty($extra_filters['enableModestBranding'])) {
+					$params[] = 'modestbranding=1';
+				}
+				if (!empty($extra_filters['enableLoop'])) {
+					$params[] = 'loop=1';
+				}
+				
+				return count($params) > 0 ? $embedUrl . '?' . implode('&', $params) : $embedUrl;
+			}
+		}
+		
+		// Check if it's a Vimeo link
+		if ($src && (strpos($src, 'vimeo.com') !== false || strpos($src, 'player.vimeo.com') !== false)) {
+			$videoId = null;
+			
+			// Extract video ID from different Vimeo URL formats
+			if (strpos($src, 'vimeo.com/') !== false) {
+				// Format: https://vimeo.com/123456789 or https://vimeo.com/123456789?h=abc123
+				$parts = explode('vimeo.com/', $src);
+				if (isset($parts[1])) {
+					$videoId = explode('?', $parts[1])[0];
+				}
+			} elseif (strpos($src, 'player.vimeo.com/video/') !== false) {
+				// Format: https://player.vimeo.com/video/123456789
+				$parts = explode('player.vimeo.com/video/', $src);
+				if (isset($parts[1])) {
+					$videoId = explode('?', $parts[1])[0];
+				}
+			}
+			
+			// If we found a video ID, convert to embed format
+			if ($videoId) {
+				$embedUrl = 'https://player.vimeo.com/video/' . $videoId;
+				$params = array();
+				
+				// Apply parameters based on extra_filters
+				if (!empty($extra_filters['enableAutoplay'])) {
+					$params[] = 'autoplay=1';
+					$params[] = 'muted=1';
+				}
+				if (!empty($extra_filters['disableControls'])) {
+					$params[] = 'controls=0';
+				}
+				if (!empty($extra_filters['enableLoop'])) {
+					$params[] = 'loop=1';
+				}
+				
+				return count($params) > 0 ? $embedUrl . '?' . implode('&', $params) : $embedUrl;
+			}
+		}
+		
+		// Return original src if not a YouTube/Vimeo link or couldn't extract ID
+		return $src;
+	}
+
 	public function init_handler()
 	{
 		register_block_type(
@@ -54,10 +159,15 @@ class Element
 			if($block['attrs']['tag'] == 'table' && (!empty($block['attrs']['tableAttributes']['table']['sortable']) || !empty($block['attrs']['tableStyles']['table']['style']))){
 				wp_enqueue_script('gstablesort');
 			}else if($block['attrs']['tag'] == 'iframe'){
-				if(!empty($block['attrs']['src']) && strpos($block['attrs']['src'], '{{') !== false){
+				if(!empty($block['attrs']['src'])){
 					$p = new \WP_HTML_Tag_Processor( $html );
 					$p->next_tag();
-					$p->set_attribute( 'src', greenshift_dynamic_placeholders(esc_attr($block['attrs']['src'])));
+					$src = greenshift_dynamic_placeholders(esc_url($block['attrs']['src']));
+					if(!empty($block['attrs']['isVariation']) && ($block['attrs']['isVariation'] == 'youtubeplay' || $block['attrs']['isVariation'] == 'vimeoplay')){
+						$extra_filters = !empty($block['attrs']['extra_filters']) ? $block['attrs']['extra_filters'] : array();
+						$src = $this->embedsrc($src, $extra_filters);
+					}
+					$p->set_attribute( 'src', $src);
 					$html = $p->get_updated_html();
 				}
 			} else if($block['attrs']['tag'] == 'a'){
@@ -72,6 +182,10 @@ class Element
 					$p->next_tag();
 					$p->set_attribute( 'title', greenshift_dynamic_placeholders(esc_attr($block['attrs']['title'])));
 					$html = $p->get_updated_html();
+				}
+			} else if($block['attrs']['tag'] == 'video'){
+				if(!empty($block['attrs']['lazyLoadVideo'])){
+					wp_enqueue_script('gs-lazyloadvideo');
 				}
 			}
 		}
@@ -340,6 +454,10 @@ class Element
 				}
 				
 				$html = $p->get_updated_html();
+			}else if($block['attrs']['isVariation'] == 'stylemanager'){
+				if(!is_admin()){
+					return '';
+				}
 			}
 		}
 		if(!empty($block['attrs']['enableTooltip'])){
@@ -353,7 +471,7 @@ class Element
 				$content = !empty($block['attrs']['textContent']) ? $block['attrs']['textContent'] : '';
 				$html = GSPB_make_dynamic_text($html, $block['attrs'], $block, $block['attrs']['dynamictext'], $content);
 				
-				if(!empty($block['attrs']['splitText'])){
+				if(!empty($block['attrs']['splitText']) || (!empty($block['attrs']['isVariation']) && $block['attrs']['isVariation'] == 'splittext')){
 					//ensure to split also dynamic text
 					$type = !empty($block['attrs']['splitTextType']) ? $block['attrs']['splitTextType'] : 'words';
 					$html = greenshift_split_dynamic_text($html, $type);
@@ -375,7 +493,11 @@ class Element
 								$value = esc_url($block['attrs']['dynamiclink']['fallbackValue']);
 							}
 						}
-						$p->set_attribute( 'src', $value);
+						if($block['attrs']['tag'] == 'video' && !empty($block['attrs']['lazyLoadVideo'])){
+							$p->set_attribute( 'data-src', $value);
+						} else {
+							$p->set_attribute( 'src', $value);
+						}
 						
 						if(!empty($block['attrs']['enableSrcSet']) && !empty($type['type']) && $type['type'] == 'image'){
 							$id = attachment_url_to_postid($value);

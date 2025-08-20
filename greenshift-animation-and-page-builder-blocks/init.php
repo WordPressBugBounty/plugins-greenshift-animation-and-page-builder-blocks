@@ -114,6 +114,14 @@ function gspb_greenShift_register_scripts_blocks(){
 
 	wp_register_script( 'gspb-js-blocks', '', array(), '1.0', true );
 
+	wp_register_script(
+		'gs-lazyloadvideo',
+		GREENSHIFT_DIR_URL . 'libs/video/lazy.js',
+		array(),
+		'1.0',
+		true
+	);
+
 	//lazyload
 	wp_register_script(
 		'gs-lazyload',
@@ -550,7 +558,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-lightbox',
 		GREENSHIFT_DIR_URL . 'libs/greenlightbox/index.js',
 		array(),
-		'1.2',
+		'1.3',
 		true
 	);
 
@@ -582,7 +590,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greenpanel',
 		GREENSHIFT_DIR_URL . 'libs/greenpanel/index.js',
 		array(),
-		'1.8',
+		'1.9',
 		true
 	);
 
@@ -2439,7 +2447,7 @@ function gspb_global_assets()
 			wp_enqueue_style('greenShift-dark-accent-css', GREENSHIFT_DIR_URL . 'templates/admin/dark_accent_ui.css', array(), '1.0');
 		}
 		if(!empty($options['dark_mode'])){
-			wp_enqueue_style('greenShift-dark-mode-css', GREENSHIFT_DIR_URL . 'templates/admin/black.css', array(), '1.4');
+			wp_enqueue_style('greenShift-dark-mode-css', GREENSHIFT_DIR_URL . 'templates/admin/black.css', array(), '1.5');
 		}
 
 	}
@@ -2931,6 +2939,23 @@ function gspb_update_css_settings($request)
 	try {
 		$css = sanitize_text_field($request->get_param('css'));
 		$id = sanitize_text_field($request->get_param('id'));
+		
+		// Security check: Verify the post exists and user has permission to edit it
+		if (!$id || !get_post($id)) {
+			return json_encode(array(
+				'success' => false,
+				'message' => 'Post not found.',
+			));
+		}
+		
+		// Check if user can edit this specific post
+		if (!current_user_can('edit_post', $id)) {
+			return json_encode(array(
+				'success' => false,
+				'message' => 'You do not have permission to edit this post.',
+			));
+		}
+		
 		if ($css) {
 			update_post_meta($id, '_gspb_post_css', $css);
 		}
@@ -3693,6 +3718,7 @@ function gspb_enable_extended_upload($mime_types = array())
 	$mime_types['usdz']  = 'application/octet-stream';
 	$mime_types['splinecode'] = 'application/octet-stream';
 	$mime_types['gltf']  = 'text/plain';
+	$mime_types['json'] = 'application/json';
 	return $mime_types;
 }
 add_filter('upload_mimes', 'gspb_enable_extended_upload');

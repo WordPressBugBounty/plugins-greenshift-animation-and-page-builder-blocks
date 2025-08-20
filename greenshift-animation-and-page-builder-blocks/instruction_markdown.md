@@ -181,13 +181,13 @@ Determines how the block's content is handled:
     -   *Example (Two Columns):* Use `isVariation: "contentcolumns"` on the outer section and `isVariation: "contentarea"` on the inner flex container. Configure `flexColumns_Extra` and `flexWidths_Extra`.
 
     ```html
-    <!-- wp:greenshift-blocks/element {"id":"gsbp-e7ebc80","tag":"section","type":"inner","localId":"gsbp-e7ebc80","align":"full","styleAttributes":{"display":["flex"],"justifyContent":["center"],"flexDirection":["column"],"alignItems":["center"],"paddingRight":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"paddingLeft":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"marginTop":["0px"],"marginBottom":["0px"],"position":["relative"], "paddingTop":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dtop, 0px)"], "paddingBottom":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dbottom, 0px)"]},"isVariation":"contentcolumns","dynamicAttributes":[{"name": "data-type", "value":"section-component"}]} -->
-    <section class="gsbp-e7ebc80 alignfull"><!-- wp:greenshift-blocks/element {"id":"gsbp-96ba582","type":"inner","localId":"gsbp-96ba582","styleAttributes":{"maxWidth":["100%"],"width":["var(\u002d\u002dwp\u002d\u002dstyle\u002d\u002dglobal\u002d\u002dwide-size, 1200px)"],"display":["flex"],"flexColumns_Extra":2,"flexWidths_Extra":{"desktop":{"name":"50/50","widths":[50,50]},"tablet":{"name":"50/50","widths":[50,50]},"mobile":{"name":"100/100","widths":[100,100]}},"flexDirection":["row"],"columnGap":["25px"],"rowGap":["25px"],"flexWrap":["wrap"]},"isVariation":"contentarea","metadata":{"name":"Content Area"},"dynamicAttributes":[{"name": "data-type", "value":"content-area-component"}]} -->
-    <div class="gsbp-96ba582"><!-- wp:greenshift-blocks/element {"id":"gsbp-72676cb","type":"inner","localId":"gsbp-72676cb"} -->
+    <!-- wp:greenshift-blocks/element {"id":"gsbp-42bdb4c","tag":"section","type":"inner","localId":"gsbp-42bdb4c","align":"full","dynamicAttributes":[{"name":"data-type","value":"section-component"}],"styleAttributes":{"display":["flex"],"justifyContent":["center"],"flexDirection":["column"],"alignItems":["center"],"paddingRight":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"paddingLeft":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"paddingTop":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dtop, 0px)"],"paddingBottom":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dbottom, 0px)"],"marginTop":["0px"],"marginBottom":["0px"],"paddingLink_Extra":"lr","position":["relative"]},"isVariation":"contentcolumns"} -->
+    <section class="gsbp-42bdb4c alignfull" data-type="section-component"><!-- wp:greenshift-blocks/element {"id":"gsbp-67dafe8","type":"inner","localId":"gsbp-67dafe8","dynamicAttributes":[{"name":"data-type","value":"content-area-component"}],"styleAttributes":{"maxWidth":["100%"],"width":["var(\u002d\u002dwp\u002d\u002dstyle\u002d\u002dglobal\u002d\u002dwide-size, 1200px)"],"display":["flex"],"flexColumns_Extra":2,"flexWidths_Extra":{"desktop":{"name":"50/50","widths":[50,50]},"tablet":{"name":"50/50","widths":[50,50]},"mobile":{"name":"100/100","widths":[100,100]}},"flexDirection":["row"],"columnGap":["25px"],"rowGap":["25px"],"flexWrap":["wrap"]},"isVariation":"contentarea","metadata":{"name":"Content Area"}} -->
+    <div class="gsbp-67dafe8" data-type="content-area-component"><!-- wp:greenshift-blocks/element {"id":"gsbp-2d5265e","type":"inner","localId":"gsbp-2d5265e"} -->
     <div></div>
     <!-- /wp:greenshift-blocks/element -->
 
-    <!-- wp:greenshift-blocks/element {"id":"gsbp-0058e6e","type":"inner","localId":"gsbp-0058e6e"} -->
+    <!-- wp:greenshift-blocks/element {"id":"gsbp-92c0862","type":"inner","localId":"gsbp-92c0862"} -->
     <div></div>
     <!-- /wp:greenshift-blocks/element --></div>
     <!-- /wp:greenshift-blocks/element --></section>
@@ -196,9 +196,9 @@ Determines how the block's content is handled:
 
  - **Section** For full width sections with centered content use `align: "full"` and next example.
     ```html
-    <!-- wp:greenshift-blocks/element {"id":"gsbp-bed93f7","tag":"section","type":"inner","localId":"gsbp-bed93f7","align":"full","styleAttributes":{"display":["flex"],"justifyContent":["center"],"flexDirection":["column"],"alignItems":["center"],"paddingRight":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"paddingLeft":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"marginTop":["0px"],"marginBottom":["0px"],"position":["relative"],"paddingTop":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dtop, 0px)"],"paddingBottom":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dbottom, 0px)"]},"isVariation":"contentwrapper","dynamicAttributes": [{"name": "data-type", "value":"section-component"}]} -->
-    <section class="gsbp-bed93f7 alignfull"><!-- wp:greenshift-blocks/element {"id":"gsbp-2900b2c","type":"inner","localId":"gsbp-2900b2c","styleAttributes":{"maxWidth":["100%"],"width":["var(\u002d\u002dwp\u002d\u002dstyle\u002d\u002dglobal\u002d\u002dwide-size, 1200px)"]},"isVariation":"nocolumncontent","metadata":{"name":"Content Area"},"dynamicAttributes":[{"name": "data-type", "value":"content-area-component"}]} -->
-    <div class="gsbp-2900b2c"></div>
+    <!-- wp:greenshift-blocks/element {"id":"gsbp-1c2390f","tag":"section","type":"inner","localId":"gsbp-1c2390f","align":"full","dynamicAttributes":[{"name":"data-type","value":"section-component"}],"styleAttributes":{"display":["flex"],"justifyContent":["center"],"flexDirection":["column"],"alignItems":["center"],"paddingRight":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"paddingLeft":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dside, min(3vw, 20px))"],"paddingTop":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dtop, 0px)"],"paddingBottom":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dspacing\u002d\u002dbottom, 0px)"],"marginTop":["0px"],"marginBottom":["0px"],"paddingLink_Extra":"lr","position":["relative"]},"isVariation":"contentwrapper"} -->
+    <section class="gsbp-1c2390f alignfull" data-type="section-component"><!-- wp:greenshift-blocks/element {"id":"gsbp-9a9c9e1","type":"inner","localId":"gsbp-9a9c9e1","dynamicAttributes":[{"name":"data-type","value":"content-area-component"}],"styleAttributes":{"maxWidth":["100%"],"width":["var(\u002d\u002dwp\u002d\u002dstyle\u002d\u002dglobal\u002d\u002dwide-size, 1200px)"]},"isVariation":"nocolumncontent","metadata":{"name":"Content Area"}} -->
+    <div class="gsbp-9a9c9e1" data-type="content-area-component"></div>
     <!-- /wp:greenshift-blocks/element --></section>
     <!-- /wp:greenshift-blocks/element -->
     ```
@@ -333,7 +333,7 @@ There are some special interactive blocks that have additional rules and attribu
 **Accordion Element**
 
 ```html
-<!-- wp:greenshift-blocks/element {"id":"gsbp-4893b17","dynamicGClasses":[{"value":"gs_accordion_273","type":"local","label":"gs_accordion_273","localed":false,"css":"","attributes":{"styleAttributes":{}},"originalBlock":"greenshift-blocks/element","selectors":[{"value":" \u003e .gs_item","attributes":{"styleAttributes":{"borderRadiusLink_Extra":true,"borderTopLeftRadius":["8px"],"borderBottomLeftRadius":["8px"],"borderTopRightRadius":["8px"],"borderBottomRightRadius":["8px"],"overflow":["hidden"],"borderWidth":["1px"],"borderStyle":["solid"],"borderColor":["#00000012"],"borderCustom_Extra":false,"borderLink_Extra":false}},"css":".gs_accordion_273 \u003e .gs_item{border-top-left-radius:8px;border-bottom-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;overflow:hidden;border-width:1px;border-style:solid;border-color:#00000012;}"},{"value":" .gs_title","attributes":{"styleAttributes":{"marginTop":["0px"],"marginRight":["0px"],"marginBottom":["0px"],"marginLeft":["0px"],"paddingTop":["0px"],"paddingRight":["0px"],"paddingBottom":["0px"],"paddingLeft":["0px"]}},"css":".gs_accordion_273 .gs_title{margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;}"},{"value":" .gs_title button","attributes":{"styleAttributes":{"fontSize":["1rem"],"backgroundColor":["#0000000d"],"borderCustom_Extra":true,"border":["none"],"paddingTop":["1rem"],"paddingBottom":["1rem"],"paddingRight":["1.5rem"],"paddingLeft":["1.5rem"],"fontWeight":["normal"],"textDecoration":["none"],"display":["flex"],"justifyContent":["space-between"],"alignItems":["center"],"width":["100%"],"color":["#000000"],"cursor":["pointer"],"columnGap":["5px"]}},"css":".gs_accordion_273 .gs_title button{font-size:1rem;background-color:#0000000d;border:none;padding-top:1rem;padding-bottom:1rem;padding-right:1.5rem;padding-left:1.5rem;font-weight:normal;text-decoration:none;display:flex;justify-content:space-between;align-items:center;width:100%;color:#000000;cursor:pointer;column-gap:5px;}"},{"value":" .gs_title .gs_icon","attributes":{"styleAttributes":{"width":["17px"],"height":["17px"],"transition":["all 0.5s ease"]}},"css":".gs_accordion_273 .gs_title .gs_icon{width:17px;height:17px;transition:all 0.5s ease;}"},{"value":"\u003e .gs_item \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["0px"],"overflow":["hidden"],"transition":["max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1)"],"opacity":["0"]}},"css":".gs_accordion_273 \u003e .gs_item \u003e .gs_content{max-height:0px;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);opacity:0;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["5000px"],"opacity":["1"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_content{max-height:5000px;opacity:1;}"},{"value":" .gs_content \u003e .gs_content_inner","attributes":{"styleAttributes":{"paddingTop":["25px"],"paddingRight":["25px"],"paddingBottom":["25px"],"paddingLeft":["25px"],"fontSize":["1rem"],"lineHeight":["1.3rem"]}},"css":".gs_accordion_273 .gs_content \u003e .gs_content_inner{padding-top:25px;padding-right:25px;padding-bottom:25px;padding-left:25px;font-size:1rem;line-height:1.3rem;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_title .gs_icon","attributes":{"styleAttributes":{"transform":["rotate(90deg)"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_title .gs_icon{transform:rotate(90deg);}"}]}],"type":"inner","className":"gs_accordion_273","localId":"gsbp-4893b17","styleAttributes":{"position":["relative"],"display":["flex"],"flexDirection":["column"],"rowGap":["15px"],"columnGap":["15px"],"alignItems":["stretch"],"justifyContent":["flex-start"]},"isVariation":"accordion","dynamicAttributes":[{"name": "data-type", "value":"accordion-component"}]} -->
+<!-- wp:greenshift-blocks/element {"id":"gsbp-4893b17","dynamicGClasses":[{"value":"gs_accordion_273","type":"local","label":"gs_accordion_273","localed":false,"css":"","attributes":{"styleAttributes":{}},"originalBlock":"greenshift-blocks/element","selectors":[{"value":" \u003e .gs_item","attributes":{"styleAttributes":{"borderRadiusLink_Extra":true,"borderTopLeftRadius":["8px"],"borderBottomLeftRadius":["8px"],"borderTopRightRadius":["8px"],"borderBottomRightRadius":["8px"],"overflow":["hidden"],"borderWidth":["1px"],"borderStyle":["solid"],"borderColor":["var(--wp--preset--color--border, #00000012)"],"borderCustom_Extra":false,"borderLink_Extra":false}},"css":".gs_accordion_273 \u003e .gs_item{border-top-left-radius:8px;border-bottom-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;overflow:hidden;border-width:1px;border-style:solid;border-color:var(--wp--preset--color--border, #00000012);}"},{"value":" .gs_title","attributes":{"styleAttributes":{"marginTop":["0px"],"marginRight":["0px"],"marginBottom":["0px"],"marginLeft":["0px"],"paddingTop":["0px"],"paddingRight":["0px"],"paddingBottom":["0px"],"paddingLeft":["0px"]}},"css":".gs_accordion_273 .gs_title{margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;}"},{"value":" .gs_title button","attributes":{"styleAttributes":{"fontSize":["1rem"],"backgroundColor":["#0000000d"],"borderCustom_Extra":true,"border":["none"],"paddingTop":["1rem"],"paddingBottom":["1rem"],"paddingRight":["1.5rem"],"paddingLeft":["1.5rem"],"fontWeight":["normal"],"textDecoration":["none"],"display":["flex"],"justifyContent":["space-between"],"alignItems":["center"],"width":["100%"],"color":["#000000"],"cursor":["pointer"],"columnGap":["5px"]}},"css":".gs_accordion_273 .gs_title button{font-size:1rem;background-color:#0000000d;border:none;padding-top:1rem;padding-bottom:1rem;padding-right:1.5rem;padding-left:1.5rem;font-weight:normal;text-decoration:none;display:flex;justify-content:space-between;align-items:center;width:100%;color:#000000;cursor:pointer;column-gap:5px;}"},{"value":" .gs_title .gs_icon","attributes":{"styleAttributes":{"width":["17px"],"height":["17px"],"transition":["all 0.5s ease"]}},"css":".gs_accordion_273 .gs_title .gs_icon{width:17px;height:17px;transition:all 0.5s ease;}"},{"value":"\u003e .gs_item \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["0px"],"overflow":["hidden"],"transition":["max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1)"],"opacity":["0"]}},"css":".gs_accordion_273 \u003e .gs_item \u003e .gs_content{max-height:0px;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);opacity:0;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["5000px"],"opacity":["1"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_content{max-height:5000px;opacity:1;}"},{"value":" .gs_content \u003e .gs_content_inner","attributes":{"styleAttributes":{"paddingTop":["25px"],"paddingRight":["25px"],"paddingBottom":["25px"],"paddingLeft":["25px"],"fontSize":["1rem"],"lineHeight":["1.3rem"]}},"css":".gs_accordion_273 .gs_content \u003e .gs_content_inner{padding-top:25px;padding-right:25px;padding-bottom:25px;padding-left:25px;font-size:1rem;line-height:1.3rem;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_title .gs_icon","attributes":{"styleAttributes":{"transform":["rotate(90deg)"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_title .gs_icon{transform:rotate(90deg);}"}]}],"type":"inner","className":"gs_accordion_273","localId":"gsbp-4893b17","styleAttributes":{"position":["relative"],"display":["flex"],"flexDirection":["column"],"rowGap":["15px"],"columnGap":["15px"],"alignItems":["stretch"],"justifyContent":["flex-start"]},"isVariation":"accordion","dynamicAttributes":[{"name": "data-type", "value":"accordion-component"}]} -->
 <div class="gs_accordion_273 gsbp-4893b17"><!-- wp:greenshift-blocks/element {"id":"gsbp-1d542bc","type":"inner","className":"gs_item","localId":"gsbp-1d542bc","metadata":{"name":"Accordion Item"}} -->
 <div class="gs_item"><!-- wp:greenshift-blocks/element {"id":"gsbp-792c75d","tag":"h3","type":"inner","className":"gs_title","localId":"gsbp-792c75d","metadata":{"name":"Accordion Title"}} -->
 <h3 class="gs_title"><!-- wp:greenshift-blocks/element {"id":"gsbp-594799c","tag":"button","type":"inner","className":"gs_click_sync","localId":"gsbp-594799c","formAttributes":{"type":"button"},"dynamicAttributes":[{"name":"aria-expanded","value":"false"}]} -->
@@ -441,7 +441,7 @@ There are some special interactive blocks that have additional rules and attribu
 Tables have extra tableStyles attribute where we have styles for table, td, th elements + responsive attribute to make table responsive.
 
 ```html
-<!-- wp:greenshift-blocks/element {"id":"gsbp-7f2c7b7","tag":"table","type":"inner","localId":"gsbp-7f2c7b7","tableAttributes":{"table":{"responsive":"yes"}},"tableStyles":{"table":{"layout":"fixed","border":"collapse"},"responsive":"yes","td":{"paddingTop":["6px"],"paddingBottom":["6px"],"paddingRight":["12px"],"paddingLeft":["12px"],"borderStyle":"solid","borderWidth":"1px","borderColor":"#00000012","fontSize":["14px"]},"th":{"paddingTop":["6px"],"paddingBottom":["6px"],"paddingRight":["12px"],"paddingLeft":["12px"],"borderStyle":"solid","borderWidth":"1px","borderColor":"#00000012","fontSize":["16px"],"backgroundColor":"var(\u002d\u002dwp\u002d\u002dpreset\u002d\u002dcolor\u002d\u002dlightbg, #cddceb21)"}},"styleAttributes":{"width":["100%"]}} -->
+<!-- wp:greenshift-blocks/element {"id":"gsbp-7f2c7b7","tag":"table","type":"inner","localId":"gsbp-7f2c7b7","tableAttributes":{"table":{"responsive":"yes"}},"tableStyles":{"table":{"layout":"fixed","border":"collapse"},"responsive":"yes","td":{"paddingTop":["6px"],"paddingBottom":["6px"],"paddingRight":["12px"],"paddingLeft":["12px"],"borderStyle":"solid","borderWidth":"1px","borderColor":"var(--wp--preset--color--border, #00000012)","fontSize":["14px"]},"th":{"paddingTop":["6px"],"paddingBottom":["6px"],"paddingRight":["12px"],"paddingLeft":["12px"],"borderStyle":"solid","borderWidth":"1px","borderColor":"var(--wp--preset--color--border, #00000012)","fontSize":["16px"],"backgroundColor":"var(\u002d\u002dwp\u002d\u002dpreset\u002d\u002dcolor\u002d\u002dlightbg, #cddceb21)"}},"styleAttributes":{"width":["100%"]}} -->
 <table class="gsbp-7f2c7b7"><!-- wp:greenshift-blocks/element {"id":"gsbp-86384cd","tag":"tr","type":"inner","localId":"gsbp-86384cd"} -->
 <tr><!-- wp:greenshift-blocks/element {"id":"gsbp-d14108c","textContent":"Header","tag":"th","localId":"gsbp-d14108c"} -->
 <th>Header</th>
@@ -496,6 +496,25 @@ If user don't have specific requirement for button, use next button component.
 <!-- /wp:greenshift-blocks/element -->
 ```
 
+**Inline Youtube Video block**
+
+This block is used primarly for Video backgrounds from Youtube links. It has muted autoplay and loop
+
+```html
+<!-- wp:greenshift-blocks/element {"id":"gsbp-c1db4cc","tag":"iframe","localId":"gsbp-c1db4cc","src":"https://www.youtube.com/watch?v=PpGeRu0mZy0","dynamicAttributes":[{"name":"allow","value":"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"},{"name":"allowfullscreen","value":"true"}],"styleAttributes":{"aspectRatio":["16/9"],"display":["block"],"objectFit":["cover"],"width":["100%"],"pointerEvents":["none"]},"isVariation":"youtubeplay"} -->
+<iframe class="gsbp-c1db4cc" src="https://www.youtube.com/watch?v=PpGeRu0mZy0" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<!-- /wp:greenshift-blocks/element -->
+```
+
+**Inline Vimeo Video block**
+
+This block is used primarly for Video backgrounds from Vimeo links. It has muted autoplay and loop
+
+```html
+<!-- wp:greenshift-blocks/element {"id":"gsbp-add38f7","tag":"iframe","localId":"gsbp-add38f7","src":"https://vimeo.com/863362136","dynamicAttributes":[{"name":"allow","value":"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"},{"name":"allowfullscreen","value":"true"}],"styleAttributes":{"aspectRatio":["16/9"],"display":["block"],"objectFit":["cover"],"width":["100%"],"pointerEvents":["none"]},"isVariation":"vimeoplay"} -->
+<iframe class="gsbp-add38f7" src="https://vimeo.com/863362136" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<!-- /wp:greenshift-blocks/element -->
+```
 
 **Marquee block**
 
@@ -674,40 +693,6 @@ The plugin includes a comprehensive set of predefined CSS variables organized by
 - `var(--wp--custom--size--colossal, 700px)` = 700px
 - `var(--wp--custom--size--god, 1000px)` = 1000px
 
-**Colors:**
-- `var(--wp--preset--color--brand, #33EFAB)` = #33EFAB
-- `var(--wp--preset--color--brand-hover, #15BA3F)` = #15BA3F
-- `var(--wp--preset--color--text-on-brand, #000002)` = #000002
-- `var(--wp--preset--color--text-on-brand-hover, #000003)` = #000003
-- `var(--wp--preset--color--secondary, #340fa0)` = #340fa0
-- `var(--wp--preset--color--secondary-hover, #441999)` = #441999
-- `var(--wp--preset--color--text-on-secondary, #fffffc)` = #fffffc
-- `var(--wp--preset--color--text-on-secondary-hover, #fffffd)` = #fffffd
-- `var(--wp--preset--color--textcolor, #333333)` = #333333
-- `var(--wp--preset--color--heading, #111111)` = #111111
-- `var(--wp--preset--color--border, #00000012)` = #00000012
-- `var(--wp--preset--color--background, #f9f9f9)` = #f9f9f9
-- `var(--wp--preset--color--card-base, #FFFEFE)` = #FFFEFE
-- `var(--wp--preset--color--card-border, #f0f0f0)` = #f0f0f0
-- `var(--wp--preset--color--card-text, #333333)` = #333333
-
-**Gradients:**
-- `var(--wp--preset--gradient--creative-primary, linear-gradient(196deg, rgb(74, 234, 220) 0%, rgb(151, 120, 209) 20%, rgb(207, 42, 186) 40%, rgb(238, 44, 130) 60%, rgb(251, 105, 98) 80%, rgb(254, 248, 76) 100%))` = linear-gradient(196deg, rgb(74, 234, 220) 0%, rgb(151, 120, 209) 20%, rgb(207, 42, 186) 40%, rgb(238, 44, 130) 60%, rgb(251, 105, 98) 80%, rgb(254, 248, 76) 100%)
-- `var(--wp--preset--gradient--creative-secondary, linear-gradient(70deg, #FF8813 0%, #FF0000 40%, #EE0EBD 100%))` = linear-gradient(70deg, #FF8813 0%, #FF0000 40%, #EE0EBD 100%)
-
-**Layout:**
-- `var(--wp--style--global--wide-size, 1200px)` = 1200px
-
-**Extra Variables:**
-- `var(--wp--custom--lightbox--background-color, rgba(0, 0, 0, 0.8))` = rgba(0, 0, 0, 0.8)
-- `var(--wp--custom--lightbox--close-button--background-color, rgba(0, 0, 0, 0.5))` = rgba(0, 0, 0, 0.5)
-- `var(--wp--custom--close-button--color, #ffffff)` = #ffffff
-- `var(--wp--custom--panel--background-color, #000)` = #000
-- `var(--wp--custom--panel--color, #ffffff)` = #ffffff
-- `var(--wp--custom--panel--color-a, #ffffff)` = #ffffff
-- `var(--wp--custom--spacing--side, min(3vw, 20px))` = min(3vw, 20px)
-- `var(--wp--custom--spacing--top, 0px)` = 0px
-- `var(--wp--custom--spacing--bottom, 0px)` = 0px
 
 **Usage Example:**
 ```html
@@ -715,10 +700,6 @@ The plugin includes a comprehensive set of predefined CSS variables organized by
 <div class="gsbp-example">Variable Example</div>
 <!-- /wp:greenshift-blocks/element -->
 ```
-
-#### Colors
-
-If user didn't specify required colors, give priority to colors from CSS variables. Brand color is used for accents and buttons, secondary color can be used for secondary buttons and accented links, text color is for color of regular content, heading color is for color of headings, card colors are for styling grouped card boxes, etc. If you add custom colors to background or text, try to match it with colors of buttons, headings, text
 
 ### Output Requirements
 

@@ -857,30 +857,6 @@ function greenshift_render_preset_classes(){
 			'label' => esc_html__('Border Presets', 'greenshift-animation-and-page-builder-blocks'),
 			'options' => apply_filters('greenshift_border_preset_classes',array(
 				[
-					'value'=> 'gs_border_elegant',
-					'label'=> "Border Elegant",
-					'css'=> ".gs_border_elegant{border:1px solid #00000012}",
-					'type' => "preset",
-					'style_store' => array(
-						array(
-							'selector'     => '.gs_border_elegant',
-							'css' => 'border: 1px solid #00000012'
-						),
-					),
-				],
-				[
-					'value'=> 'gs_border_radius_s',
-					'label'=> "Small border radius",
-					'css'=> ".gs_border_radius_s{border-radius: 5px}",
-					'type' => "preset",
-					'style_store' => array(
-						array(
-							'selector'     => '.gs_border_radius_s',
-							'css' => 'border-radius: 5px'
-						),
-					),
-				],
-				[
 					'value'=> 'gs_inter_toon_border',
 					'label' => "Toon Border",
 					'css'=> '.gs_inter_toon_border{text-decoration:none;text-transform:uppercase;color:#000;cursor:pointer;border:3px solid;box-shadow:1px 1px 0 0,2px 2px 0 0,3px 3px 0 0,4px 4px 0 0,5px 5px 0 0;position:relative;user-select:none;-webkit-user-select:none;touch-action:manipulation}.gs_inter_toon_border:active{box-shadow:0 0;top:5px;left:5px}',
@@ -896,43 +872,6 @@ function greenshift_render_preset_classes(){
 						),
 					),
 				],
-				[
-					'value'=> 'gs_border_radius_m',
-					'label'=> "Middle border radius",
-					'css'=> ".gs_border_radius_m{border-radius: 15px}",
-					'type' => "preset",
-					'style_store' => array(
-						array(
-							'selector'     => '.gs_border_radius_m',
-							'css' => 'border-radius: 15px'
-						),
-					),
-				],
-				[
-					'value'=> 'gs_border_radius_l',
-					'label'=> "Large border radius",
-					'css'=> ".gs_border_radius_l{border-radius: 30px}",
-					'type' => "preset",
-					'style_store' => array(
-						array(
-							'selector'     => '.gs_border_radius_l',
-							'css' => 'border-radius: 30px'
-						),
-					),
-				],
-				[
-					'value'=> 'gs_border_round',
-					'label'=> "Rounded corners",
-					'css'=> ".gs_border_round{border-radius: 50%}",
-					'type' => "preset",
-					'style_store' => array(
-						array(
-							'selector'     => '.gs_border_round',
-							'css' => 'border-radius: 50%'
-						),
-					),
-				],
-
 			))
 		),
 		array(
@@ -1191,34 +1130,69 @@ function greenshift_get_wp_local_fonts(){
 // Split text content
 //////////////////////////////////////////////////////////////////
 function greenshift_split_dynamic_text($content, $type = 'word') {
-    // Find the highest index before <dynamictext>
+    // Find the highest index before processing
     $class_type = $type === 'word' ? 'gs_split_word' : 'gs_split_symbol';
     preg_match_all('/gs-split-index-(\d+)/', $content, $matches);
     $last_index = !empty($matches[1]) ? max($matches[1]) : -1;
 
+    // Check if content contains <dynamictext> tags
     $pattern = '/<dynamictext>(.*?)<\/dynamictext>/s';
-    
-    return preg_replace_callback($pattern, function($matches) use ($type, $last_index, $class_type) {
-        $text = $matches[1];
-        
-        if ($type === 'word') {
-            $parts = preg_split('/(\s+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-        } else {
-            $parts = str_split($text);
-        }
+    if (preg_match($pattern, $content)) {
+        // Process content with <dynamictext> tags
+        return preg_replace_callback($pattern, function($matches) use ($type, $last_index, $class_type) {
+            $text = $matches[1];
+            
+            if ($type === 'word') {
+                $parts = preg_split('/(\s+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+            } else {
+                $parts = str_split($text);
+            }
+            
+            $output = '';
+            foreach ($parts as $part) {
+                if (trim($part) !== '') {
+                    $last_index++;
+                    $output .= '<span class="' . $class_type . ' gs-split-index-' . $last_index . '">' . esc_html($part) . '</span>';
+                } else {
+                    $output .= $part; // This preserves spaces
+                }
+            }
+            
+            return $output;
+        }, $content);
+    } else {
+        // Process the entire content directly (no <dynamictext> tags)
+        // Use regex to split text while preserving HTML tags
+        $pattern = '/(<[^>]*>)/';
+        $parts = preg_split($pattern, $content, -1, PREG_SPLIT_DELIM_CAPTURE);
         
         $output = '';
         foreach ($parts as $part) {
-            if (trim($part) !== '') {
-                $last_index++;
-                $output .= '<span class="' . $class_type . ' gs-split-index-' . $last_index . '">' . esc_html($part) . '</span>';
+            // Check if this part is an HTML tag
+            if (preg_match('/^<[^>]*>$/', $part)) {
+                // It's an HTML tag, preserve it as-is
+                $output .= $part;
             } else {
-                $output .= $part; // This preserves spaces
+                // It's text content, split it
+                if ($type === 'word') {
+                    $text_parts = preg_split('/(\s+)/', $part, -1, PREG_SPLIT_DELIM_CAPTURE);
+                } else {
+                    $text_parts = str_split($part);
+                }
+                
+                foreach ($text_parts as $text_part) {
+                    if (trim($text_part) !== '') {
+                        $last_index++;
+                        $output .= '<span class="' . $class_type . ' gs-split-index-' . $last_index . '">' . esc_html($text_part) . '</span>';
+                    } else {
+                        $output .= $text_part; // This preserves spaces
+                    }
+                }
             }
         }
         
         return $output;
-    }, $content);
+    }
 }
 
 
@@ -1472,14 +1446,39 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 //////////////////////////////////////////////////////////////////
 
 function gsbp_script_delay($js,  $random_id, $random_function){
-	return '
+	// Extract import statements from the beginning of the script
+	$imports = '';
+	$script_without_imports = $js;
+	
+	// Split the script into lines
+	$lines = explode("\n", $js);
+	$import_lines = [];
+	$other_lines = [];
+	
+	foreach ($lines as $line) {
+		$trimmed_line = trim($line);
+		// Check if line starts with import (including various import syntaxes)
+		if (preg_match('/^import\s+/', $trimmed_line)) {
+			$import_lines[] = $line;
+		} else {
+			$other_lines[] = $line;
+		}
+	}
+	
+	// Reconstruct the script with imports at the top
+	if (!empty($import_lines)) {
+		$imports = implode("\n", $import_lines) . "\n";
+		$script_without_imports = implode("\n", $other_lines);
+	}
+	
+	return $imports . '
 	var '.$random_id.' = false;
 	const '.$random_function.' = (init = false) => {
 		if ('.$random_id.' === true) {
 			return;
 		}
 		'.$random_id.' = true;
-		' . $js . '
+		' . $script_without_imports . '
 	};
 
 	document.body.addEventListener("mouseover", '.$random_function.', {once:true});

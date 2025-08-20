@@ -8,6 +8,9 @@ if (!defined('ABSPATH')) {
 ?>
 <?php
 $global_settings = get_option('gspb_global_settings');
+if (!is_array($global_settings)) {
+	$global_settings = array();
+}
 $current_localfonts = !empty($global_settings['localfont']) ? json_decode($global_settings['localfont'], true) : [];
 $count = !empty($current_localfonts) ? count($current_localfonts) : 1;
 ?>

@@ -76,7 +76,7 @@ class GSLightbox{constructor(e={}){this.options={linkAttribute:"href",iframeWidt
         height: 100%;
     }
 `,document.head.appendChild(e)}createLightboxElement(){let e=`
-    <div id="gs-lightbox" class="gs-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div id="gs-lightbox" class="gs-lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Lightbox">
         <div class="gs-lightbox-content" tabindex="-1"></div>
         <button class="gs-lightbox-close" aria-label="Close lightbox">
             <svg width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#ffffff"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 8.707l3.646 3.647.708-.707L8.707 8l3.647-3.646-.707-.708L8 7.293 4.354 3.646l-.707.708L7.293 8l-3.646 3.646.707.708L8 8.707z"/></svg>

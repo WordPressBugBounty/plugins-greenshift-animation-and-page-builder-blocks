@@ -20,6 +20,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 		public function __construct()
 		{
 			$this->global_settings = get_option('gspb_global_settings');
+			if (!is_array($this->global_settings)) {
+				$this->global_settings = array();
+			}
 			add_filter('body_class', array($this, 'gspb_front_body_class'));
 			
 			add_filter('admin_body_class', array($this, 'gspb_admin_body_class'));
@@ -504,6 +507,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											update_option('gspb_css_save', sanitize_text_field($_POST['gspb_settings_option']));
 
 											$default_settings = get_option('gspb_global_settings');
+											if (!is_array($default_settings)) {
+												$default_settings = array();
+											}
 
 											$sanitised = array();
 											if (isset($_POST['dark_mode_on'])) {
@@ -524,6 +530,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										}
 
 										$global_settings = get_option('gspb_global_settings');
+										if (!is_array($global_settings)) {
+											$global_settings = array();
+										}
 										$css_tsyle_option = get_option('gspb_css_save');
 										$dark_mode_on = !empty($global_settings['dark_mode_on']) ? $global_settings['dark_mode_on'] : '';
 										$enable_head_inline = !empty($global_settings['enable_head_inline']) ? $global_settings['enable_head_inline'] : '';
@@ -721,6 +730,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 									break;
 									case 'breakpoints':
 										$global_settings = get_option('gspb_global_settings');
+										if (!is_array($global_settings)) {
+											$global_settings = array();
+										}
 										$gsbp_breakpoints = apply_filters('greenshift_responsive_breakpoints', array(
 											'mobile' 	=> 576,
 											'tablet' 	=> 768,
@@ -798,6 +810,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										wp_enqueue_style('gsadminsettings');
 										wp_enqueue_script('gsadminsettings');
 										$global_settings = get_option('gspb_global_settings');
+										if (!is_array($global_settings)) {
+											$global_settings = array();
+										}
 										if (isset($_POST['gspb_save_settings'])) { // Delay script saving
 											if (!wp_verify_nonce(sanitize_text_field( wp_unslash($_POST['gspb_settings_field'])), 'gspb_settings_page_action')) {
 												esc_html_e("Sorry, your nonce did not verify.", 'greenshift-animation-and-page-builder-blocks');
@@ -886,6 +901,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 
 											if (isset($_POST['googleapi']) || isset($_POST['openaiapi']) || isset($_POST['openaiapimodel']) || isset($_POST['claudeapi']) || isset($_POST['deepseekapi']) || isset($_POST['geminiapi']) || isset($_POST['aihelpermodel']) || isset($_POST['aiimagemodel']) || isset($_POST['aidesignmodel'])) {
 												$global_settings = get_option('gspb_global_settings');
+												if (!is_array($global_settings)) {
+													$global_settings = array();
+												}
 												if (isset($_POST['googleapi'])) {
 													$sanitised['googleapi'] = sanitize_text_field($_POST['googleapi']);
 												}
@@ -919,6 +937,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											}
 										}
 										$global_settings = get_option('gspb_global_settings');
+										if (!is_array($global_settings)) {
+											$global_settings = array();
+										}
 										//Form for delay script saving
 										$googleapi = !empty($global_settings['googleapi']) ? $global_settings['googleapi'] : '';
 										$openaiapi = !empty($global_settings['openaiapi']) ? $global_settings['openaiapi'] : '';
@@ -1003,7 +1024,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="gemini-2.0-flash" <?php selected($openaiapimodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
 																		<option value="claude-3-7-sonnet-latest" <?php selected($openaiapimodel, 'claude-3-7-sonnet-latest'); ?>> claude-3-7-sonnet-latest </option>
 																		<option value="claude-sonnet-4-20250514" <?php selected($openaiapimodel, 'claude-sonnet-4-20250514'); ?>> claude-sonnet-4-20250514 </option>
-																		<option value="claude-opus-4-20250514" <?php selected($openaiapimodel, 'claude-opus-4-20250514'); ?>> claude-opus-4-20250514 </option>
+																		<option value="claude-opus-4-1-20250805" <?php selected($openaiapimodel, 'claude-opus-4-1-20250805'); ?>> claude-opus-4-1-20250805 </option>
 																		<option value="deepseek-chat" <?php selected($openaiapimodel, 'deepseek-chat'); ?>> deepseek-chat </option>
 																	</select>
 																</td>
@@ -1024,6 +1045,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="gemini-2.5-pro" <?php selected($aihelpermodel, 'gemini-2.5-pro'); ?>> gemini-2.5-pro </option>
 																		<option value="gemini-2.0-flash" <?php selected($aihelpermodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
 																		<option value="gemini-2.5-flash" <?php selected($aihelpermodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
+																		<option value="claude-sonnet-4-20250514" <?php selected($aihelpermodel, 'claude-sonnet-4-20250514'); ?>> claude-sonnet-4-20250514 </option>
+																		<option value="claude-opus-4-1-20250805" <?php selected($aihelpermodel, 'claude-opus-4-1-20250805'); ?>> claude-opus-4-1-20250805 </option>
 
 																	</select>
 																</td>
@@ -1046,9 +1069,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="aidesignmodel">
-																		<option value="claude-3-7-sonnet-latest" <?php selected($aidesignmodel, 'claude-3-7-sonnet-latest'); ?>> claude-3-7-sonnet-latest </option>
 																		<option value="claude-sonnet-4-20250514" <?php selected($aidesignmodel, 'claude-sonnet-4-20250514'); ?>> claude-sonnet-4-20250514 </option>
-																		<option value="claude-opus-4-20250514" <?php selected($aidesignmodel, 'claude-opus-4-20250514'); ?>> claude-opus-4-20250514 </option>
+																		<option value="claude-opus-4-1-20250805" <?php selected($aidesignmodel, 'claude-opus-4-1-20250805'); ?>> claude-opus-4-1-20250805 </option>
 																		<option value="gemini-2.5-pro" <?php selected($aidesignmodel, 'gemini-2.5-pro'); ?>> gemini-2.5-pro </option>
 																		
 																		
@@ -1068,6 +1090,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										break;
 										case 'header':
 											$theme_settings = get_option('greenshift_theme_options');
+											if (!is_array($theme_settings)) {
+												$theme_settings = array();
+											}
 											
 											if (isset($_POST['gspb_save_settings_header'])) { // Delay script saving
 												if (!wp_verify_nonce(sanitize_text_field( wp_unslash($_POST['gspb_settings_field'])), 'gspb_settings_page_action')) {
@@ -1149,7 +1174,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 														'noscript' => []
 													]);
 												}
-												if (isset($_POST['custom_code_in_head']) || isset($_POST['custom_code_before_closed_body'])) {
+												if (isset($_POST['enable_meta'])) {
+													$theme_settings['enable_meta'] = !empty($_POST['enable_meta']) ? sanitize_text_field($_POST['enable_meta']) : '';
+												}
+												if (isset($_POST['custom_code_in_head']) || isset($_POST['custom_code_before_closed_body']) || isset($_POST['enable_meta'])) {
 													update_option('greenshift_theme_options', $theme_settings);
 												}
 											}
@@ -1159,6 +1187,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											<?php
 											$custom_code_in_head = !empty($theme_settings['custom_code_in_head']) ? wp_unslash($theme_settings['custom_code_in_head']) : '';
 											$custom_code_before_closed_body = !empty($theme_settings['custom_code_before_closed_body']) ? wp_unslash($theme_settings['custom_code_before_closed_body']) : '';
+											$enable_meta = !empty($theme_settings['enable_meta']) ? sanitize_text_field($theme_settings['enable_meta']) : '';
 											?>
 											<form method="POST">
 												<?php wp_nonce_field('gspb_settings_page_action', 'gspb_settings_field'); ?>
@@ -1173,6 +1202,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 														<th> <label for="custom_code_before_closed_body"><?php esc_html_e("Custom code before closed Body", 'greenshift'); ?></label> </th>
 														<td>
 															<textarea name="custom_code_before_closed_body" id="" cols="30" rows="10" style="width: 100%"><?php echo $custom_code_before_closed_body ?></textarea>
+														</td>
+													</tr>
+													<tr>
+														<th> <label for="enable_meta"><?php esc_html_e("Enable Meta Description", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
+														<td>
+															<input type="checkbox" name="enable_meta" id="enable_meta" value="1" <?php checked($enable_meta, '1'); ?>>
 														</td>
 													</tr>
 												</table>
@@ -1230,6 +1265,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 		public function gspb_save_general_form($data, $files)
 		{
 			$global_settings = get_option('gspb_global_settings');
+			if (!is_array($global_settings)) {
+				$global_settings = array();
+			}
 
 			$fonts_urls = $this->gspb_save_files($files);
 			$arr = [];
@@ -1528,7 +1566,25 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 					'noscript' => []
 				]);
 			}
+			if(!empty($theme_settings['enable_meta'])){
+				if (is_singular()) {
+					global $post;
+					if (has_excerpt($post->ID)) {
+						$meta_desc = strip_tags(get_the_excerpt($post->ID));
+					} else {
+						$meta_desc = wp_trim_words(strip_tags($post->post_content), 30);
+					}
+				}  else {
+					$meta_desc = get_bloginfo('description');
+				}
+				if(!empty($meta_desc)){
+					echo '<meta name="description" content="' . esc_attr($meta_desc) . '">' . "\n";
+				}
+			}
 			$sitesettings = get_option('gspb_global_settings');
+			if (!is_array($sitesettings)) {
+				$sitesettings = array();
+			}
 			$localfonts = (!empty($sitesettings['localfont'])) ? $sitesettings['localfont'] : '';
 			if ($localfonts) {
 				$localfonts = json_decode($localfonts, true);
