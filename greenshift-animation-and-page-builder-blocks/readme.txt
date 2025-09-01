@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 6.9
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 12.1.2
+Stable tag: 12.2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -75,6 +75,9 @@ We have very long 10 year story of developing different tools for affiliate, rev
 = WOOCOMMERCE ADDON =
 Add woocommerce blocks to FSE. Extend your shop with extra features like Buy now button, Free shipping, Sold out counters, Bundles, Combos, sliding panels, swatches, attribute groups, extra single product templates, custom tabs, ajax search and many more.
 
+= HTML Converter =
+Convert any page to Greenshift blocks.
+
 == Installation ==
 Extract the zip file and just drop the contents in the wp-content/plugins/ directory of your WordPress installation and then activate the Plugin from Plugins page.
 
@@ -111,6 +114,14 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 12.2 =
+
+* Added: Animation can be added to global classes
+* Added: Nana Banana Gemini model for images
+* Added: Descendant style Bulk Changer
+* Added: Options to remove different wordpress generated head codes (skip links, emoji, etc)
+* Added: [HTML Converter](https://greenlightbuilder.pro/html-converter/) 
 
 = 12.1.2 =
 

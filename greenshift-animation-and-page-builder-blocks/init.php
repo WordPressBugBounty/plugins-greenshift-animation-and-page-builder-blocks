@@ -192,7 +192,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-aos-lib',
 		GREENSHIFT_DIR_URL . 'libs/aos/aoslight.js',
 		array(),
-		'3.8',
+		'4.0',
 		true
 	);
 
@@ -200,7 +200,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-aos-lib-clip',
 		GREENSHIFT_DIR_URL . 'libs/aos/aoslightclip.js',
 		array(),
-		'3.7',
+		'4.0',
 		true
 	);
 
@@ -606,7 +606,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-lightcountdown',
 		GREENSHIFT_DIR_URL . 'libs/greencountdown/index.js',
 		array(),
-		'1.0',
+		'1.1',
 		true
 	);
 
@@ -1804,6 +1804,7 @@ function gspb_greenShift_editor_assets()
 	$default_attributes = (!empty($sitesettings['default_attributes'])) ? $sitesettings['default_attributes'] : '';
 	$global_classes = (!empty($sitesettings['global_classes'])) ? $sitesettings['global_classes'] : [];
 	$global_interactions = (!empty($sitesettings['global_interactions'])) ? $sitesettings['global_interactions'] : [];
+	$global_animations = (!empty($sitesettings['global_animations'])) ? $sitesettings['global_animations'] : [];
 	$framework_classes = (!empty($sitesettings['framework_classes'])) ? $sitesettings['framework_classes'] : [];
 	$preset_classes = greenshift_render_preset_classes();
 	$global_variables = (!empty($sitesettings['variables'])) ? $sitesettings['variables'] : [];
@@ -2023,6 +2024,7 @@ function gspb_greenShift_editor_assets()
 		'googleapi' => apply_filters('gspb_google_api_key', $googleapi),
 		'global_classes' => apply_filters('gspb_global_classes', $global_classes),
 		'global_interactions' => apply_filters('gspb_global_interactions', $global_interactions),
+		'global_animations' => apply_filters('gspb_global_animations', $global_animations),
 		'framework_classes' => apply_filters('gspb_framework_classes', $framework_classes),
 		'preset_classes' => $preset_classes,
 		'colours' => $colours,
@@ -2242,6 +2244,51 @@ function gspb_global_assets()
 				$gs_global_css = $gs_global_css . $global_class_style;
 			}
 		}
+
+		if (!empty($options['global_animations']) && is_array($options['global_animations'])) {
+			$animationclasses = $options['global_animations'];
+			$has_clip_animations = false;
+			$has_regular_animations = false;
+			$clip_classes = array();
+			$animation_classes = array();
+			
+			foreach ($animationclasses as $index => $value){
+				if (!empty($value['animationCSS']) && !empty($value['type'])){
+					$gs_global_css = $gs_global_css . $value['animationCSS']; 
+					
+					// Check animation type to determine which script to load
+					$type = $value['type'];
+					if (in_array($type, array(
+						'clip-down', 'clip-up', 'clip-left', 'clip-right',
+						'display-in', 'display-in-slide', 'display-in-zoom', 'custom',
+						'slide-left', 'slide-right', 'slide-top', 'slide-bottom'
+					))) {
+						$has_clip_animations = true;
+						$clip_classes[] = $index; // Store class name (index) instead of whole value
+					} else {
+						$has_regular_animations = true;
+						$animation_classes[] = $index; // Store class name (index) instead of whole value
+					}
+				}
+			}
+			
+			// Enqueue appropriate AOS scripts based on animation types
+			if ($has_clip_animations) {
+				wp_enqueue_script('greenShift-aos-lib-clip');
+			}
+			if ($has_regular_animations) {
+				wp_enqueue_script('greenShift-aos-lib');
+			}
+			
+			// Add global JavaScript variables for separated animation classes
+			if (!empty($clip_classes) || !empty($animation_classes)) {
+				$js_variables = '<script>';
+				$js_variables .= 'window.clipClasses = ' . json_encode($clip_classes) . ';';
+				$js_variables .= 'window.animationClasses = ' . json_encode($animation_classes) . ';';
+				$js_variables .= '</script>';
+				echo $js_variables;
+			}
+		}
 	
 		if ($gs_global_css) {
 			$gs_global_css = gspb_get_final_css($gs_global_css);
@@ -2250,17 +2297,6 @@ function gspb_global_assets()
 			wp_register_style('greenshift-global-css', false);
 			wp_enqueue_style('greenshift-global-css');
 			wp_add_inline_style('greenshift-global-css', $gs_global_css);
-		}
-
-		//Style presets and global class render if we use Merged Inline Option
-		$styleStore = GreenShiftStyleStore::getInstance();
-		$styles = $styleStore->renderStyles();
-		$classstyles = $styleStore->renderClassStyles();
-		if($styles || $classstyles){
-			$styles = $styles . $classstyles;
-			wp_register_style('greenshift-style-presets', false);
-			wp_enqueue_style('greenshift-style-presets');
-			wp_add_inline_style('greenshift-style-presets', $styles);
 		}
 
 		if (!empty($options['global_interactions']) && is_array($options['global_interactions'])) {
@@ -2277,6 +2313,17 @@ function gspb_global_assets()
 				wp_enqueue_script('gspb_interactions');
 				wp_add_inline_script('gspb_interactions', $script, 'after');
 			}
+		}
+
+		//Style presets and global class render if we use Merged Inline Option
+		$styleStore = GreenShiftStyleStore::getInstance();
+		$styles = $styleStore->renderStyles();
+		$classstyles = $styleStore->renderClassStyles();
+		if($styles || $classstyles){
+			$styles = $styles . $classstyles;
+			wp_register_style('greenshift-style-presets', false);
+			wp_enqueue_style('greenshift-style-presets');
+			wp_add_inline_style('greenshift-style-presets', $styles);
 		}
 
 	}else{

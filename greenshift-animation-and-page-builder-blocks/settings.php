@@ -19,7 +19,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 
 		public function __construct()
 		{
-			$this->global_settings = get_option('gspb_global_settings');
+			$global_settings = get_option('gspb_global_settings');
+			$this->global_settings = $global_settings;
 			if (!is_array($this->global_settings)) {
 				$this->global_settings = array();
 			}
@@ -49,6 +50,47 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				add_action('wp_ajax_nopriv_gspb_el_reusable_load', array($this, 'gspb_el_reusable_load'));
 				//settings fonts actions
 				add_action('wp_ajax_gspb_settings_add_font', array($this, 'gspb_settings_add_font'));
+			}
+
+			if (!empty($global_settings['remove_emoji'])) {
+				remove_action('wp_head', 'print_emoji_detection_script', 7);
+				remove_action('wp_print_styles', 'print_emoji_styles');
+			}
+			
+			if (!empty($global_settings['remove_skip_link'])) {
+				add_action( 'wp_enqueue_scripts', function() {
+					// Remove script
+					wp_dequeue_script( 'wp-block-template-skip-link' );
+					wp_deregister_script( 'wp-block-template-skip-link' );
+				
+					// Remove style
+					wp_dequeue_style( 'wp-block-template-skip-link' );
+					wp_deregister_style( 'wp-block-template-skip-link' );
+				}, 20 );
+			}
+			
+			if (!empty($global_settings['remove_generator_meta'])) {
+				remove_action('wp_head', 'wp_generator');
+				remove_action('wp_head', 'wlwmanifest_link');
+				remove_action('wp_head', 'rsd_link');
+				remove_action('wp_head', 'wp_shortlink_wp_head');
+			}
+			
+			if (!empty($global_settings['remove_wp_block_library'])) {
+				add_action( 'wp_enqueue_scripts', function() {
+					wp_dequeue_style( 'wp-block-library' );
+					wp_dequeue_style( 'wp-block-library-theme' );
+					wp_dequeue_style( 'wc-block-style' );
+				}, 100 );
+			}
+			
+			if (!empty($global_settings['remove_rss_links'])) {
+				remove_action('wp_head', 'feed_links', 2);
+				remove_action('wp_head', 'feed_links_extra', 3);
+			}
+			
+			if (!empty($global_settings['remove_api_links'])) {
+				remove_action('wp_head', 'rest_output_link_wp_head');
 			}
 		}
 
@@ -1057,7 +1099,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="aiimagemodel">
-																		<option value="gemini-2.0-flash" <?php selected($aiimagemodel, 'gemini-2.0-flash'); ?>> Google Flash 2 </option>
+																		<option value="gemini-2.5-flash-image-preview" <?php selected($aiimagemodel, 'gemini-2.5-flash-image-preview'); ?>> Google Flash 2.5 </option>
 																		<option value="gpt-image-1" <?php selected($aiimagemodel, 'gpt-image-1'); ?>> GPT Image 1 </option>
 																		
 																	</select>
@@ -1090,8 +1132,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										break;
 										case 'header':
 											$theme_settings = get_option('greenshift_theme_options');
+											$global_settings = get_option('gspb_global_settings');
 											if (!is_array($theme_settings)) {
 												$theme_settings = array();
+											}
+											if (!is_array($global_settings)) {
+												$global_settings = array();
 											}
 											
 											if (isset($_POST['gspb_save_settings_header'])) { // Delay script saving
@@ -1177,8 +1223,29 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												if (isset($_POST['enable_meta'])) {
 													$theme_settings['enable_meta'] = !empty($_POST['enable_meta']) ? sanitize_text_field($_POST['enable_meta']) : '';
 												}
+												if (isset($_POST['remove_emoji'])) {
+													$global_settings['remove_emoji'] = !empty($_POST['remove_emoji']) ? sanitize_text_field($_POST['remove_emoji']) : '';
+												}
+												if (isset($_POST['remove_skip_link'])) {
+													$global_settings['remove_skip_link'] = !empty($_POST['remove_skip_link']) ? sanitize_text_field($_POST['remove_skip_link']) : '';
+												}
+												if (isset($_POST['remove_generator_meta'])) {
+													$global_settings['remove_generator_meta'] = !empty($_POST['remove_generator_meta']) ? sanitize_text_field($_POST['remove_generator_meta']) : '';
+												}
+												if (isset($_POST['remove_wp_block_library'])) {
+													$global_settings['remove_wp_block_library'] = !empty($_POST['remove_wp_block_library']) ? sanitize_text_field($_POST['remove_wp_block_library']) : '';
+												}
+												if (isset($_POST['remove_rss_links'])) {
+													$global_settings['remove_rss_links'] = !empty($_POST['remove_rss_links']) ? sanitize_text_field($_POST['remove_rss_links']) : '';
+												}
+												if (isset($_POST['remove_api_links'])) {
+													$global_settings['remove_api_links'] = !empty($_POST['remove_api_links']) ? sanitize_text_field($_POST['remove_api_links']) : '';
+												}
 												if (isset($_POST['custom_code_in_head']) || isset($_POST['custom_code_before_closed_body']) || isset($_POST['enable_meta'])) {
 													update_option('greenshift_theme_options', $theme_settings);
+												}
+												if (isset($_POST['remove_emoji']) || isset($_POST['remove_skip_link']) || isset($_POST['remove_generator_meta']) || isset($_POST['remove_wp_block_library']) || isset($_POST['remove_rss_links']) || isset($_POST['remove_api_links'])) {
+													update_option('gspb_global_settings', $global_settings);
 												}
 											}
 										?>
@@ -1188,6 +1255,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											$custom_code_in_head = !empty($theme_settings['custom_code_in_head']) ? wp_unslash($theme_settings['custom_code_in_head']) : '';
 											$custom_code_before_closed_body = !empty($theme_settings['custom_code_before_closed_body']) ? wp_unslash($theme_settings['custom_code_before_closed_body']) : '';
 											$enable_meta = !empty($theme_settings['enable_meta']) ? sanitize_text_field($theme_settings['enable_meta']) : '';
+											$remove_emoji = !empty($global_settings['remove_emoji']) ? sanitize_text_field($global_settings['remove_emoji']) : '';
+											$remove_skip_link = !empty($global_settings['remove_skip_link']) ? sanitize_text_field($global_settings['remove_skip_link']) : '';
+											$remove_generator_meta = !empty($global_settings['remove_generator_meta']) ? sanitize_text_field($global_settings['remove_generator_meta']) : '';
+											$remove_wp_block_library = !empty($global_settings['remove_wp_block_library']) ? sanitize_text_field($global_settings['remove_wp_block_library']) : '';
+											$remove_rss_links = !empty($global_settings['remove_rss_links']) ? sanitize_text_field($global_settings['remove_rss_links']) : '';
+											$remove_api_links = !empty($global_settings['remove_api_links']) ? sanitize_text_field($global_settings['remove_api_links']) : '';
 											?>
 											<form method="POST">
 												<?php wp_nonce_field('gspb_settings_page_action', 'gspb_settings_field'); ?>
@@ -1208,6 +1281,47 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 														<th> <label for="enable_meta"><?php esc_html_e("Enable Meta Description", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
 														<td>
 															<input type="checkbox" name="enable_meta" id="enable_meta" value="1" <?php checked($enable_meta, '1'); ?>>
+														</td>
+													</tr>
+													<tr>
+														<th colspan="2">
+															<h3><?php esc_html_e("Remove WordPress Elements", 'greenshift-animation-and-page-builder-blocks'); ?></h3>
+														</th>
+													</tr>
+													<tr>
+														<th> <label for="remove_emoji"><?php esc_html_e("Remove Emoji Scripts and Styles", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
+														<td>
+															<input type="checkbox" name="remove_emoji" id="remove_emoji" value="1" <?php checked($remove_emoji, '1'); ?>>
+														</td>
+													</tr>
+													<tr>
+														<th> <label for="remove_skip_link"><?php esc_html_e("Remove Skip to Content Link and Script", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
+														<td>
+															<input type="checkbox" name="remove_skip_link" id="remove_skip_link" value="1" <?php checked($remove_skip_link, '1'); ?>>
+														</td>
+													</tr>
+													<tr>
+														<th> <label for="remove_generator_meta"><?php esc_html_e("Remove Generator and Other Meta Tags", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
+														<td>
+															<input type="checkbox" name="remove_generator_meta" id="remove_generator_meta" value="1" <?php checked($remove_generator_meta, '1'); ?>>
+														</td>
+													</tr>
+													<tr>
+														<th> <label for="remove_wp_block_library"><?php esc_html_e("Remove wp-block-library CSS", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
+														<td>
+															<input type="checkbox" name="remove_wp_block_library" id="remove_wp_block_library" value="1" <?php checked($remove_wp_block_library, '1'); ?>>
+														</td>
+													</tr>
+													<tr>
+														<th> <label for="remove_rss_links"><?php esc_html_e("Remove RSS/XML Links", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
+														<td>
+															<input type="checkbox" name="remove_rss_links" id="remove_rss_links" value="1" <?php checked($remove_rss_links, '1'); ?>>
+														</td>
+													</tr>
+													<tr>
+														<th> <label for="remove_api_links"><?php esc_html_e("Remove API Links (api.w.org, rsd)", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
+														<td>
+															<input type="checkbox" name="remove_api_links" id="remove_api_links" value="1" <?php checked($remove_api_links, '1'); ?>>
 														</td>
 													</tr>
 												</table>
@@ -1522,7 +1636,13 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 
 		function greenshift_additional__header_elements()
 		{
+			$sitesettings = get_option('gspb_global_settings');
 			$theme_settings = get_option('greenshift_theme_options');
+
+			// Add CSS to hide skip link if enabled
+			if (!empty($sitesettings['remove_skip_link'])) {
+				echo '<style>.skip-link { display: none !important; }</style>';
+			}
 			if (!empty($theme_settings['custom_code_in_head'])) {
 				echo wp_kses(wp_unslash($theme_settings['custom_code_in_head']), [
 					'meta' => [
@@ -1580,10 +1700,6 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				if(!empty($meta_desc)){
 					echo '<meta name="description" content="' . esc_attr($meta_desc) . '">' . "\n";
 				}
-			}
-			$sitesettings = get_option('gspb_global_settings');
-			if (!is_array($sitesettings)) {
-				$sitesettings = array();
 			}
 			$localfonts = (!empty($sitesettings['localfont'])) ? $sitesettings['localfont'] : '';
 			if ($localfonts) {

@@ -95,6 +95,7 @@ Determines how the block's content is handled:
 -   Each property is an **array** representing responsive values:
     -   `["desktop", "tablet", "mobile_landscape", "mobile_portrait"]`
     -   If fewer values are provided, they apply upwards (e.g., `["10px"]` applies to all).
+    -   If only desktop value provided, use just one value in array, example `["10px"]`. Do not use `["10px", null, null, null]` in such cases
 -   **Pseudo-selectors**: Append `_hover` or `_focus` to the property name (e.g., `backgroundColor_hover`).
 -   **Required Class**: If a block has `styleAttributes`, its `localId` **must** be added to the HTML element's `class` attribute.
     -   *Example:*
@@ -513,6 +514,24 @@ This block is used primarly for Video backgrounds from Vimeo links. It has muted
 ```html
 <!-- wp:greenshift-blocks/element {"id":"gsbp-add38f7","tag":"iframe","localId":"gsbp-add38f7","src":"https://vimeo.com/863362136","dynamicAttributes":[{"name":"allow","value":"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"},{"name":"allowfullscreen","value":"true"}],"styleAttributes":{"aspectRatio":["16/9"],"display":["block"],"objectFit":["cover"],"width":["100%"],"pointerEvents":["none"]},"isVariation":"vimeoplay"} -->
 <iframe class="gsbp-add38f7" src="https://vimeo.com/863362136" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<!-- /wp:greenshift-blocks/element -->
+```
+
+**Video LightBox Block**
+
+This block is used for lightboxes with video and play button
+
+```html
+<!-- wp:greenshift-blocks/element {"id":"gsbp-fc481da","dynamicGClasses":[{"value":"gs_videolightbox_853","type":"local","label":"gs_videolightbox_853","localed":false,"css":"","attributes":{"styleAttributes":{}},"originalBlock":"greenshift-blocks/element","selectors":[{"value":" .play_button_pulse","attributes":{"styleAttributes":{"position":["absolute"],"width":["80px"],"height":["80px"],"borderRadius":["50%"],"backgroundColor":["#ff0000"],"border":["none"],"cursor":["pointer"],"display":["flex"],"alignItems":["center"],"justifyContent":["center"],"zIndex":["1"]}},"css":".gs_videolightbox_853 .play_button_pulse{position:absolute;width:80px;height:80px;border-radius:50%;background-color:#ff0000;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1;}"},{"value":" .play_button_pulse::before","attributes":{"styleAttributes":{"content":["\u0022\u0022"],"borderRadius":["50%"],"animation":["pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite"],"position":["absolute"],"left":["0px"],"top":["0px"],"bottom":["0px"],"right":["0px"],"borderWidth":["1px"],"borderStyle":["solid"],"borderColor":["#ff0000"],"animation_keyframes_Extra":[{"name":"pulse-ring","code":["from{\nscale:1;\nopacity:1;\n}\nto{\nscale:1.5;\nopacity:0;\n}","","",""]}]}},"css":".gs_videolightbox_853 .play_button_pulse::before{content:\u0022\u0022;border-radius:50%;animation:pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;position:absolute;left:0px;top:0px;bottom:0px;right:0px;border-width:1px;border-style:solid;border-color:#ff0000;}\n@keyframes pulse-ring {\nfrom{\nscale:1;\nopacity:1;\n}\nto{\nscale:1.5;\nopacity:0;\n}\n}\n@media (prefers-reduced-motion) {\n.gs_videolightbox_00000 .play_button_pulse::before {\nanimation: none !important;\n}\n}"},{"value":" .play_button_pulse::after","attributes":{"styleAttributes":{"content":["\u0022\u0022"],"position":["absolute"],"borderRadius":["50%"],"animation":["pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 0.5s"],"top":["0px"],"left":["0px"],"bottom":["0px"],"right":["0px"],"borderWidth":["1px"],"borderStyle":["solid"],"borderColor":["#ff0000"]}},"css":".gs_videolightbox_853 .play_button_pulse::after{content:\u0022\u0022;position:absolute;border-radius:50%;animation:pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 0.5s;top:0px;left:0px;bottom:0px;right:0px;border-width:1px;border-style:solid;border-color:#ff0000;}"}]}],"interactionLayers":[{"actions":[{"actionname":"lightbox"}],"env":"no-action","triggerData":{"trigger":"click"}}],"type":"inner","className":"gs_videolightbox_853","localId":"gsbp-fc481da","styleAttributes":{"position":["relative"],"display":["flex"],"flexDirection":["column"],"justifyContent":["center"],"alignItems":["center"]},"isVariation":"videolightbox","dynamicAttributes":[{"name":"data-type","value":"video-lightbox-component"}]} -->
+<div data-gspbactions="[{&quot;actions&quot;:[{&quot;actionname&quot;:&quot;lightbox&quot;}],&quot;env&quot;:&quot;no-action&quot;,&quot;triggerData&quot;:{&quot;trigger&quot;:&quot;click&quot;}}]" class="gs_videolightbox_853 gsbp-fc481da" data-type="video-lightbox-component"><!-- wp:greenshift-blocks/element {"id":"gsbp-2f4769b","tag":"button","type":"inner","className":"play_button_pulse","localId":"gsbp-2f4769b","formAttributes":{"type":"button"},"metadata":{"name":"Play Button"}} -->
+<button class="play_button_pulse" type="button"><!-- wp:greenshift-blocks/element {"id":"gsbp-89c9513","tag":"svg","icon":{"icon":{"svg":"\u003csvg width=\u0022100\u0022 height=\u0022100\u0022 viewBox=\u00220 0 100 100\u0022 xmlns=\u0022http://www.w3.org/2000/svg\u0022\u003e\u003cpolygon points=\u002230,20 30,80 70,50\u0022 fill=\u0022#ffffff\u0022/\u003e\u003c/svg\u003e","image":""},"fill":"currentColor","type":"svg"},"localId":"gsbp-89c9513","styleAttributes":{"width":["30px"],"height":["30px"],"color":["#ffffff"]}} -->
+<svg viewBox="0 0 100 100" width="100" height="100" class="gsbp-89c9513"><polygon xmlns="http://www.w3.org/2000/svg" points="30,20 30,80 70,50" fill="#ffffff"/></svg>
+<!-- /wp:greenshift-blocks/element --></button>
+<!-- /wp:greenshift-blocks/element -->
+
+<!-- wp:greenshift-blocks/element {"id":"gsbp-745540d","tag":"img","localId":"gsbp-745540d","src":"https://placehold.co/1280x720","alt":"","styleAttributes":{"aspectRatio":["16/9"],"objectFit":["cover"]},"metadata":{"name":"Video Thumbnail"}} -->
+<img class="gsbp-745540d" src="https://placehold.co/1280x720" alt="" loading="lazy"/>
+<!-- /wp:greenshift-blocks/element --></div>
 <!-- /wp:greenshift-blocks/element -->
 ```
 
