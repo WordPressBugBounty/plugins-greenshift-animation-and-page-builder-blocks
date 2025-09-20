@@ -294,6 +294,7 @@ class Element
 						$current_class = $p->get_attribute( 'class' );
 						$new_class = $current_class ? $current_class . ' current_item' : 'current_item';
 						$p->set_attribute( 'class', $new_class );
+						$p->set_attribute( 'aria-current', 'page' );
 						$html = $p->get_updated_html();
 					}
 				}

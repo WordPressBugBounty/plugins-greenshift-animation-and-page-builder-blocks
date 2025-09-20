@@ -241,11 +241,13 @@ if (!current_user_can('manage_options')) {
                                         <li class="gspb-offer">
                                             <span class="gspb-price">$19.99</span>
                                         </li>
-                                        <li class="gspb-description">Add motion and animations like on top awwarded sites without code knowledge <br><br>
+                                        <li class="gspb-description">Add motion and animations like on top awwarded sites <br><br>
                                             <a class="gspb-buttonbox" href="https://greenshiftwp.com/block-gallery/#animation" target="_blank" rel="noopener">Details and Demo</a>
                                         </li>
-                                        <?php if (($is_active || defined('REHUB_ADMIN_DIR'))) : ?>
+                                        <?php if (($is_active || defined('REHUB_ADMIN_DIR')) && !defined('GREENSHIFTGSAP_DIR_URL')) : ?>
                                             <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/update-plugin/greenshiftgsap.zip" target="_blank"><?php esc_html_e("Download", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
+                                        <?php elseif ($is_active && defined('GREENSHIFTGSAP_DIR_URL')) : ?>
+                                            <li class="gspb-cta"></li>
                                         <?php else : ?>
                                             <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/downloads/advanced-animation-addon/" target="_blank"><?php esc_html_e("Buy Now", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
                                         <?php endif; ?>
@@ -274,8 +276,10 @@ if (!current_user_can('manage_options')) {
                                         <li class="gspb-description">Custom templates, dynamic content, listings, grid, taxonomy blocks<br><br>
                                             <a class="gspb-buttonbox" href="https://greenshiftwp.com/block-gallery/#query" target="_blank" rel="noopener">Details and Demo</a>
                                         </li>
-                                        <?php if ($is_active) : ?>
+                                        <?php if ($is_active && !defined('GREENSHIFTQUERY_DIR_URL')) : ?>
                                             <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/update-plugin/greenshiftquery.zip" target="_blank"><?php esc_html_e("Download", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
+                                        <?php elseif ($is_active && defined('GREENSHIFTQUERY_DIR_URL')) : ?>
+                                            <li class="gspb-cta"></li>
                                         <?php else : ?>
                                             <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/downloads/query-addon/" rel="noopener" target="_blank"><?php esc_html_e("Buy Now", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
                                         <?php endif; ?>
@@ -304,8 +308,10 @@ if (!current_user_can('manage_options')) {
                                         <li class="gspb-description">Special mobile and seo optimized blocks which can help to earn money<br><br>
                                             <a class="gspb-buttonbox" href="https://greenshiftwp.com/block-gallery/#seo" target="_blank" rel="noopener">Details and Demo</a>
                                         </li>
-                                        <?php if ($is_active) : ?>
+                                        <?php if ($is_active && !defined('GREENSHIFTSEO_DIR_URL')) : ?>
                                             <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/update-plugin/greenshiftseo.zip" target="_blank"><?php esc_html_e("Download", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
+                                        <?php elseif ($is_active && defined('GREENSHIFTSEO_DIR_URL')) : ?>
+                                            <li class="gspb-cta"></li>
                                         <?php else : ?>
                                             <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/downloads/marketing-and-seo-addon/" target="_blank"><?php esc_html_e("Buy Now", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
                                         <?php endif; ?>
@@ -336,8 +342,10 @@ if (!current_user_can('manage_options')) {
                                         <li class="gspb-description">Do you want to improve visual hierarchy and presentation in your content<br><br>
                                             <a class="gspb-buttonbox" href="https://greenshiftwp.com/block-gallery/#chart" target="_blank" rel="noopener">Details and Demo</a>
                                         </li>
-                                        <?php if ($is_active) : ?>
+                                        <?php if ($is_active && !defined('GSCBN_VERSION')) : ?>
                                             <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/update-plugin/greenshiftchart.zip" target="_blank"><?php esc_html_e("Download", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
+                                        <?php elseif ($is_active && defined('GSCBN_VERSION')) : ?>
+                                            <li class="gspb-cta"></li>
                                         <?php else : ?>
                                             <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/downloads/greenshift-chart-plugin/" rel="noopener" target="_blank"><?php esc_html_e("Buy Now", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
                                         <?php endif; ?>
@@ -368,8 +376,10 @@ if (!current_user_can('manage_options')) {
                                         <li class="gspb-description">Use Woocommerce FSE blocks to build fast eshops <br><br>
                                             <a class="gspb-buttonbox" href="https://greenshiftwp.com/block-gallery/#woocommerce" target="_blank" rel="noopener">Details and Demo</a>
                                         </li>
-                                        <?php if ($is_active) : ?>
+                                        <?php if ($is_active && !defined('GREENSHIFTWOO_DIR_URL')) : ?>
                                             <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/update-plugin/greenshiftwoo.zip" target="_blank"><?php esc_html_e("Download", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
+                                        <?php elseif ($is_active && defined('GREENSHIFTWOO_DIR_URL')) : ?>
+                                            <li class="gspb-cta"></li>
                                         <?php else : ?>
                                             <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/downloads/woocommerce-addon/" target="_blank"><?php esc_html_e("Buy Now", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
                                         <?php endif; ?>

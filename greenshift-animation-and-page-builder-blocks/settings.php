@@ -1222,24 +1222,38 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												}
 												if (isset($_POST['enable_meta'])) {
 													$theme_settings['enable_meta'] = !empty($_POST['enable_meta']) ? sanitize_text_field($_POST['enable_meta']) : '';
+												} else {
+													unset($theme_settings['enable_meta']);
 												}
 												if (isset($_POST['remove_emoji'])) {
 													$global_settings['remove_emoji'] = !empty($_POST['remove_emoji']) ? sanitize_text_field($_POST['remove_emoji']) : '';
+												} else {
+													unset($global_settings['remove_emoji']);
 												}
 												if (isset($_POST['remove_skip_link'])) {
 													$global_settings['remove_skip_link'] = !empty($_POST['remove_skip_link']) ? sanitize_text_field($_POST['remove_skip_link']) : '';
+												} else {
+													unset($global_settings['remove_skip_link']);
 												}
 												if (isset($_POST['remove_generator_meta'])) {
 													$global_settings['remove_generator_meta'] = !empty($_POST['remove_generator_meta']) ? sanitize_text_field($_POST['remove_generator_meta']) : '';
+												} else {
+													unset($global_settings['remove_generator_meta']);
 												}
 												if (isset($_POST['remove_wp_block_library'])) {
 													$global_settings['remove_wp_block_library'] = !empty($_POST['remove_wp_block_library']) ? sanitize_text_field($_POST['remove_wp_block_library']) : '';
+												} else {
+													unset($global_settings['remove_wp_block_library']);
 												}
 												if (isset($_POST['remove_rss_links'])) {
 													$global_settings['remove_rss_links'] = !empty($_POST['remove_rss_links']) ? sanitize_text_field($_POST['remove_rss_links']) : '';
+												} else {
+													unset($global_settings['remove_rss_links']);
 												}
 												if (isset($_POST['remove_api_links'])) {
 													$global_settings['remove_api_links'] = !empty($_POST['remove_api_links']) ? sanitize_text_field($_POST['remove_api_links']) : '';
+												} else {
+													unset($global_settings['remove_api_links']);
 												}
 												if (isset($_POST['custom_code_in_head']) || isset($_POST['custom_code_before_closed_body']) || isset($_POST['enable_meta'])) {
 													update_option('greenshift_theme_options', $theme_settings);

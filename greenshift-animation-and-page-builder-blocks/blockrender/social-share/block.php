@@ -42,7 +42,7 @@ class SocialShare
             'type' => 'array',
             'default' => array(
                 'fb' => 'Share on Facebook',
-                'tw' => 'Share on Twitter',
+                'tw' => 'Share on X (Twitter)',
                 'tg' => 'Share on Telegram',
                 'pn' => 'Share on Pinterest',
                 'wa' => 'Share on Whatsapp',
