@@ -737,25 +737,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'11.5'
+		'12.0'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'11.5'
+		'12.0'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'11.5'
+		'12.0'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'11.5'
+		'12.0'
 	);
 
 	//Script for ajax reusable loading
@@ -794,13 +794,15 @@ function gspb_greenShift_register_scripts_blocks(){
 	//register_block_type(__DIR__ . '/blockrender/element');
 
 	// admin settings scripts and styles
-	wp_register_script('gsadminsettings',  GREENSHIFT_DIR_URL . 'libs/admin/settings.js', array(), '1.2', true);
+	wp_register_script('gsadminsettings',  GREENSHIFT_DIR_URL . 'libs/admin/settings.js', array(), '1.3', true);
 	wp_register_style('gsadminsettings',  GREENSHIFT_DIR_URL . 'libs/admin/settings.css', array(), '1.1');
 	wp_localize_script(
 		'gsadminsettings',
 		'greenShift_params',
 		array(
-			'ajaxUrl' => admin_url('admin-ajax.php')
+			'ajaxUrl' => admin_url('admin-ajax.php'),
+			'install_nonce' => wp_create_nonce('gspb_install_addon_nonce'),
+			'activate_nonce' => wp_create_nonce('gspb_activate_addon_nonce')
 		)
 	);
 
@@ -4099,4 +4101,112 @@ function gspb_large_value_autoload( $autoload, $option ) {
         return true;
     }
     return $autoload;
+}
+
+
+// Addon installation functions
+add_action('wp_ajax_gspb_install_addon', 'gspb_install_addon');
+add_action('wp_ajax_gspb_activate_addon', 'gspb_activate_addon');
+function gspb_install_addon() {
+	// Check user capabilities
+	if (!current_user_can('install_plugins')) {
+		wp_die(json_encode(array('success' => false, 'message' => 'Insufficient permissions')));
+	}
+
+	// Verify nonce
+	if (!wp_verify_nonce($_POST['nonce'], 'gspb_install_addon_nonce')) {
+		wp_die(json_encode(array('success' => false, 'message' => 'Security check failed')));
+	}
+
+	$addon_slug = sanitize_text_field($_POST['addon_slug']);
+	$download_url = esc_url_raw($_POST['download_url']);
+
+	// Check if plugin folder already exists
+	$plugin_dir = WP_PLUGIN_DIR . '/' . $addon_slug;
+	if (is_dir($plugin_dir)) {
+		// Plugin folder exists, try to activate it
+		$plugin_file = $addon_slug . '/' . $addon_slug . '.php';
+		
+		// Check if plugin file exists
+		if (file_exists(WP_PLUGIN_DIR . '/' . $plugin_file)) {
+			$result = activate_plugin($plugin_file);
+			if (is_wp_error($result)) {
+				wp_die(json_encode(array('success' => false, 'message' => 'Activation failed: ' . $result->get_error_message())));
+			}
+			wp_die(json_encode(array('success' => true, 'message' => 'Plugin activated successfully')));
+		} else {
+			// Plugin folder exists but main file not found, remove folder and install fresh
+			if (!gspb_remove_directory($plugin_dir)) {
+				wp_die(json_encode(array('success' => false, 'message' => 'Failed to remove existing plugin folder')));
+			}
+			// Continue with fresh installation
+		}
+	}
+
+	// Include required WordPress files for installation
+	if (!function_exists('download_url')) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+	}
+	if (!function_exists('WP_Upgrader')) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+	}
+	if (!function_exists('Plugin_Upgrader')) {
+		require_once ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php';
+	}
+
+	// Download the plugin zip file
+	$temp_file = download_url($download_url);
+	if (is_wp_error($temp_file)) {
+		wp_die(json_encode(array('success' => false, 'message' => 'Failed to download plugin: ' . $temp_file->get_error_message())));
+	}
+
+	// Install the plugin
+	$upgrader = new Plugin_Upgrader();
+	$result = $upgrader->install($temp_file);
+
+	// Clean up temp file
+	if (file_exists($temp_file)) {
+		unlink($temp_file);
+	}
+
+	if (is_wp_error($result)) {
+		wp_die(json_encode(array('success' => false, 'message' => 'Installation failed: ' . $result->get_error_message())));
+	}
+
+	if ($result === true) {
+		// Try to activate the newly installed plugin
+		$plugin_file = $addon_slug . '/' . $addon_slug . '.php';
+		$activate_result = activate_plugin($plugin_file);
+		if (is_wp_error($activate_result)) {
+			wp_die(json_encode(array('success' => true, 'message' => 'Plugin installed but activation failed: ' . $activate_result->get_error_message())));
+		}
+		wp_die(json_encode(array('success' => true, 'message' => 'Plugin installed and activated successfully')));
+	} else {
+		wp_die(json_encode(array('success' => false, 'message' => 'Installation failed')));
+	}
+}
+
+if (!function_exists('gspb_activate_addon')) {
+    function gspb_activate_addon() {
+        // Check user capabilities
+        if (!current_user_can('activate_plugins')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Insufficient permissions')));
+        }
+
+        // Verify nonce
+        if (!wp_verify_nonce($_POST['nonce'], 'gspb_activate_addon_nonce')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Security check failed')));
+        }
+
+        $plugin_file = sanitize_text_field($_POST['plugin_file']);
+
+        // Activate the plugin
+        $result = activate_plugin($plugin_file);
+
+        if (is_wp_error($result)) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Activation failed: ' . $result->get_error_message())));
+        }
+
+        wp_die(json_encode(array('success' => true, 'message' => 'Plugin activated successfully')));
+    }
 }

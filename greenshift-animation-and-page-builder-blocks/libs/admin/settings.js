@@ -69,4 +69,69 @@ jQuery(document).ready(function ($) {
 		}  
 	});
 
-})
+	// Addon installation functionality
+	$(document).on('click', '.gspb-install-addon', function(e) {
+		e.preventDefault();
+		
+		const $button = $(this);
+		const $card = $button.closest('.gspb-card');
+		const addonSlug = $card.data('slug');
+		const downloadUrl = $button.data('download-url');
+		
+		// Update button state
+		$button.prop('disabled', true).text('Installing...');
+		
+		// Install the addon
+		$.ajax({
+			url: greenShift_params.ajaxUrl,
+			type: 'POST',
+			data: {
+				action: 'gspb_install_addon',
+				addon_slug: addonSlug,
+				download_url: downloadUrl,
+				nonce: greenShift_params.install_nonce
+			},
+			success: function(response) {
+				try {
+					const data = typeof response === 'string' ? JSON.parse(response) : response;
+					if (data.success) {
+						$button.text('Installed').removeClass('gspb-install-addon').addClass('button-secondary');
+						
+						// Update badges
+						$card.find('.gspb-badge-warning').removeClass('gspb-badge-warning').addClass('gspb-badge').text('Installed');
+						
+						// Show success message
+						showNotice('success', 'Addon installed successfully!');
+						
+						// Reload page after 2 seconds to update interface
+						setTimeout(function() {
+							location.reload();
+						}, 2000);
+					} else {
+						$button.prop('disabled', false).text('Install');
+						showNotice('error', data.message || 'Installation failed');
+					}
+				} catch (e) {
+					$button.prop('disabled', false).text('Install');
+					showNotice('error', 'Installation failed');
+				}
+			},
+			error: function() {
+				$button.prop('disabled', false).text('Install');
+				showNotice('error', 'Installation failed');
+			}
+		});
+	});
+	
+	// Helper function to show notices
+	function showNotice(type, message) {
+		const noticeClass = type === 'success' ? 'notice-success' : 'notice-error';
+		const notice = $('<div class="notice ' + noticeClass + ' is-dismissible"><p>' + message + '</p></div>');
+		$('.wrap h1').after(notice);
+		
+		// Auto-dismiss after 5 seconds
+		setTimeout(function() {
+			notice.fadeOut();
+		}, 5000);
+	}
+});
