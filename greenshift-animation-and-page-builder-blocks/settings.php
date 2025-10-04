@@ -1064,7 +1064,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="gemini-2.5-pro" <?php selected($openaiapimodel, 'gemini-2.5-pro'); ?>> gemini-2.5-pro </option>
 																		<option value="gemini-2.5-flash" <?php selected($openaiapimodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
 																		<option value="gemini-2.0-flash" <?php selected($openaiapimodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
-																		<option value="claude-3-7-sonnet-latest" <?php selected($openaiapimodel, 'claude-3-7-sonnet-latest'); ?>> claude-3-7-sonnet-latest </option>
+																		<option value="claude-sonnet-4-5" <?php selected($openaiapimodel, 'claude-sonnet-4-5'); ?>> claude-sonnet-4-5 </option>
 																		<option value="claude-sonnet-4-20250514" <?php selected($openaiapimodel, 'claude-sonnet-4-20250514'); ?>> claude-sonnet-4-20250514 </option>
 																		<option value="claude-opus-4-1-20250805" <?php selected($openaiapimodel, 'claude-opus-4-1-20250805'); ?>> claude-opus-4-1-20250805 </option>
 																		<option value="deepseek-chat" <?php selected($openaiapimodel, 'deepseek-chat'); ?>> deepseek-chat </option>
@@ -1088,6 +1088,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="gemini-2.0-flash" <?php selected($aihelpermodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
 																		<option value="gemini-2.5-flash" <?php selected($aihelpermodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
 																		<option value="claude-sonnet-4-20250514" <?php selected($aihelpermodel, 'claude-sonnet-4-20250514'); ?>> claude-sonnet-4-20250514 </option>
+																		<option value="claude-sonnet-4-5" <?php selected($aihelpermodel, 'claude-sonnet-4-5'); ?>> claude-sonnet-4-5 </option>
 																		<option value="claude-opus-4-1-20250805" <?php selected($aihelpermodel, 'claude-opus-4-1-20250805'); ?>> claude-opus-4-1-20250805 </option>
 
 																	</select>
@@ -1112,6 +1113,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																<td>
 																	<select name="aidesignmodel">
 																		<option value="claude-sonnet-4-20250514" <?php selected($aidesignmodel, 'claude-sonnet-4-20250514'); ?>> claude-sonnet-4-20250514 </option>
+																		<option value="claude-sonnet-4-5" <?php selected($aidesignmodel, 'claude-sonnet-4-5'); ?>> claude-sonnet-4-5 </option>
 																		<option value="claude-opus-4-1-20250805" <?php selected($aidesignmodel, 'claude-opus-4-1-20250805'); ?>> claude-opus-4-1-20250805 </option>
 																		<option value="gemini-2.5-pro" <?php selected($aidesignmodel, 'gemini-2.5-pro'); ?>> gemini-2.5-pro </option>
 																		

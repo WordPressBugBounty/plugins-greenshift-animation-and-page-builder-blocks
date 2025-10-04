@@ -1689,10 +1689,14 @@ function gspb_greenShift_block_inline_styles($html, $block){
 			}
 		}
 
-		if (!empty($block['attrs']['inlineCssStyles']) || ($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])) ) {
+		if (!empty($block['attrs']['inlineCssStyles']) || ($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])) || !empty($block['attrs']['CSSRender']) ) {
 			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
 				$dynamic_style = get_post_meta((int)$block['attrs']['ref'], '_gspb_post_css', true);
 				$dynamic_style = apply_filters('gspb_reusable_inline_styles', $dynamic_style);
+			}else if(!empty($block['attrs']['CSSRender'])){
+				if(!empty($block['attrs']['styleAttributes']) && !empty($block['attrs']['localId'])){
+					$dynamic_style = gspb_render_style_attributes($block['attrs']['styleAttributes'], '.'.$block['attrs']['localId'], '', isset($block['attrs']['enableSpecificity']) ? $block['attrs']['enableSpecificity'] : false);
+				}
 			}else{
 				$dynamic_style = $block['attrs']['inlineCssStyles'];
 			}
@@ -1728,10 +1732,14 @@ function gspb_greenShift_block_inline_head($html, $block){
 			}
 		}
 
-		if (!empty($block['attrs']['inlineCssStyles']) || ($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])) ) {
+		if (!empty($block['attrs']['inlineCssStyles']) || ($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])) || !empty($block['attrs']['CSSRender']) ) {
 			$styleStore = GreenShiftStyleStore::getInstance();
 			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
 				$dynamic_style = get_post_meta((int)$block['attrs']['ref'], '_gspb_post_css', true);
+			}else if(!empty($block['attrs']['CSSRender'])){
+				if(!empty($block['attrs']['styleAttributes']) && !empty($block['attrs']['localId'])){
+					$dynamic_style = gspb_render_style_attributes($block['attrs']['styleAttributes'], '.'.$block['attrs']['localId'], '', isset($block['attrs']['enableSpecificity']) ? $block['attrs']['enableSpecificity'] : false);
+				}
 			}else{
 				$dynamic_style = wp_kses_post($block['attrs']['inlineCssStyles']);
 			}
@@ -4091,6 +4099,9 @@ function greenshift_new_add_type_to_script($tag, $handle, $source){
     } 
 	if ('anchor-polyfill' === $handle) {
         $tag = '<script src="'. $source .'" type="module"></script>';
+    } 
+	if ('gspb_map' === $handle || 'google-maps' === $handle) {
+        $tag = '<script src="'. $source .'" async></script>';
     } 
     return $tag;
 }

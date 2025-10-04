@@ -1487,3 +1487,420 @@ function gsbp_script_delay($js,  $random_id, $random_function){
 	document.body.addEventListener("keydown", '.$random_function.', {once:true});
 	';
 }
+
+//////////////////////////////////////////////////////////////////
+// Main CSS Generator Function - PHP analog of getCssFromStyleAttributes
+//////////////////////////////////////////////////////////////////
+
+function gspb_render_style_attributes($style_attributes, $selector, $final_css = '', $enable_specificity = false) {
+    if (empty($style_attributes) || !is_array($style_attributes)) {
+        return $final_css;
+    }
+
+    // Helper function to generate device values
+    $gspb_generate_device_values = function($value, $enable_specificity = false) {
+        if (is_array($value)) {
+            return [
+                (isset($value[0]) && $value[0] !== null && $value[0] !== '') ? $value[0] . ($enable_specificity ? ' !important' : '') : null,
+                (isset($value[1]) && $value[1] !== null && $value[1] !== '') ? $value[1] . ($enable_specificity ? ' !important' : '') : null,
+                (isset($value[2]) && $value[2] !== null && $value[2] !== '') ? $value[2] . ($enable_specificity ? ' !important' : '') : null,
+                (isset($value[3]) && $value[3] !== null && $value[3] !== '') ? $value[3] . ($enable_specificity ? ' !important' : '') : null,
+            ];
+        } else {
+            return [$value . ($enable_specificity ? ' !important' : '')];
+        }
+    };
+
+    // Helper function to clean body from selector
+    $gspb_clean_body = function($css) {
+        return str_replace('body ', '', $css);
+    };
+
+    // Helper function to calculate width
+    $gspb_calculate_width = function($width, $gap, $columns) {
+        if ($width === null || $width === '') return null;
+        if (!$gap || $width == 100) return $width . '%';
+        return 'calc(' . $width . '% - (' . $gap . ' * (' . $columns . ' - 1) / ' . $columns . '))';
+    };
+
+    // Helper function to get device inherit values
+    $gspb_get_device_inherit_values = function($value, $index) {
+        if (is_array($value) && isset($value[$index])) {
+            return $value[$index];
+        }
+        return $value;
+    };
+
+    // Helper function to generate CSS
+    $gspb_generate_css = function($selector, $properties, $values, $final_css) {
+        if (empty($properties) || empty($values)) {
+            return $final_css;
+        }
+
+        $css_rules = [];
+        $devices = ['desktop', 'tablet', 'landscape-mobile', 'portrait-mobile'];
+        $breakpoints = [
+            '(min-width: 992px)',
+            '(min-width: 768px) and (max-width: 991.98px)',
+            '(min-width: 576px) and (max-width: 767.98px)',
+            '(max-width: 575.98px)'
+        ];
+
+        // Generate CSS for each device
+        for ($device_index = 0; $device_index < 4; $device_index++) {
+            $device_css = '';
+            $has_properties = false;
+
+            for ($i = 0; $i < count($properties); $i++) {
+                if (isset($values[$i]) && is_array($values[$i]) && isset($values[$i][$device_index]) && $values[$i][$device_index] !== null) {
+                    $device_css .= $properties[$i] . ':' . $values[$i][$device_index] . ';';
+                    $has_properties = true;
+                }
+            }
+
+            if ($has_properties) {
+                if ($device_index === 0) {
+                    // Desktop (default) - no media query
+                    $css_rules[] = $selector . '{' . $device_css . '}';
+                } else {
+                    // Other devices - with media query
+                    $css_rules[] = '@media ' . $breakpoints[$device_index] . ' {' . $selector . '{' . $device_css . '}}';
+                }
+            }
+        }
+
+        return $final_css . implode('', $css_rules);
+    };
+
+    // Group attributes by type
+    $normal_attributes = [];
+    $hover_attributes = [];
+    $focus_attributes = [];
+    $active_attributes = [];
+    $anchor_attributes = [];
+    $anchor_hover_attributes = [];
+    $anchor_focus_attributes = [];
+    $anchor_active_attributes = [];
+    $extra_attributes = [];
+
+    foreach ($style_attributes as $attribute => $value) {
+        if (strpos($attribute, 'Extra_focus') !== false || strpos($attribute, 'Extra_hover') !== false) {
+            // Skip these
+        } elseif (strpos($attribute, '_A') === strlen($attribute) - 2) {
+            $anchor_attributes[] = $attribute;
+        } elseif (strpos($attribute, '_A_hover') !== false) {
+            $anchor_hover_attributes[] = $attribute;
+        } elseif (strpos($attribute, '_A_focus') !== false) {
+            $anchor_focus_attributes[] = $attribute;
+        } elseif (strpos($attribute, '_A_active') !== false) {
+            $anchor_active_attributes[] = $attribute;
+        } elseif (strpos($attribute, '_hover') !== false) {
+            $hover_attributes[] = $attribute;
+        } elseif (strpos($attribute, '_focus') !== false) {
+            $focus_attributes[] = $attribute;
+        } elseif (strpos($attribute, '_active') !== false) {
+            $active_attributes[] = $attribute;
+        } elseif (strpos($attribute, '_Extra') !== false) {
+            $extra_attributes[] = $attribute;
+        } else {
+            $normal_attributes[] = $attribute;
+        }
+    }
+
+    // Process normal attributes
+    if (!empty($normal_attributes)) {
+        $properties = [];
+        $values = [];
+        $css_selector = $selector;
+
+        foreach ($normal_attributes as $attribute) {
+            $attr_array = explode('_', $attribute);
+            $property = strtolower(preg_replace('/([A-Z])/', '-$1', $attr_array[0]));
+            $value = $style_attributes[$attribute];
+
+            if ($property == 'line-clamp') {
+                $clamp_properties = ['display', '-webkit-box-orient', 'overflow', 'text-overflow', '-webkit-line-clamp'];
+                $clamp_values = ['-webkit-box', 'vertical', 'hidden', 'ellipsis', $gspb_generate_device_values($value, $enable_specificity)];
+                $final_css = $gspb_generate_css($css_selector, $clamp_properties, $clamp_values, $final_css);
+            } else {
+                $properties[] = $property;
+                $values[] = $gspb_generate_device_values($value, $enable_specificity);
+            }
+        }
+        $final_css = $gspb_generate_css($css_selector, $properties, $values, $final_css);
+    }
+
+    // Process anchor attributes
+    if (!empty($anchor_attributes)) {
+        $properties = [];
+        $values = [];
+        $css_selector = $selector . ' a';
+
+        foreach ($anchor_attributes as $attribute) {
+            $property = str_replace('_A', '', $attribute);
+            $value = $style_attributes[$attribute];
+            $properties[] = $property;
+            $values[] = $gspb_generate_device_values($value, $enable_specificity);
+        }
+        $final_css = $gspb_generate_css($css_selector, $properties, $values, $final_css);
+    }
+
+    // Process anchor hover attributes
+    if (!empty($anchor_hover_attributes)) {
+        $properties = [];
+        $values = [];
+        
+        if (isset($style_attributes['parentClassLink_Extra']) && isset($style_attributes['hoverClass_Extra'])) {
+            $css_selector = $style_attributes['hoverClass_Extra'] . ':hover ' . $gspb_clean_body($selector) . ' a';
+        } else {
+            $css_selector = $gspb_clean_body($selector) . ':hover a';
+        }
+
+        foreach ($anchor_hover_attributes as $attribute) {
+            $property = str_replace('_A_hover', '', $attribute);
+            $attr_array = explode('_', $property);
+            $property = strtolower(preg_replace('/([A-Z])/', '-$1', $attr_array[0]));
+            $value = $style_attributes[$attribute];
+            $properties[] = $property;
+            $values[] = $gspb_generate_device_values($value, $enable_specificity);
+        }
+        $final_css = $gspb_generate_css($css_selector, $properties, $values, $final_css);
+    }
+
+    // Process anchor focus attributes
+    if (!empty($anchor_focus_attributes)) {
+        $properties = [];
+        $values = [];
+        
+        if (isset($style_attributes['parentClassLink_Extra']) && isset($style_attributes['focusClass_Extra'])) {
+            $css_selector = $style_attributes['focusClass_Extra'] . ':focus ' . $selector . ' a';
+        } else {
+            $css_selector = $selector . ':focus a';
+        }
+
+        foreach ($anchor_focus_attributes as $attribute) {
+            $property = str_replace('_A_focus', '', $attribute);
+            $attr_array = explode('_', $property);
+            $property = strtolower(preg_replace('/([A-Z])/', '-$1', $attr_array[0]));
+            $value = $style_attributes[$attribute];
+            $properties[] = $property;
+            $values[] = $gspb_generate_device_values($value, $enable_specificity);
+        }
+        $final_css = $gspb_generate_css($css_selector, $properties, $values, $final_css);
+    }
+
+    // Process hover attributes
+    if (!empty($hover_attributes)) {
+        $properties = [];
+        $values = [];
+        
+        if (isset($style_attributes['parentClassLink_Extra']) && isset($style_attributes['hoverClass_Extra'])) {
+            $css_selector = $style_attributes['hoverClass_Extra'] . ':hover ' . $gspb_clean_body($selector);
+        } else {
+            $css_selector = $selector . ':hover';
+        }
+
+        foreach ($hover_attributes as $attribute) {
+            $property = str_replace('_hover', '', $attribute);
+            $attr_array = explode('_', $property);
+            $property = strtolower(preg_replace('/([A-Z])/', '-$1', $attr_array[0]));
+            $value = $style_attributes[$attribute];
+            $properties[] = $property;
+            $values[] = $gspb_generate_device_values($value, $enable_specificity);
+        }
+        $final_css = $gspb_generate_css($css_selector, $properties, $values, $final_css);
+    }
+
+    // Process focus attributes
+    if (!empty($focus_attributes)) {
+        $properties = [];
+        $values = [];
+        
+        if (isset($style_attributes['parentClassLink_Extra']) && isset($style_attributes['focusClass_Extra'])) {
+            $css_selector = $style_attributes['focusClass_Extra'] . ' ' . $selector;
+        } else {
+            $css_selector = $selector . ':focus, ' . $selector . ':active';
+        }
+
+        foreach ($focus_attributes as $attribute) {
+            $property = str_replace('_focus', '', $attribute);
+            $attr_array = explode('_', $property);
+            $property = strtolower(preg_replace('/([A-Z])/', '-$1', $attr_array[0]));
+            $value = $style_attributes[$attribute];
+            $properties[] = $property;
+            $values[] = $gspb_generate_device_values($value, $enable_specificity);
+        }
+        $final_css = $gspb_generate_css($css_selector, $properties, $values, $final_css);
+    }
+
+    // Process active attributes
+    if (!empty($active_attributes)) {
+        $properties = [];
+        $values = [];
+        
+        if (isset($style_attributes['parentClassLink_Extra']) && isset($style_attributes['activeClass_Extra'])) {
+            $css_selector = $style_attributes['activeClass_Extra'] . ':active ' . $selector;
+        } else {
+            $css_selector = $selector . ':active';
+        }
+
+        foreach ($active_attributes as $attribute) {
+            $property = str_replace('_active', '', $attribute);
+            $attr_array = explode('_', $property);
+            $property = strtolower(preg_replace('/([A-Z])/', '-$1', $attr_array[0]));
+            $value = $style_attributes[$attribute];
+            $properties[] = $property;
+            $values[] = $gspb_generate_device_values($value, $enable_specificity);
+        }
+        $final_css = $gspb_generate_css($css_selector, $properties, $values, $final_css);
+    }
+
+    // Process extra attributes
+    if (!empty($extra_attributes)) {
+        foreach ($extra_attributes as $attribute) {
+            if ($attribute == 'flexWidths_Extra' && isset($style_attributes['flexColumns_Extra']) && isset($style_attributes['flexWidths_Extra']) && isset($style_attributes['display'][0]) && $style_attributes['display'][0] == 'flex') {
+                $gap = $style_attributes['columnGap'] ?? [];
+                $number_columns = $style_attributes['flexColumns_Extra'];
+                
+                for ($i = 1; $i <= $number_columns; $i++) {
+                    $property = ['width'];
+                    $css_selector = $selector . '>*:not(style):nth-of-type(' . $number_columns . 'n+' . $i . ')';
+                    $values = [[
+                        [$gspb_calculate_width($style_attributes['flexWidths_Extra']['desktop']['widths'][$i-1], $gspb_get_device_inherit_values($gap, 0), $number_columns)],
+                        [$gspb_calculate_width($style_attributes['flexWidths_Extra']['tablet']['widths'][$i-1], $gspb_get_device_inherit_values($gap, 1), $number_columns)],
+                        [null],
+                        [$gspb_calculate_width($style_attributes['flexWidths_Extra']['mobile']['widths'][$i-1], $gspb_get_device_inherit_values($gap, 3), $number_columns)],
+                    ]];
+                    $final_css = $gspb_generate_css($css_selector, $property, $values, $final_css);
+                }
+                
+                $property = ['flex-wrap'];
+                $css_selector = $selector;
+                $values = [['wrap']];
+                $final_css = $gspb_generate_css($css_selector, $property, $values, $final_css);
+            }
+
+            if ($attribute == 'gridLayout_Extra' && isset($style_attributes['gridLayoutItems_Extra']) && isset($style_attributes['gridLayout_Extra']) && isset($style_attributes['display'][0]) && $style_attributes['display'][0] == 'grid') {
+                $devices = ['desktop', 'tablet', 'mobile'];
+                foreach ($devices as $device_index => $device) {
+                    $layout = $style_attributes['gridLayout_Extra'][$device];
+                    if ($layout && isset($layout['layouts'])) {
+                        foreach ($layout['layouts'] as $index => $item) {
+                            $css_selector = $selector . '>*:not(style):nth-of-type(' . ($index + 1) . ')';
+                            $properties = ['grid-area'];
+                            $values = [
+                                [
+                                    [$device === 'desktop' ? ($item['y'] + 1) . ' / ' . ($item['x'] + 1) . ' / span ' . $item['h'] . ' / span ' . $item['w'] : null],
+                                    [$device === 'tablet' ? ($item['y'] + 1) . ' / ' . ($item['x'] + 1) . ' / span ' . $item['h'] . ' / span ' . $item['w'] : null],
+                                    [null],
+                                    [$device === 'mobile' ? ($item['y'] + 1) . ' / ' . ($item['x'] + 1) . ' / span ' . $item['h'] . ' / span ' . $item['w'] : null],
+                                ]
+                            ];
+                            $final_css = $gspb_generate_css($css_selector, $properties, $values, $final_css);
+                        }
+
+                        // Add grid-template-columns for the container
+                        $container_selector = $selector;
+                        $container_properties = ['grid-template-columns'];
+                        $container_values = [
+                            [
+                                [$device === 'desktop' ? 'repeat(' . $layout['cols'] . ', 1fr)' : null],
+                                [$device === 'tablet' ? 'repeat(' . $layout['cols'] . ', 1fr)' : null],
+                                [null],
+                                [$device === 'mobile' ? 'repeat(' . $layout['cols'] . ', 1fr)' : null],
+                            ]
+                        ];
+                        $final_css = $gspb_generate_css($container_selector, $container_properties, $container_values, $final_css);
+                    }
+                }
+            }
+
+            if ($attribute == 'animation_keyframes_Extra') {
+                $animation = $style_attributes[$attribute];
+                if ($animation && is_array($animation)) {
+                    foreach ($animation as $item) {
+                        $name = $item['name'];
+                        $code = $item['code'];
+                        
+                        if ($code && is_string($code)) {
+                            // Old format - direct string value
+                            $final_css .= '@keyframes ' . $name . ' {' . $code . '}';
+                        } elseif ($code && is_array($code)) {
+                            // New device format - generate responsive keyframes
+                            $devices = ['desktop', 'tablet', 'landscape-mobile', 'portrait-mobile'];
+                            $breakpoints = ['(min-width: 992px)', '(min-width: 768px) and (max-width: 991.98px)', '(min-width: 576px) and (max-width: 767.98px)', '(max-width: 575.98px)'];
+                            
+                            foreach ($devices as $device_index => $device) {
+                                $device_code = $code[$device_index] ?? '';
+                                if ($device_code && trim($device_code)) {
+                                    if ($device_index === 0) {
+                                        // Desktop (default) - no media query
+                                        $final_css .= '@keyframes ' . $name . ' {' . $device_code . '}';
+                                    } else {
+                                        // Other devices - with media query
+                                        $final_css .= '@media ' . $breakpoints[$device_index] . ' {@keyframes ' . $name . ' {' . $device_code . '}}';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $final_css .= '@media (prefers-reduced-motion) {' . $selector . '{animation: none !important;}}';
+                }
+            }
+
+            if ($attribute == 'anchorSupport_Extra') {
+                $anchor_support = $style_attributes['anchorSupport_Extra'];
+                if ($anchor_support) {
+                    $final_css .= '@supports not (position-anchor: --a) {' . $selector . '{' . $anchor_support . '}}';
+                }
+            }
+
+            if ($attribute == 'position_try_Extra') {
+                $position_try_fallbacks = $style_attributes['position_try_Extra'];
+                if ($position_try_fallbacks && is_array($position_try_fallbacks)) {
+                    foreach ($position_try_fallbacks as $fallback) {
+                        $fallback_name = $fallback['name'];
+                        $fallback_code = $fallback['code'];
+                        $final_css .= '@position-try ' . $fallback_name . ' {' . $fallback_code . '}';
+                    }
+                }
+            }
+
+            if ($attribute == 'hideOnMobile_Extra') {
+                $final_css .= '@media (max-width: 575.98px){' . $selector . '{display: none !important;}}';
+            }
+
+            if ($attribute == 'hideOnTablet_Extra') {
+                $final_css .= '@media (min-width: 768px) and (max-width: 991.98px){' . $selector . '{display: none !important;}}';
+            }
+
+            if ($attribute == 'hideOnLandscape_Extra') {
+                $final_css .= '@media (min-width: 576px) and (max-width: 767.98px){' . $selector . '{display: none !important;}}';
+            }
+
+            if ($attribute == 'hideOnDesktop_Extra') {
+                $final_css .= '@media (min-width: 992px){' . $selector . '{display: none !important;}}';
+            }
+
+            if ($attribute == 'hideOnFrontend_Extra') {
+                $final_css .= 'body.gspb-bodyfront ' . $selector . '{display: none !important;}';
+            }
+
+            if ($attribute == 'hideOnEditor_Extra') {
+                $final_css .= 'body:not(.gspb-bodyfront) ' . $selector . '{display: none !important;}';
+            }
+
+            if ($attribute == 'customCSS_Extra') {
+                $custom_css = $style_attributes[$attribute];
+                if (strpos($custom_css, ' {CURRENT}') !== false) {
+                    $custom_css = str_replace('{CURRENT}', str_replace(['body ', 'body.gspb-bodyfront '], '', $selector), $custom_css);
+                } elseif (strpos($custom_css, '{CURRENT}') !== false) {
+                    $custom_css = str_replace('{CURRENT}', $selector, $custom_css);
+                }
+                $final_css .= $custom_css;
+            }
+        }
+    }
+
+    return $final_css;
+}
