@@ -6,7 +6,7 @@
  * Author: Wpsoul
  * Author URI: https://greenshiftwp.com
  * Plugin URI: https://greenshiftwp.com
- * Version: 12.2.5
+ * Version: 12.8.1
  * Text Domain: greenshift-animation-and-page-builder-blocks
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
@@ -176,7 +176,6 @@ add_action('init', array('gspb_PageTemplater', 'get_instance'));
 require_once GREENSHIFT_DIR_PATH . 'init.php';
 require_once GREENSHIFT_DIR_PATH . 'includes/helper.php';
 require_once GREENSHIFT_DIR_PATH . 'settings.php';
-//require_once GREENSHIFT_DIR_PATH . 'includes/patterns.php';
 require_once GREENSHIFT_DIR_PATH . 'includes/jsoptimization.php';
 require_once GREENSHIFT_DIR_PATH . 'includes/importer.php';
 
@@ -184,7 +183,6 @@ require_once GREENSHIFT_DIR_PATH . '/edd/edd_start.php';
 add_action('plugins_loaded', 'gspb_GreenShift_plugin_init');
 function gspb_GreenShift_plugin_init()
 {
-	load_plugin_textdomain('greenshift-animation-and-page-builder-blocks', false, GREENSHIFT_DIR_PATH . 'lang'); //translation files
 	if (class_exists('EddLicensePage')) {
 		new EddLicensePage();
 	}
@@ -201,9 +199,11 @@ function gspb_activation_redirect($plugin)
 			return;
 		}
 		if(defined('GREENSHIFT_THEME_VERSION')){
-			exit(wp_redirect(admin_url('admin.php?page=greenshift_theme_settings')));
+			wp_redirect(esc_url(admin_url('admin.php?page=greenshift_theme_settings')));
+			exit;
 		}else{
-			exit(wp_redirect(admin_url('admin.php?page=greenshift_dashboard')));
+			wp_redirect(esc_url(admin_url('admin.php?page=greenshift_dashboard')));
+			exit;
 		}
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 class GSPBLazyOptimization {
 
@@ -42,7 +42,7 @@ class GSPBLazyOptimization {
 
 			$allowedpagesArray = array( );
 
-    		$current_url = home_url( $_SERVER['REQUEST_URI'] );
+    		$current_url = home_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
 			
 			$delay_js_page_list = !empty($global_settings['jsdelay']['delay_js_page_list']) ? $global_settings['jsdelay']['delay_js_page_list'] : '';
 

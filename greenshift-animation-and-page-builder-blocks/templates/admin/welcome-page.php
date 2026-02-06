@@ -310,7 +310,7 @@ if (!defined('ABSPATH')) {
     #gspb_row-id-gsbp-9dbd0a17-1f16>.gspb_backgroundOverlay.gspb-inview-active {
         transform: scale(1) rotate(0deg) translateX(0) translateY(0);
         opacity: 1;
-        background-image: url(<?php echo GREENSHIFT_DIR_URL . 'templates/admin/img/bg-kvad.webp'; ?>);
+        background-image: url(<?php echo esc_url(GREENSHIFT_DIR_URL . 'templates/admin/img/bg-kvad.webp'); ?>);
         background-size: contain;
         background-repeat: no-repeat;
         background-position: 50% 0
@@ -340,7 +340,7 @@ if (!defined('ABSPATH')) {
         background-size: 30%;
         background-repeat: no-repeat;
         background-position: 97% 100%;
-        background-image: url(<?php echo GREENSHIFT_DIR_URL . 'templates/admin/img/logoext.webp'; ?>)
+        background-image: url(<?php echo esc_url(GREENSHIFT_DIR_URL . 'templates/admin/img/logoext.webp'); ?>)
     }
 
     #gspb_container-id-gsbp-710c6e65-d7c0.gspb_container>p:last-of-type,
@@ -867,6 +867,26 @@ Worm form
         }
     }
 
+    input:nth-of-type(4):checked~.worm .worm__segment {
+        transform: translateY(15em);
+    }
+
+    input:nth-of-type(4):checked~.worm .worm__segment:before {
+        animation-name: hop4;
+    }
+
+    @keyframes hop4 {
+
+        from,
+        to {
+            transform: translateX(0);
+        }
+
+        50% {
+            transform: translateX(-1.5em);
+        }
+    }
+
     .gs-typewritter {
     position: relative;
     display: inline-block;
@@ -930,7 +950,7 @@ Worm form
 
 
 
-            <div class="wp-block-greenshift-blocks-image gspb_image gspb_image-id-gsbp-39406707-6d0b" id="gspb_image-id-gsbp-39406707-6d0b"><img decoding="async" loading="lazy" src="<?php echo GREENSHIFT_DIR_URL . 'templates/admin/img/cursor.png'; ?>" data-src="" alt="" height="73"></div>
+            <div class="wp-block-greenshift-blocks-image gspb_image gspb_image-id-gsbp-39406707-6d0b" id="gspb_image-id-gsbp-39406707-6d0b"><img decoding="async" loading="lazy" src="<?php echo esc_url(GREENSHIFT_DIR_URL . 'templates/admin/img/cursor.png'); ?>" data-src="" alt="" height="73"></div>
 
 
 
@@ -1052,7 +1072,7 @@ Worm form
 
 
 
-                    <div class="wp-block-greenshift-blocks-image gspb_image gspb_image-id-gsbp-7f102a1f-e4d6" id="gspb_image-id-gsbp-7f102a1f-e4d6"><img decoding="async" loading="lazy" src="<?php echo GREENSHIFT_DIR_URL . 'templates/admin/img/image.webp'; ?>" data-src="" alt="" width="1435" height="470"></div>
+                    <div class="wp-block-greenshift-blocks-image gspb_image gspb_image-id-gsbp-7f102a1f-e4d6" id="gspb_image-id-gsbp-7f102a1f-e4d6"><img decoding="async" loading="lazy" src="<?php echo esc_url(GREENSHIFT_DIR_URL . 'templates/admin/img/image.webp'); ?>" data-src="" alt="" width="1435" height="470"></div>
                 </div>
             </div>
         </div>

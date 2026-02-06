@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 define( 'EDD_CONSTANTS', true );
 
 define( 'EDD_GSPB_PLUGIN_LICENSE_PAGE', 'greenshift-license' );

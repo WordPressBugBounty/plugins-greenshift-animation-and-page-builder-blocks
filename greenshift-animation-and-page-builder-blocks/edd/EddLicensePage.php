@@ -212,7 +212,7 @@ class EddLicensePage
 
 				<div class="wp-block-greenshift-blocks-container gspb_container gspb_container-gsbp-89d45563-1559" id="gspb_container-id-gsbp-89d45563-1559">
 					<div class="wp-block-greenshift-blocks-container gspb_container gspb_container-gsbp-efb64efe-d083" id="gspb_container-id-gsbp-efb64efe-d083">
-						<h2 id="gspb_heading-id-gsbp-ca0b0ada-6561" class="gspb_heading gspb_heading-id-gsbp-ca0b0ada-6561 "><?php esc_html_e('Plugins License Options'); ?></h2>
+						<h2 id="gspb_heading-id-gsbp-ca0b0ada-6561" class="gspb_heading gspb_heading-id-gsbp-ca0b0ada-6561 "><?php esc_html_e('Plugins License Options', 'greenshift-animation-and-page-builder-blocks'); ?></h2>
 					</div>
 
 
@@ -257,7 +257,7 @@ class EddLicensePage
 		<?php
 		if ('valid' !== $status) {
 			printf(
-				'<input type="password" autocomplete="off" class="regular-text" id="edd_license_key_' . $args['product'] . '" name="edd_license_key_' . $args['product'] . '" value="%s" />',
+				'<input type="password" autocomplete="off" class="regular-text" id="edd_license_key_' . esc_attr($args['product']) . '" name="edd_license_key_' . esc_attr($args['product']) . '" value="%s" />',
 				esc_attr($license)
 			);
 		} else {
@@ -318,7 +318,7 @@ class EddLicensePage
 						$this->licensesData[$key]['status'] = '';
 						$this->licensesData[$key]['expires'] = '';
 					}
-					$this->licensesData[$key]['license'] = $_POST[$data['license_key']];
+					$this->licensesData[$key]['license'] = sanitize_text_field($_POST[$data['license_key']]);
 				}
 			}
 
@@ -565,7 +565,7 @@ class EddLicensePage
 			if (is_wp_error($response)) {
 				$message = $response->get_error_message();
 			} else {
-				$message = __('An error occurred, please try again.');
+				$message = __('An error occurred, please try again.', 'greenshift-animation-and-page-builder-blocks');
 			}
 
 			$redirect = add_query_arg(
@@ -649,70 +649,72 @@ class EddLicensePage
 
 	static function edd_check_and_update_licenses_static()
 	{
-		$licenses_data = [];
-		$dbOptions = get_option('gspb_edd_licenses');
-
-		if (empty($dbOptions)) return false;
-
-		$licenses_data = $dbOptions;
-
-		foreach ($licenses_data as $plugin_key => $data) {
-			if (!$data['status']) continue;
-
-			$api_params = array(
-				'edd_action'  => 'check_license',
-				'license'     => $data['license'],
-				'item_id'     => $data['plugin_id'],
-				'item_name'   => rawurlencode($data['plugin_name']),
-				'url'         => home_url(),
-				'environment' => function_exists('wp_get_environment_type') ? wp_get_environment_type() : 'production',
-			);
-
-			// Call the custom API.
-			$response = wp_remote_post(
-				EDD_GSPB_STORE_URL,
-				array(
-					'timeout'   => 15,
-					'sslverify' => false,
-					'body'      => $api_params,
-				)
-			);
-
-			if (is_wp_error($response)) {
-				return false;
+		if(defined('GREENSHIFTGSAP_DIR_URL') || defined('GREENSHIFTQUERY_DIR_URL') || defined('GREENSHIFTWOO_DIR_URL') || defined('GREENSHIFTSEO_DIR_URL')){
+			$licenses_data = [];
+			$dbOptions = get_option('gspb_edd_licenses');
+	
+			if (empty($dbOptions)) return false;
+	
+			$licenses_data = $dbOptions;
+	
+			foreach ($licenses_data as $plugin_key => $data) {
+				if (!$data['status']) continue;
+	
+				$api_params = array(
+					'edd_action'  => 'check_license',
+					'license'     => $data['license'],
+					'item_id'     => $data['plugin_id'],
+					'item_name'   => rawurlencode($data['plugin_name']),
+					'url'         => home_url(),
+					'environment' => function_exists('wp_get_environment_type') ? wp_get_environment_type() : 'production',
+				);
+	
+				// Call the custom API.
+				$response = wp_remote_post(
+					EDD_GSPB_STORE_URL,
+					array(
+						'timeout'   => 15,
+						'sslverify' => false,
+						'body'      => $api_params,
+					)
+				);
+	
+				if (is_wp_error($response)) {
+					return false;
+				}
+	
+				$license_data = json_decode(wp_remote_retrieve_body($response));
+	
+				if(!isset($license_data->license)){
+					return false;
+				}
+	
+				switch ($license_data->license) {
+					case 'invalid':
+						$licenses_data[$plugin_key]['expires'] = '';
+						$licenses_data[$plugin_key]['status'] = '';
+						$licenses_data[$plugin_key]['license'] = '';
+						break;
+					case 'expired':
+						$licenses_data[$plugin_key]['expires'] = $license_data->expires;
+						$licenses_data[$plugin_key]['status'] = '';
+						break;
+					case 'inactive':
+						$licenses_data[$plugin_key]['expires'] = '';
+						$licenses_data[$plugin_key]['status'] = '';
+						break;
+					case 'disabled':
+						$licenses_data[$plugin_key]['expires'] = $license_data->expires;
+						$licenses_data[$plugin_key]['status'] = $license_data->license;
+						break;
+					default:
+						$licenses_data[$plugin_key]['expires'] = $license_data->expires;
+						break;
+				}
 			}
-
-			$license_data = json_decode(wp_remote_retrieve_body($response));
-
-			if(!isset($license_data->license)){
-				return false;
-			}
-
-			switch ($license_data->license) {
-				case 'invalid':
-					$licenses_data[$plugin_key]['expires'] = '';
-					$licenses_data[$plugin_key]['status'] = '';
-					$licenses_data[$plugin_key]['license'] = '';
-					break;
-				case 'expired':
-					$licenses_data[$plugin_key]['expires'] = $license_data->expires;
-					$licenses_data[$plugin_key]['status'] = '';
-					break;
-				case 'inactive':
-					$licenses_data[$plugin_key]['expires'] = '';
-					$licenses_data[$plugin_key]['status'] = '';
-					break;
-				case 'disabled':
-					$licenses_data[$plugin_key]['expires'] = $license_data->expires;
-					$licenses_data[$plugin_key]['status'] = $license_data->license;
-					break;
-				default:
-					$licenses_data[$plugin_key]['expires'] = $license_data->expires;
-					break;
-			}
+	
+			update_option('gspb_edd_licenses', $licenses_data);
 		}
-
-		update_option('gspb_edd_licenses', $licenses_data);
 	}
 
 	/**

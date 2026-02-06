@@ -110,7 +110,7 @@ function gspb_block_get_user_roles() {
 }
 
 // Handle form submission
-if (isset($_POST['gspb_save_block_manager']) && wp_verify_nonce($_POST['gspb_block_manager_nonce'], 'gspb_block_manager_action')) {
+if (isset($_POST['gspb_save_block_manager'], $_POST['gspb_block_manager_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['gspb_block_manager_nonce'])), 'gspb_block_manager_action')) {
     $global_settings = get_option('gspb_global_settings', array());
     $block_manager_settings = array();
     
@@ -130,12 +130,32 @@ if (isset($_POST['gspb_save_block_manager']) && wp_verify_nonce($_POST['gspb_blo
         
         // Check for disabled blocks
         if (isset($_POST['disabled_blocks'][$role_name]) && is_array($_POST['disabled_blocks'][$role_name])) {
-            $role_settings['disabled_blocks'] = $_POST['disabled_blocks'][$role_name];
+            $sanitized_blocks = array();
+            foreach ($_POST['disabled_blocks'][$role_name] as $block) {
+                $sanitized_block = sanitize_text_field(wp_unslash($block));
+                // Whitelist against known blocks
+                if (array_key_exists($sanitized_block, $blocks)) {
+                    $sanitized_blocks[] = $sanitized_block;
+                }
+            }
+            if (!empty($sanitized_blocks)) {
+                $role_settings['disabled_blocks'] = $sanitized_blocks;
+            }
         }
         
         // Check for disabled variations
         if (isset($_POST['disabled_variations'][$role_name]) && is_array($_POST['disabled_variations'][$role_name])) {
-            $role_settings['disabled_variations'] = $_POST['disabled_variations'][$role_name];
+            $sanitized_variations = array();
+            foreach ($_POST['disabled_variations'][$role_name] as $variation) {
+                $sanitized_variation = sanitize_text_field(wp_unslash($variation));
+                // Whitelist against known variations
+                if (array_key_exists($sanitized_variation, $variations)) {
+                    $sanitized_variations[] = $sanitized_variation;
+                }
+            }
+            if (!empty($sanitized_variations)) {
+                $role_settings['disabled_variations'] = $sanitized_variations;
+            }
         }
         
         // Save role settings if there are any settings (simplified panels, disabled blocks, or disabled variations)
@@ -147,7 +167,7 @@ if (isset($_POST['gspb_save_block_manager']) && wp_verify_nonce($_POST['gspb_blo
     $global_settings['block_manager'] = $block_manager_settings;
     update_option('gspb_global_settings', $global_settings);
     
-    echo '<div class="notice notice-success"><p>' . __('Block manager settings saved successfully!', 'greenshift-animation-and-page-builder-blocks') . '</p></div>';
+    echo '<div class="notice notice-success"><p>' . esc_html__('Block manager settings saved successfully!', 'greenshift-animation-and-page-builder-blocks') . '</p></div>';
 }
 
 // Get current settings

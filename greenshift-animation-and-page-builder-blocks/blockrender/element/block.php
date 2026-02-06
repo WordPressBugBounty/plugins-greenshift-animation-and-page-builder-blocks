@@ -11,6 +11,9 @@ class Element
 	public function __construct()
 	{
 		add_action('init', array($this, 'init_handler'));
+		// Register form processing hooks for contact form
+		add_action('admin_post_greenshift_form', array($this, 'process_form'));
+		add_action('admin_post_nopriv_greenshift_form', array($this, 'process_form'));
 	}
 
 	/**
@@ -120,18 +123,33 @@ class Element
 
 	public function init_handler()
 	{
+		//////////////////////////////////////////////////////////////////
+		// Components Supported Attributes
+		//////////////////////////////////////////////////////////////////
+		add_filter('block_bindings_supported_attributes_greenshift-blocks/element', function ( $supported_attributes ) {
+			$supported_attributes[] = 'textContent';
+			$supported_attributes[] = 'src';
+			$supported_attributes[] = 'alt';
+			$supported_attributes[] = 'href';
+			$supported_attributes[] = 'poster';
+			$supported_attributes[] = 'title';
+			$supported_attributes[] = 'icon';
+			return $supported_attributes;
+		});
+
 		register_block_type(
 			__DIR__,
 			array(
+				'uses_context'    => array( 'pattern/overrides' ),
 				'render_callback' => array($this, 'render_block'),
 			)
 		);
 	}
 
 
-	public function render_block($settings, $inner_content, $block)
+	public function render_block($settings, $inner_content, $blockobj)
 	{
-		$block = (is_array($block)) ? $block : $block->parsed_block;
+		$block = (is_array($blockobj)) ? $blockobj : $blockobj->parsed_block;
 		$html = $inner_content;
 
 		if(!empty($block['attrs']['styleAttributes']['hideOnFrontend_Extra'])){
@@ -167,7 +185,7 @@ class Element
 						$extra_filters = !empty($block['attrs']['extra_filters']) ? $block['attrs']['extra_filters'] : array();
 						$src = $this->embedsrc($src, $extra_filters);
 					}
-					$p->set_attribute( 'src', $src);
+					$p->set_attribute( 'src', esc_url($src));
 					$html = $p->get_updated_html();
 				}
 			} else if($block['attrs']['tag'] == 'a'){
@@ -187,6 +205,41 @@ class Element
 				if(!empty($block['attrs']['lazyLoadVideo'])){
 					wp_enqueue_script('gs-lazyloadvideo');
 				}
+			} else if($block['attrs']['tag'] == 'svg'){
+				if(!empty($block['attrs']['icon'])){
+					$icon = $block['attrs']['icon'];
+					$svg_code = '';
+					
+					// Get SVG code from icon attribute
+					if(!empty($icon['icon']['svg'])){
+						$svg_code = $icon['icon']['svg'];
+					} else if(!empty($icon['svg'])){
+						$svg_code = $icon['svg'];
+					}
+					
+					if(!empty($svg_code)){
+						// Extract opening <svg> tag using regex
+						if(preg_match('/<svg[^>]*>/i', $svg_code, $svg_tag_match)){
+							$svg_tag = $svg_tag_match[0];
+							
+							// List of SVG attributes to preserve
+							$svg_attrs_to_preserve = array('fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-miterlimit', 'stroke-opacity', 'fill-opacity', 'fill-rule', 'clip-rule', 'opacity', 'color');
+							
+							$p = new \WP_HTML_Tag_Processor( $html );
+							$p->next_tag();
+							
+							foreach($svg_attrs_to_preserve as $attr_name){
+								// Match attribute with double or single quotes
+								$pattern = '/' . preg_quote($attr_name, '/') . '=["\']([^"\']*)["\']/';
+								if(preg_match($pattern, $svg_tag, $attr_match)){
+									$p->set_attribute($attr_name, $attr_match[1]);
+								}
+							}
+							
+							$html = $p->get_updated_html();
+						}
+					}
+				}
 			}
 		}
 
@@ -202,7 +255,7 @@ class Element
 					$p->next_tag();
 					$blockid = 'api_id_'.\greenshift_sanitize_id_key($block['attrs']['localId']);
 					$blockid = str_replace('-','_', $blockid);
-					$p->set_attribute( 'data-api-id', $blockid);
+					$p->set_attribute( 'data-api-id', esc_attr($blockid));
 					$p->set_attribute( 'data-dynamic-api', 'true');
 					$p->set_attribute( 'data-dynamic-api-trigger', !empty($block['attrs']['api_filters']['ajaxTrigger']) ? esc_attr($block['attrs']['api_filters']['ajaxTrigger']) : 'load');
 					if(!empty($block['attrs']['api_filters']['ajaxTrigger']) && $block['attrs']['api_filters']['ajaxTrigger'] == 'form' && !empty($block['attrs']['api_filters']['ajaxSelector'])){
@@ -223,7 +276,7 @@ class Element
 						'rest_url' => esc_url_raw(rest_url('greenshift/v1/api-connector/')),
 						'nonce' => wp_create_nonce('wp_rest'),
 					);
-					wp_localize_script('gspb-apiconnector', 'api_connector_vars', $rest_vars);
+					wp_localize_script('gspb-apiconnector', 'gspbapi_connector_vars', $rest_vars);
 					wp_enqueue_script('gspb-apiconnector');	
 
 					// We clean because it will be generated dynamically
@@ -280,7 +333,7 @@ class Element
 			}else if($block['attrs']['isVariation'] == 'menu_item_link'){
 				// Check if current link matches the page URL
 				if(!empty($block['attrs']['href'])){
-					$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+					$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) . esc_url_raw(wp_unslash($_SERVER['REQUEST_URI']));
 					$link_url = $block['attrs']['href'];
 					
 					// Remove trailing slashes for comparison
@@ -293,7 +346,7 @@ class Element
 						$p->next_tag();
 						$current_class = $p->get_attribute( 'class' );
 						$new_class = $current_class ? $current_class . ' current_item' : 'current_item';
-						$p->set_attribute( 'class', $new_class );
+						$p->set_attribute( 'class', esc_attr($new_class) );
 						$p->set_attribute( 'aria-current', 'page' );
 						$html = $p->get_updated_html();
 					}
@@ -312,7 +365,7 @@ class Element
 				$p = new \WP_HTML_Tag_Processor( $html );
 				$p->next_tag();
 				$service = esc_attr($block['attrs']['alt']);
-				$p->set_attribute( 'data-social-service', $service);
+				$p->set_attribute( 'data-social-service', esc_attr($service));
 				if($service == 'facebook'){
 					global $post;
 					$link = get_permalink($post->ID);
@@ -365,8 +418,8 @@ class Element
 				while ( $p->next_tag() ) {
 					// Skip an element if it's not supposed to be processed.
 					if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs_click_sync' ) || $p->has_class( 'gs_hover_sync' )) ) {
-						$p->set_attribute( 'id', 'gs-trigger-'.$block['attrs']['id'].'-'.$itrigger);
-						$p->set_attribute( 'aria-controls', 'gs-content-'.$block['attrs']['id'].'-'.$itrigger);
+						$p->set_attribute( 'id', 'gs-trigger-'.esc_attr($block['attrs']['id']).'-'.$itrigger);
+						$p->set_attribute( 'aria-controls', 'gs-content-'.esc_attr($block['attrs']['id']).'-'.$itrigger);
 						$itrigger ++;
 					}
 				}
@@ -377,8 +430,8 @@ class Element
 				while ( $p->next_tag() ) {
 					// Skip an element if it's not supposed to be processed.
 					if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs_content' )) ) {
-						$p->set_attribute( 'id', 'gs-content-'.$block['attrs']['id'].'-'.$icontent);
-						$p->set_attribute( 'aria-labelledby', 'gs-trigger-'.$block['attrs']['id'].'-'.$icontent);
+						$p->set_attribute( 'id', 'gs-content-'.esc_attr($block['attrs']['id']).'-'.$icontent);
+						$p->set_attribute( 'aria-labelledby', 'gs-trigger-'.esc_attr($block['attrs']['id']).'-'.$icontent);
 						$icontent ++;
 					}
 				}
@@ -457,8 +510,60 @@ class Element
 				$html = $p->get_updated_html();
 			}else if($block['attrs']['isVariation'] == 'stylemanager'){
 				if(!is_admin()){
-					return '';
+					$html = '<!-- gs-stylemanager -->';
 				}
+			}else if($block['attrs']['isVariation'] == 'contactform'){
+				// Add action parameter to form if not already set
+					$p = new \WP_HTML_Tag_Processor( $html );
+					$p->next_tag();
+						$p->set_attribute( 'action', home_url().'/wp-admin/admin-post.php?action=greenshift_form' );
+						$p->set_attribute( 'method', 'post' );
+						$html = $p->get_updated_html();
+					// Add nonce field to the form
+					$nonce_field = wp_nonce_field('greenshift_form', '_wpnonce', true, false);
+					// Insert nonce field at the beginning of the form
+					$html = preg_replace('/(<form[^>]*>)/i', '$1' . $nonce_field, $html, 1);
+					
+					// Add hidden formtype field for contact form
+					$formtype_field = '<input type="hidden" name="formtype" value="contact" />';
+					// Insert formtype field after nonce field
+					$html = preg_replace_callback('/(<input[^>]*_wpnonce[^>]*>)/i', function($matches) use ($formtype_field) {
+						return $matches[0] . $formtype_field;
+					}, $html, 1);
+					
+					// Add Cloudflare Turnstile captcha
+					$global_settings = get_option('gspb_global_settings');
+					$turnstile_site_key = !empty($global_settings['turnstile_site_key']) ? $global_settings['turnstile_site_key'] : '';
+					$turnstile_site_key = apply_filters('greenshift_turnstile_site_key', $turnstile_site_key);
+					if (!empty($turnstile_site_key)) {
+						// Enqueue Turnstile script
+						wp_enqueue_script('cloudflare-turnstile', GREENSHIFT_DIR_URL . 'libs/map/api.js', array(), null, true);
+						
+						// Add Turnstile widget before submit button
+						$turnstile_widget = '<div class="cf-turnstile" data-sitekey="' . esc_attr($turnstile_site_key) . '" data-theme="auto"></div>';
+						// Insert Turnstile widget before the submit button
+						$html = preg_replace('/(<button[^>]*type=["\']submit["\'][^>]*>)/i', $turnstile_widget . '$1', $html, 1);
+						// If no button found, insert before closing form tag
+						if (strpos($html, $turnstile_widget) === false) {
+							$html = preg_replace('/(<\/form>)/i', $turnstile_widget . '$1', $html, 1);
+						}
+					}
+					// Check query strings to determine which messages to show/hide
+					$show_success = isset($_GET['gs-form-success']) && $_GET['gs-form-success'] == '1';
+					$show_error = isset($_GET['gs-form-error']) && $_GET['gs-form-error'] == '1';
+					$show_captcha_error = isset($_GET['gs-form-captcha-error']) && $_GET['gs-form-captcha-error'] == '1';
+					
+					// Only hide messages that shouldn't be shown
+					if (!$show_success) {
+						$html = str_replace('id="gs-form-success"', 'id="gs-form-success" style="display: none;"', $html);
+					}
+					if (!$show_error) {
+						$html = str_replace('id="gs-form-error"', 'id="gs-form-error" style="display: none;"', $html);
+					}
+					if (!$show_captcha_error) {
+						$html = str_replace('id="gs-form-captcha-error"', 'id="gs-form-captcha-error" style="display: none;"', $html);
+					}
+				
 			}
 		}
 		if(!empty($block['attrs']['enableTooltip'])){
@@ -495,9 +600,9 @@ class Element
 							}
 						}
 						if($block['attrs']['tag'] == 'video' && !empty($block['attrs']['lazyLoadVideo'])){
-							$p->set_attribute( 'data-src', $value);
+							$p->set_attribute( 'data-src', esc_url($value));
 						} else {
-							$p->set_attribute( 'src', $value);
+							$p->set_attribute( 'src', esc_url($value));
 						}
 						
 						if(!empty($block['attrs']['enableSrcSet']) && !empty($type['type']) && $type['type'] == 'image'){
@@ -524,7 +629,7 @@ class Element
 					$value = GSPB_make_dynamic_text($href, $block['attrs'], $block, $block['attrs']['dynamiclink'], $href);
 					if($value){
 						$linknew = apply_filters('greenshiftseo_url_filter', $value);
-						$p->set_attribute( 'href', $linknew);
+						$p->set_attribute( 'href', esc_url($linknew));
 						$html = $p->get_updated_html();
 					}else{
 						return '';
@@ -537,7 +642,7 @@ class Element
 					$p->next_tag();
 					$value = GSPB_make_dynamic_text($block['attrs']['poster'], $block['attrs'], $block, $block['attrs']['dynamicextra']);
 					if($value){
-						$p->set_attribute( 'poster', $value);
+						$p->set_attribute( 'poster', esc_url($value));
 						$html = $p->get_updated_html();
 					}else{
 						return '';
@@ -563,7 +668,7 @@ class Element
 				$p = new \WP_HTML_Tag_Processor( $html );
 				$p->next_tag();
 				foreach($dynamicAttributes as $index=>$value){
-					$p->set_attribute( $value['name'], $value['value']);
+					$p->set_attribute( $value['name'], wp_strip_all_tags($value['value']));
 				}
 				$html = $p->get_updated_html();
 			}
@@ -574,7 +679,7 @@ class Element
 			$anchor = str_replace('{POST_ID}', $post_id, $block['attrs']['anchor']);
 			$p = new \WP_HTML_Tag_Processor( $html );
 			$p->next_tag();
-			$p->set_attribute( 'id', $anchor);
+			$p->set_attribute( 'id', esc_attr($anchor));
 			$html = $p->get_updated_html();
 		}
 		if(!empty($block['attrs']['dynamicIndexer'])){
@@ -656,6 +761,7 @@ class Element
 					$html = $p->get_updated_html();
 				}
 			}
+
 		}
 		if(!empty($block['attrs']['textContent'])){
 			if(strpos($block['attrs']['textContent'], '{{') !== false){
@@ -698,7 +804,7 @@ class Element
 				}
 				$data = rtrim($data, ',');
 				$data .= ']';
-				$p->set_attribute( 'data-canvas-controllers', $data );
+				$p->set_attribute( 'data-canvas-controllers', wp_strip_all_tags($data) );
 				$html = $p->get_updated_html();
 			}
 
@@ -750,12 +856,304 @@ class Element
 					} else {
 						wp_enqueue_script('gspb-js-blocks');
 						wp_add_inline_script('gspb-js-blocks', $js, 'after');
+
+					}
+				}
+			}
+		}
+
+		//Block Binding
+		$binding_name = $block['attrs']['metadata']['name'] ?? null;
+		
+		if(!empty($binding_name)){
+			$overrides = array();
+			if ( $binding_name && isset( $blockobj->context['pattern/overrides'][ $binding_name ] ) ) {
+				$overrides = $blockobj->context['pattern/overrides'][ $binding_name ];
+			}
+			if(!empty($overrides)){
+				if(!empty($overrides['textContent'])){
+					$html = str_replace($block['attrs']['textContent'], esc_html($overrides['textContent']), $html);
+				}
+				if(!empty($overrides['src']) || !empty($overrides['alt']) || !empty($overrides['href']) || !empty($overrides['title']) || !empty($overrides['poster'])){
+					$p = new \WP_HTML_Tag_Processor( $html );
+					$p->next_tag();
+					if(!empty($overrides['src'])){
+						$p->set_attribute( 'src', esc_url($overrides['src']));
+					}
+					if(!empty($overrides['alt'])){
+						$p->set_attribute( 'alt', esc_attr($overrides['alt']));
+					}
+					if(!empty($overrides['href'])){
+						$p->set_attribute( 'href', esc_url($overrides['href']));
+					}
+					if(!empty($overrides['title'])){
+						$p->set_attribute( 'title', esc_attr($overrides['title']));
+					}
+					if(!empty($overrides['poster'])){
+						$p->set_attribute( 'poster', esc_url($overrides['poster']));
+					}
+					$html = $p->get_updated_html();
+				}
+				// Handle icon override for SVG elements
+				if(!empty($overrides['icon']) && !empty($block['attrs']['icon'])){
+					$new_icon = $overrides['icon'];
+					
+					// Get new SVG code
+					$new_svg = '';
+					if(!empty($new_icon['icon']['svg'])){
+						$new_svg = $new_icon['icon']['svg'];
+					} else if(!empty($new_icon['svg'])){
+						$new_svg = $new_icon['svg'];
+					} else if(!empty($new_icon['icon']['font'])){
+						$new_svg = greenshift_render_icon_module($overrides['icon']);
+					}
+					
+					if(!empty($new_svg)){
+						// Extract attributes from old SVG in HTML
+						$p = new \WP_HTML_Tag_Processor($html);
+						$p->next_tag('svg');
+						
+						// Get all attributes from old SVG
+						$old_attrs = array();
+						$attr_names = $p->get_attribute_names_with_prefix('');
+						if(!empty($attr_names)){
+							foreach($attr_names as $attr_name){
+								$old_attrs[$attr_name] = $p->get_attribute($attr_name);
+							}
+						}
+						
+						// Extract inner content from new SVG
+						$new_inner = '';
+						if(preg_match('/<svg[^>]*>(.*)<\/svg>/is', $new_svg, $inner_match)){
+							$new_inner = $inner_match[1];
+						}
+						
+						// Replace inner content of old SVG with new inner content
+						$html = preg_replace('/(<svg[^>]*>)(.*?)(<\/svg>)/is', '$1' . $new_inner . '$3', $html);
+						
+						// Now apply any SVG-specific attributes from new icon (fill, stroke, etc.) while keeping old class, width, height, etc.
+						$p2 = new \WP_HTML_Tag_Processor($html);
+						$p2->next_tag('svg');
+						
+						// Get fill/stroke from new SVG if present
+						if(preg_match('/<svg[^>]*>/i', $new_svg, $svg_tag_match)){
+							$new_svg_tag = $svg_tag_match[0];
+							$svg_style_attrs = array('fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin');
+							foreach($svg_style_attrs as $attr_name){
+								$pattern = '/' . preg_quote($attr_name, '/') . '=["\']([^"\']*)["\']/i';
+								if(preg_match($pattern, $new_svg_tag, $attr_match)){
+									$p2->set_attribute($attr_name, $attr_match[1]);
+								}
+							}
+						}
+						
+						$html = $p2->get_updated_html();
 					}
 				}
 			}
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Process contact form submission
+	 */
+	public function process_form()
+	{
+		// Verify nonce for security
+		if (!isset($_POST['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'greenshift_form')) {
+			wp_die(esc_html__('Security check failed', 'greenshift-animation-and-page-builder-blocks'));
+		}
+
+		// Get form type
+		$formtype = isset($_POST['formtype']) ? sanitize_text_field($_POST['formtype']) : '';
+
+		// Process based on form type
+		if ($formtype === 'contact') {
+			$this->process_contact_form();
+		} else {
+			// Handle other form types or default behavior
+			// You can add more form types here in the future
+			$redirect_url = wp_get_referer();
+			if (!$redirect_url) {
+				$redirect_url = home_url();
+			}
+			wp_safe_redirect($redirect_url);
+			exit;
+		}
+	}
+
+	/**
+	 * Process contact form submission
+	 */
+	private function process_contact_form()
+	{
+
+		// Verify Cloudflare Turnstile captcha
+		$global_settings = get_option('gspb_global_settings');
+		$turnstile_secret_key = !empty($global_settings['turnstile_secret_key']) ? $global_settings['turnstile_secret_key'] : '';
+		$turnstile_secret_key = apply_filters('greenshift_turnstile_secret_key', $turnstile_secret_key);
+		if (!empty($turnstile_secret_key)) {
+			$turnstile_token = isset($_POST['cf-turnstile-response']) ? sanitize_text_field($_POST['cf-turnstile-response']) : '';
+			
+			if (empty($turnstile_token)) {
+				$redirect_url = wp_get_referer();
+				if (!$redirect_url) {
+					$redirect_url = home_url();
+				}
+				$redirect_url = add_query_arg('gs-form-captcha-error', 1, $redirect_url);
+				wp_safe_redirect($redirect_url);
+				exit;
+			}
+			
+			// Verify Turnstile token with Cloudflare API
+			$verify_url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+			$remote_ip = isset($_SERVER['REMOTE_ADDR']) ? filter_var(wp_unslash($_SERVER['REMOTE_ADDR']), FILTER_VALIDATE_IP) : '';
+			$verify_data = array(
+				'secret' => $turnstile_secret_key,
+				'response' => $turnstile_token,
+				'remoteip' => $remote_ip ? $remote_ip : ''
+			);
+			
+			$verify_response = wp_remote_post($verify_url, array(
+				'body' => $verify_data,
+				'timeout' => 10
+			));
+			
+			if (is_wp_error($verify_response)) {
+				$redirect_url = wp_get_referer();
+				if (!$redirect_url) {
+					$redirect_url = home_url();
+				}
+				$redirect_url = add_query_arg('gs-form-captcha-error', 1, $redirect_url);
+				wp_safe_redirect($redirect_url);
+				exit;
+			}
+			
+			$verify_result = json_decode(wp_remote_retrieve_body($verify_response), true);
+			
+			if (empty($verify_result['success'])) {
+				$redirect_url = wp_get_referer();
+				if (!$redirect_url) {
+					$redirect_url = home_url();
+				}
+				$redirect_url = add_query_arg('gs-form-captcha-error', 1, $redirect_url);
+				wp_safe_redirect($redirect_url);
+				exit;
+			}
+		}
+
+		// Sanitize and validate form data
+		$name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+		$email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+		$message = isset($_POST['message']) ? sanitize_textarea_field($_POST['message']) : '';
+
+		// Validation
+		$errors = array();
+		
+		if (empty($name)) {
+			$errors[] = __('Name is required', 'greenshift-animation-and-page-builder-blocks');
+		}
+		
+		if (empty($email) || !is_email($email)) {
+			$errors[] = __('Valid email is required', 'greenshift-animation-and-page-builder-blocks');
+		}
+		
+		if (empty($message)) {
+			$errors[] = __('Message is required', 'greenshift-animation-and-page-builder-blocks');
+		}
+
+		// If there are errors, redirect back with error message
+		if (!empty($errors)) {
+			$redirect_url = wp_get_referer();
+			if (!$redirect_url) {
+				$redirect_url = home_url();
+			}
+			$redirect_url = add_query_arg('gs-form-error', 1, $redirect_url);
+			wp_safe_redirect($redirect_url);
+			exit;
+		}
+
+		// Get admin email from WordPress core function and apply filter
+		$to = apply_filters('greenshift_contact_form_email', get_option('admin_email'));
+
+		// Prepare email
+		/* translators: 1: Blog name */
+		$subject = sprintf(__('New Contact Form Submission from %s', 'greenshift-animation-and-page-builder-blocks'), get_bloginfo('name'));
+		$subject = apply_filters('greenshift_contact_form_subject', $subject);
+		$email_message = sprintf("%s\n%s\n%s", $name, $email, $message);
+
+		if(isset($POST['extra_fields']) && !empty($POST['extra_fields'])){
+			$extra_fields = sanitize_text_field($_POST['extra_fields']);
+			if(!empty($extra_fields)){
+				$fields = explode('|', $extra_fields);
+				if(!empty($fields)){
+					foreach($fields as $field){
+						$field = sanitize_text_field($field);
+						$email_message .= sprintf("%s\n", $field);
+					}
+				}
+			}
+		}
+		$email_message = apply_filters('greenshift_contact_form_message', $email_message);
+
+		$headers = array(
+			'Content-Type: text/plain; charset=UTF-8',
+			'From: ' . get_bloginfo('name') . ' <' . $to . '>',
+			'Reply-To: ' . $name . ' <' . $email . '>'
+		);
+
+		// Send email
+		$mail_sent = wp_mail($to, $subject, $email_message, $headers);
+
+		// Check if "contactform" post type exists and create post
+		if (post_type_exists('contactform')) {
+			$post_data = array(
+				'post_title'    => $name,
+				'post_content'  => $email_message,
+				'post_status'   => 'publish',
+				'post_type'     => 'contactform',
+			);
+			
+			$post_id = wp_insert_post($post_data);
+			
+			// Add custom fields if post was created successfully
+			if ($post_id && !is_wp_error($post_id)) {
+				update_post_meta($post_id, 'email', $email);
+				update_post_meta($post_id, 'name', $name);
+			}
+		}
+
+		// Get redirect URL from hidden field or use referer
+		$redirect_url = '';
+		if (isset($_POST['thank_you_page']) && !empty($_POST['thank_you_page'])) {
+			$thank_you_page = sanitize_text_field($_POST['thank_you_page']);
+			// Replace {{SITE_URL}} placeholder with actual site URL
+			$site_url = home_url();
+			$thank_you_page = str_replace('{{SITE_URL}}', $site_url, $thank_you_page);
+			$redirect_url = esc_url_raw($thank_you_page);
+		}
+
+		// If no thank you page URL or email failed, redirect back with message
+		if (empty($redirect_url) || !$mail_sent) {
+			$redirect_url = wp_get_referer();
+			if (!$redirect_url) {
+				$redirect_url = home_url();
+			}
+			
+			if ($mail_sent) {
+				$redirect_url = add_query_arg('gs-form-success', '1', $redirect_url);
+			} else {
+				$redirect_url = add_query_arg('gs-form-error', '1', $redirect_url);
+			}
+		} else {
+			// Success - redirect to thank you page
+			$redirect_url = add_query_arg('gs-form-success', '1', $redirect_url);
+		}
+
+		wp_safe_redirect($redirect_url);
+		exit;
 	}
 }
 

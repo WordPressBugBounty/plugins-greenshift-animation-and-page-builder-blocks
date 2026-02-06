@@ -418,12 +418,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				});
 			</script>
 			<div class="stylebook_form_wrap" style="padding:25px">
-				<h1><?php _e('GreenShift Stylebook', 'greenshift-animation-and-page-builder-blocks'); ?></h1>
+				<h1><?php esc_html_e('GreenShift Stylebook', 'greenshift-animation-and-page-builder-blocks'); ?></h1>
 				<div id="ajax-response"> </div>
 				<form id="stylebook_generation" method="post" class="stylbook_btn_wrapper">
 					<?php wp_nonce_field('gspb_generate_stylebook', 'gspb_stylebook'); ?>
 					<div class="stylbook_btn_wrapper">
-						<input type="submit" id="greenshift_stylebook_btn" name="greenshift_stylebook_btn" value=<?php _e('Create Stylebook', 'greenshift-animation-and-page-builder-blocks'); ?> class="button button-primary button-large">
+						<input type="submit" id="greenshift_stylebook_btn" name="greenshift_stylebook_btn" value="<?php esc_html_e('Create Stylebook', 'greenshift-animation-and-page-builder-blocks'); ?>" class="button button-primary button-large">
 						<span class="spinner"></span>
 					</div>
 				</form>
@@ -617,7 +617,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 														</tr>
 													</table>
 
-													<input type="submit" name="gspb_save_settings" value="<?php esc_html_e("Save settings"); ?>" class="button button-primary button-large">
+													<input type="submit" name="gspb_save_settings" value="<?php esc_html_e("Save settings", 'greenshift-animation-and-page-builder-blocks'); ?>" class="button button-primary button-large">
 												</div>
 
 											</form>
@@ -699,7 +699,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</svg></div>
 															<div class="gs-box-text">
 																<?php esc_html_e("Install Smart Code AI free plugin to enable code editor in block HTML/CSS panels", 'greenshift-animation-and-page-builder-blocks'); ?>
-																<a target="_blank" href="<?php echo admin_url('plugin-install.php?s=Greenshift%2520Smart%2520Code%2520AI&tab=search&type=term');?>" target="_blank"><?php esc_html_e("Download", 'greenshift-animation-and-page-builder-blocks'); ?></a>
+																<a target="_blank" href="<?php echo esc_url(admin_url('plugin-install.php?s=Greenshift%2520Smart%2520Code%2520AI&tab=search&type=term'));?>" target="_blank"><?php esc_html_e("Download", 'greenshift-animation-and-page-builder-blocks'); ?></a>
 															</div>
 														</div>
 													</div>
@@ -763,7 +763,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 														</tr>
 													</table>
 
-													<input type="submit" name="gspb_save_settings" value="<?php esc_html_e("Save settings"); ?>" class="button button-primary button-large">
+													<input type="submit" name="gspb_save_settings" value="<?php esc_html_e("Save settings", "greenshift-animation-and-page-builder-blocks"); ?>" class="button button-primary button-large">
 												</div>
 
 											</form>
@@ -834,7 +834,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 													<td>
 														<input name="row" type="text" value="<?php if (isset($global_settings['breakpoints']['row'])) {
 															echo esc_attr($global_settings['breakpoints']['row']);
-														} ?>" placeholder="<?php echo apply_filters('gspb_default_row_width_px', 1200); ?>" />
+														} ?>" placeholder="<?php echo esc_attr(apply_filters('gspb_default_row_width_px', 1200)); ?>" />
 													</td>
 												</tr>
 												<tr>
@@ -924,7 +924,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 													</table>
 
 
-													<input type="submit" name="gspb_save_settings" value="<?php esc_html_e("Save settings"); ?>" class="button button-primary button-large javascript_delay_submit">
+													<input type="submit" name="gspb_save_settings" value="<?php esc_html_e("Save settings", "greenshift-animation-and-page-builder-blocks"); ?>" class="button button-primary button-large javascript_delay_submit">
 												</div>
 											</form>
 										</div>
@@ -941,7 +941,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											}
 											$sanitised = array();
 
-											if (isset($_POST['googleapi']) || isset($_POST['openaiapi']) || isset($_POST['openaiapimodel']) || isset($_POST['claudeapi']) || isset($_POST['deepseekapi']) || isset($_POST['geminiapi']) || isset($_POST['aihelpermodel']) || isset($_POST['aiimagemodel']) || isset($_POST['aidesignmodel'])) {
+											if (isset($_POST['googleapi']) || isset($_POST['openaiapi']) || isset($_POST['openaiapimodel']) || isset($_POST['claudeapi']) || isset($_POST['deepseekapi']) || isset($_POST['geminiapi']) || isset($_POST['aihelpermodel']) || isset($_POST['aiimagemodel']) || isset($_POST['aidesignmodel']) || isset($_POST['turnstile_site_key']) || isset($_POST['turnstile_secret_key'])) {
 												$global_settings = get_option('gspb_global_settings');
 												if (!is_array($global_settings)) {
 													$global_settings = array();
@@ -973,6 +973,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												if (isset($_POST['aidesignmodel'])) {
 													$sanitised['aidesignmodel'] = sanitize_text_field($_POST['aidesignmodel']);
 												}
+												if (isset($_POST['turnstile_site_key'])) {
+													$sanitised['turnstile_site_key'] = sanitize_text_field($_POST['turnstile_site_key']);
+												}
+												if (isset($_POST['turnstile_secret_key'])) {
+													$sanitised['turnstile_secret_key'] = sanitize_text_field($_POST['turnstile_secret_key']);
+												}
 												
 												$newargs = wp_parse_args($sanitised, $global_settings);
 												update_option('gspb_global_settings', $newargs);
@@ -992,6 +998,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										$aihelpermodel = !empty($global_settings['aihelpermodel']) ? $global_settings['aihelpermodel'] : '';
 										$aiimagemodel = !empty($global_settings['aiimagemodel']) ? $global_settings['aiimagemodel'] : '';
 										$aidesignmodel = !empty($global_settings['aidesignmodel']) ? $global_settings['aidesignmodel'] : '';
+										$turnstile_site_key = !empty($global_settings['turnstile_site_key']) ? $global_settings['turnstile_site_key'] : '';
+										$turnstile_secret_key = !empty($global_settings['turnstile_secret_key']) ? $global_settings['turnstile_secret_key'] : '';
 									?>
 										<div class="gspb_settings_form">
 											<form method="POST">
@@ -1006,6 +1014,24 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																<td>
 																	<textarea style="width:100%; min-height:50px;border-color:#ddd" id="googleapi" name="googleapi"><?php echo esc_html($googleapi); ?></textarea>
 																	<div style="margin-bottom:15px"><a href="https://developers.google.com/maps/documentation/javascript/get-api-key"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
+																</td>
+															</tr>
+															<tr class="turnstilesitekey">
+																<td>
+																	<label for="turnstile_site_key"><?php esc_html_e("Cloudflare Turnstile Site Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+																</td>
+																<td>
+																	<input type="text" style="width:100%;border-color:#ddd" id="turnstile_site_key" name="turnstile_site_key" value="<?php echo esc_attr($turnstile_site_key); ?>" />
+																	<div style="margin-bottom:15px"><a href="https://dash.cloudflare.com/?to=/:account/turnstile" target="_blank"><?php esc_html_e("Get Turnstile Keys", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
+																</td>
+															</tr>
+															<tr class="turnstilesecretkey">
+																<td>
+																	<label for="turnstile_secret_key"><?php esc_html_e("Cloudflare Turnstile Secret Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+																</td>
+																<td>
+																	<input type="text" style="width:100%;border-color:#ddd" id="turnstile_secret_key" name="turnstile_secret_key" value="<?php echo esc_attr($turnstile_secret_key); ?>" />
+																	<div style="margin-bottom:15px"><?php esc_html_e("Secret key is used for server-side verification", 'greenshift-animation-and-page-builder-blocks'); ?></div>
 																</td>
 															</tr>
 															<tr class="openaiapikey">
@@ -1050,23 +1076,23 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="openaiapimodel">
-																		<option value="gpt-4.1" <?php selected($openaiapimodel, 'gpt-4.1'); ?>> gpt-4.1 </option>
+																		<option value="gpt-5.1" <?php selected($openaiapimodel, 'gpt-5.1'); ?>> gpt-5.1 </option>
 																		<option value="gpt-4.1-mini" <?php selected($openaiapimodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
 																		<option value="gpt-5" <?php selected($openaiapimodel, 'gpt-5'); ?>> gpt-5 </option>
 																		<option value="gpt-5-mini" <?php selected($openaiapimodel, 'gpt-5-mini'); ?>> gpt-5-mini </option>
-																		<option value="gpt-5-nano" <?php selected($openaiapimodel, 'gpt-5-nano'); ?>> gpt-5-nano </option>
-																		<option value="gpt-4o" <?php selected($openaiapimodel, 'gpt-4o'); ?>> gpt-4o </option>
+																		<option value="gpt-5.2-pro" <?php selected($openaiapimodel, 'gpt-5.2-pro'); ?>> gpt-5.2-pro </option>
+																		<option value="gpt-5.2" <?php selected($openaiapimodel, 'gpt-5.2'); ?>> gpt-5.2 </option>
 																		<option value="o1" <?php selected($openaiapimodel, 'o1'); ?>> o1 </option>
 																		<option value="o1-mini" <?php selected($openaiapimodel, 'o1-mini'); ?>> o1-mini </option>
 																		<option value="o3" <?php selected($openaiapimodel, 'o3'); ?>> o3 </option>
 																		<option value="o1-pro" <?php selected($openaiapimodel, 'o1-pro'); ?>> o1-pro </option>
 																		<option value="o4-mini" <?php selected($openaiapimodel, 'o4-mini'); ?>> o4-mini </option>
-																		<option value="gemini-2.5-pro" <?php selected($openaiapimodel, 'gemini-2.5-pro'); ?>> gemini-2.5-pro </option>
+																		<option value="gemini-3-flash-preview" <?php selected($openaiapimodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
 																		<option value="gemini-2.5-flash" <?php selected($openaiapimodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
-																		<option value="gemini-2.0-flash" <?php selected($openaiapimodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
+																		<option value="gemini-3-pro-preview" <?php selected($openaiapimodel, 'gemini-3-pro-preview'); ?>> gemini-3-pro-preview </option>
 																		<option value="claude-sonnet-4-5" <?php selected($openaiapimodel, 'claude-sonnet-4-5'); ?>> claude-sonnet-4-5 </option>
-																		<option value="claude-sonnet-4-20250514" <?php selected($openaiapimodel, 'claude-sonnet-4-20250514'); ?>> claude-sonnet-4-20250514 </option>
-																		<option value="claude-opus-4-1-20250805" <?php selected($openaiapimodel, 'claude-opus-4-1-20250805'); ?>> claude-opus-4-1-20250805 </option>
+																		<option value="claude-haiku-4-5" <?php selected($openaiapimodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
+																		<option value="claude-opus-4-5-20251101" <?php selected($openaiapimodel, 'claude-opus-4-5-20251101'); ?>> claude-opus-4-5-20251101 </option>
 																		<option value="deepseek-chat" <?php selected($openaiapimodel, 'deepseek-chat'); ?>> deepseek-chat </option>
 																	</select>
 																</td>
@@ -1077,19 +1103,19 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="aihelpermodel">
-																		<option value="gpt-4.1" <?php selected($aihelpermodel, 'gpt-4.1'); ?>> gpt-4.1 </option>
+																		<option value="gpt-5.1" <?php selected($aihelpermodel, 'gpt-5.1'); ?>> gpt-5.1 </option>
 																		<option value="gpt-4.1-mini" <?php selected($aihelpermodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
 																		<option value="gpt-5" <?php selected($aihelpermodel, 'gpt-5'); ?>> gpt-5 </option>
 																		<option value="gpt-5-mini" <?php selected($aihelpermodel, 'gpt-5-mini'); ?>> gpt-5-mini </option>
-																		<option value="gpt-5-nano" <?php selected($aihelpermodel, 'gpt-5-nano'); ?>> gpt-5-nano </option>
+																		<option value="gpt-5.2-pro" <?php selected($aihelpermodel, 'gpt-5.2-pro'); ?>> gpt-5.2-pro </option>
 																		<option value="o3" <?php selected($aihelpermodel, 'o3'); ?>> o3 </option>
 																		<option value="o4-mini" <?php selected($aihelpermodel, 'o4-mini'); ?>> o4-mini </option>
-																		<option value="gemini-2.5-pro" <?php selected($aihelpermodel, 'gemini-2.5-pro'); ?>> gemini-2.5-pro </option>
-																		<option value="gemini-2.0-flash" <?php selected($aihelpermodel, 'gemini-2.0-flash'); ?>> gemini-2.0-flash </option>
+																		<option value="gemini-3-flash-preview" <?php selected($aihelpermodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
+																		<option value="gemini-3-pro-preview" <?php selected($aihelpermodel, 'gemini-3-pro-preview'); ?>> gemini-3-pro-preview </option>
 																		<option value="gemini-2.5-flash" <?php selected($aihelpermodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
-																		<option value="claude-sonnet-4-20250514" <?php selected($aihelpermodel, 'claude-sonnet-4-20250514'); ?>> claude-sonnet-4-20250514 </option>
+																		<option value="claude-haiku-4-5" <?php selected($aihelpermodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
 																		<option value="claude-sonnet-4-5" <?php selected($aihelpermodel, 'claude-sonnet-4-5'); ?>> claude-sonnet-4-5 </option>
-																		<option value="claude-opus-4-1-20250805" <?php selected($aihelpermodel, 'claude-opus-4-1-20250805'); ?>> claude-opus-4-1-20250805 </option>
+																		<option value="claude-opus-4-5-20251101" <?php selected($aihelpermodel, 'claude-opus-4-5-20251101'); ?>> claude-opus-4-5-20251101 </option>
 
 																	</select>
 																</td>
@@ -1101,7 +1127,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																<td>
 																	<select name="aiimagemodel">
 																		<option value="gemini-2.5-flash-image-preview" <?php selected($aiimagemodel, 'gemini-2.5-flash-image-preview'); ?>> Google Flash 2.5 </option>
+																		<option value="gemini-3-pro-image-preview" <?php selected($aiimagemodel, 'gemini-3-pro-image-preview'); ?>> Google Pro 3 Preview </option>
 																		<option value="gpt-image-1" <?php selected($aiimagemodel, 'gpt-image-1'); ?>> GPT Image 1 </option>
+																		<option value="gpt-image-1.5" <?php selected($aiimagemodel, 'gpt-image-1.5'); ?>> GPT Image 1.5 </option>
 																		
 																	</select>
 																</td>
@@ -1112,10 +1140,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="aidesignmodel">
-																		<option value="claude-sonnet-4-20250514" <?php selected($aidesignmodel, 'claude-sonnet-4-20250514'); ?>> claude-sonnet-4-20250514 </option>
+																		<option value="claude-haiku-4-5" <?php selected($aidesignmodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
 																		<option value="claude-sonnet-4-5" <?php selected($aidesignmodel, 'claude-sonnet-4-5'); ?>> claude-sonnet-4-5 </option>
-																		<option value="claude-opus-4-1-20250805" <?php selected($aidesignmodel, 'claude-opus-4-1-20250805'); ?>> claude-opus-4-1-20250805 </option>
-																		<option value="gemini-2.5-pro" <?php selected($aidesignmodel, 'gemini-2.5-pro'); ?>> gemini-2.5-pro </option>
+																		<option value="claude-opus-4-5-20251101" <?php selected($aidesignmodel, 'claude-opus-4-5-20251101'); ?>> claude-opus-4-5-20251101 </option>
+																		<option value="gemini-3-flash-preview" <?php selected($aidesignmodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
 																		
 																		
 																	</select>
@@ -1125,7 +1153,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 													</table>
 
 
-													<input type="submit" name="gspb_save_settings" value="<?php esc_html_e("Save settings"); ?>" class="button button-primary button-large">
+													<input type="submit" name="gspb_save_settings" value="<?php esc_html_e("Save settings", "greenshift-animation-and-page-builder-blocks"); ?>" class="button button-primary button-large">
 												</div>
 											</form>
 										</div>
@@ -1282,13 +1310,13 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												<?php wp_nonce_field('gspb_settings_page_action', 'gspb_settings_field'); ?>
 												<table class="form-table">
 													<tr>
-														<th> <label for="custom_code_in_head"><?php esc_html_e("Custom code in head section", 'greenshift'); ?></label> </th>
+														<th> <label for="custom_code_in_head"><?php esc_html_e("Custom code in head section", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
 														<td>
 															<textarea name="custom_code_in_head" id="" cols="30" rows="10" style="width: 100%"><?php echo $custom_code_in_head ?></textarea>
 														</td>
 													</tr>
 													<tr>
-														<th> <label for="custom_code_before_closed_body"><?php esc_html_e("Custom code before closed Body", 'greenshift'); ?></label> </th>
+														<th> <label for="custom_code_before_closed_body"><?php esc_html_e("Custom code before closed Body", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
 														<td>
 															<textarea name="custom_code_before_closed_body" id="" cols="30" rows="10" style="width: 100%"><?php echo $custom_code_before_closed_body ?></textarea>
 														</td>
@@ -1383,7 +1411,17 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 		// settings fonts
 		public function gspb_settings_add_font()
 		{
-			$i = $_POST['i'];
+			// Verify nonce for CSRF protection
+			if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'gspb_add_font_nonce')) {
+				wp_send_json_error(['message' => 'Invalid nonce'], 403);
+			}
+
+			// Check user capability
+			if (!current_user_can('manage_options')) {
+				wp_send_json_error(['message' => 'Unauthorized'], 403);
+			}
+
+			$i = isset($_POST['i']) ? absint($_POST['i']) : 0;
 			$allowed_font_ext = $this->allowed_font_ext;
 			ob_start();
 			require_once GREENSHIFT_DIR_PATH . 'templates/admin/settings_general_font_item.php';
@@ -1464,23 +1502,39 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			$upload_dir = $upload['basedir'] . '/GreenShift/fonts';
 			$upload_url = $upload['baseurl'] . '/GreenShift/fonts';
 
+			// Initialize WordPress Filesystem
+			global $wp_filesystem;
+			if (empty($wp_filesystem)) {
+				require_once(ABSPATH . 'wp-admin/includes/file.php');
+				WP_Filesystem();
+			}
+
 			foreach (array_keys($files) as $filename) {
 				foreach ($files[$filename]["error"] as $key => $error) {
 					if ($error == UPLOAD_ERR_OK) {
 						$tmp_name = $files[$filename]["tmp_name"][$key];
-						$name = basename($files[$filename]["name"][$key]);
-						$ext = pathinfo($name, PATHINFO_EXTENSION);
+						$name = sanitize_file_name(basename($files[$filename]["name"][$key]));
+						$ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+
+						// Validate file extension against allowed font types
+						if (!in_array($ext, $this->allowed_font_ext)) continue;
+
+						// Verify the uploaded file is valid
+						if (!is_uploaded_file($tmp_name)) continue;
+
 						$font_dir = $upload_dir . '/font_' . ($key + 1) . '/' . $ext;
 
-						$this->gspb_rm_rec($font_dir); //clean up dir before download
+						$this->gspb_rm_rec($font_dir); // clean up dir before download
 
 						if (!wp_mkdir_p($font_dir)) {
 							return false;
 						}
 
-						if(!in_array($ext, $this->allowed_font_ext)) continue;
+						$destination = trailingslashit($font_dir) . $name;
 
-						if (move_uploaded_file($tmp_name, "$font_dir/$name")) {
+						// Read the uploaded file content and write using WP_Filesystem
+						$file_content = $wp_filesystem->get_contents($tmp_name);
+						if ($file_content !== false && $wp_filesystem->put_contents($destination, $file_content, FS_CHMOD_FILE)) {
 							$result[$key][$ext] = $upload_url . '/font_' . ($key + 1) . '/' . $ext . '/' . $name;
 						}
 					}
@@ -1492,7 +1546,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 
 		public function gspb_rm_rec($path)
 		{
-			if (is_file($path)) return unlink($path);
+			if (is_file($path)) return wp_delete_file($path);
 			if (is_dir($path)) {
 				foreach (scandir($path) as $p) if (($p != '.') && ($p != '..'))
 					$this->gspb_rm_rec($path . '/' . $p);
@@ -1520,12 +1574,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 
 				case 'gs-reusable-preview':
 
-					echo '<p><input type="text" style="width:350px" value="[wp_reusable_render id=\'' . $ID . '\']" readonly=""></p>';
-					echo '<p>' . esc_html__('If you use template inside other dynamic ajax blocks', 'greenshift-animation-and-page-builder-blocks') . '<br><input type="text" style="width:350px" value="[wp_reusable_render inlinestyle=1 id=\'' . $ID . '\']" readonly="">';
-					echo '<p>' . esc_html__('Shortcode for Ajax render:', 'greenshift-animation-and-page-builder-blocks') . '<br><input type="text" style="width:350px" value="[wp_reusable_render ajax=1 height=100px id=\'' . $ID . '\']" readonly="">';
-					echo '<p>' . esc_html__('Hover trigger:', 'greenshift-animation-and-page-builder-blocks') . ' <code>gs-el-onhover load-block-' . $ID . '</code>';
-					echo '<p>' . esc_html__('Click trigger:', 'greenshift-animation-and-page-builder-blocks') . ' <code>gs-el-onclick load-block-' . $ID . '</code>';
-					echo '<p>' . esc_html__('On view trigger:', 'greenshift-animation-and-page-builder-blocks') . ' <code>gs-el-onview load-block-' . $ID . '</code>';
+					echo '<p><input type="text" style="width:350px" value="[wp_reusable_render id=\'' . (int)$ID . '\']" readonly=""></p>';
+					echo '<p>' . esc_html__('If you use template inside other dynamic ajax blocks', 'greenshift-animation-and-page-builder-blocks') . '<br><input type="text" style="width:350px" value="[wp_reusable_render inlinestyle=1 id=\'' . (int)$ID . '\']" readonly="">';
+					echo '<p>' . esc_html__('Shortcode for Ajax render:', 'greenshift-animation-and-page-builder-blocks') . '<br><input type="text" style="width:350px" value="[wp_reusable_render ajax=1 height=100px id=\'' . (int)$ID . '\']" readonly="">';
+					echo '<p>' . esc_html__('Hover trigger:', 'greenshift-animation-and-page-builder-blocks') . ' <code>gs-el-onhover load-block-' . (int)$ID . '</code>';
+					echo '<p>' . esc_html__('Click trigger:', 'greenshift-animation-and-page-builder-blocks') . ' <code>gs-el-onclick load-block-' . (int)$ID . '</code>';
+					echo '<p>' . esc_html__('On view trigger:', 'greenshift-animation-and-page-builder-blocks') . ' <code>gs-el-onview load-block-' . (int)$ID . '</code>';
 					break;
 
 				default:
@@ -1548,6 +1602,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			if (!isset($id) || empty($id)) {
 				return '';
 			}
+			// Allow to filter the id of the reusable block
+			$id = apply_filters('gspb_template_shortcode_function_id', $id);
 			if (!is_numeric($id)) {
 				$postget = get_page_by_path($id, OBJECT, array('wp_block'));
 				if (is_object($postget)) {
@@ -1559,10 +1615,11 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			$style = '';
 			$post_css = get_post_meta((int)$id, '_gspb_post_css', true);
 			if(!empty($post_css)){
-				$dynamic_style = '<style>' . wp_kses_post($post_css) . '</style>';
+				$dynamic_style = $post_css;
 				$dynamic_style = gspb_get_final_css($dynamic_style);
 				$dynamic_style = gspb_quick_minify_css($dynamic_style);
 				$dynamic_style = htmlspecialchars_decode($dynamic_style);
+				$dynamic_style = '<style>' . wp_strip_all_tags($dynamic_style) . '</style>';
 				$style .= $dynamic_style;
 			}
 			if (!empty($ajax)) {
@@ -1706,9 +1763,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				if (is_singular()) {
 					global $post;
 					if (has_excerpt($post->ID)) {
-						$meta_desc = strip_tags(get_the_excerpt($post->ID));
+						$meta_desc = wp_strip_all_tags(get_the_excerpt($post->ID));
 					} else {
-						$meta_desc = wp_trim_words(strip_tags($post->post_content), 30);
+						$meta_desc = wp_trim_words(wp_strip_all_tags($post->post_content), 30);
 					}
 				}  else {
 					$meta_desc = get_bloginfo('description');
@@ -1726,7 +1783,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 							$allowed_font_ext = $this->allowed_font_ext;
 							foreach ($allowed_font_ext as $ext) {
 								if (!empty($localfont[$ext])) {
-									echo '<link rel="preload" href="' . $localfont[$ext] . '" as="font" type="font/' . $ext . '" crossorigin>';
+									echo '<link rel="preload" href="' . esc_url($localfont[$ext]) . '" as="font" type="font/' . esc_attr($ext) . '" crossorigin>';
 								}
 							}
 						}
@@ -1829,7 +1886,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 					echo '<style>';
 					$safeselectors = explode(',', $sitesettings['sitesettings']['pagetransitionsafe']);
 					foreach ($safeselectors as $selector) {
-						echo $selector . ' { view-transition-name: ' . str_replace(array('.', '#'), '', esc_attr($selector)) . '; }';
+						echo esc_attr($selector) . ' { view-transition-name: ' . str_replace(array('.', '#'), '', esc_attr($selector)) . '; }';
 					}
 					echo '</style>';
 				}else{

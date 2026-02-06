@@ -8,14 +8,14 @@ Requires at least: 6.6
 Tested up to: 6.9
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 12.2.5
+Stable tag: 12.8.1
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
 
 == Description ==
 
-https://www.youtube.com/watch?v=3xbQcQ5LDEc
+https://www.youtube.com/watch?v=H8N4RtIe5Pg
 
 = HIGHLY OPTIMIZED WEB CREATION TOOL =
 
@@ -76,8 +76,29 @@ We have very long 10 year story of developing different tools for affiliate, rev
 = WOOCOMMERCE ADDON =
 Add woocommerce blocks to FSE. Extend your shop with extra features like Buy now button, Free shipping, Sold out counters, Bundles, Combos, sliding panels, swatches, attribute groups, extra single product templates, custom tabs, ajax search and many more.
 
-= HTML Converter =
-Convert any page to Greenshift blocks.
+= Any webpage to WordPress Converter =
+[Convert any webpage or HTML design to Greenshift blocks.](https://greenshiftwp.com/any-webpage-to-wordpress-converter/). Requires AIO plan
+
+= Figma to WordPress Converter =
+[Convert any Figma design to Greenshift blocks in one click.](https://www.youtube.com/watch?v=NjxHbrpE93g). Free to everyone.
+
+= AI Helper =
+[AI Helper](https://www.youtube.com/watch?v=PpGeRu0mZy0) is a tool that helps you to build blocks with AI. Use own api keys, no limits, no subscriptions, no sending data to third parties, no payment required.
+
+= HTML code to Wordpress Blocks converter=
+[HTML source to blocks converter](https://youtu.be/nHzq8jyturA) Put any kind of html with css and js snippets and it will be converted to dynamic blocks
+
+== Third Party Services ==
+
+This plugin can connect to external third-party services in certain situations:
+
+= GreenShift Shop =
+
+When you activate a premium license for GreenShift addons, the plugin connects to our licensing server at [https://shop.greenshiftwp.com/](https://shop.greenshiftwp.com/) to verify and activate your license key. This connection sends your license key and site URL for validation purposes. No other data is sent to third parties. This connection is made only in time of activation of license, this is not required to use plugin without license.
+
+* Terms of Service: [https://greenshiftwp.com/terms-and-conditions/](https://greenshiftwp.com/terms-and-conditions/)
+* Privacy Policy: [https://greenshiftwp.com/privacy-policy-2/](https://greenshiftwp.com/privacy-policy-2/)
+
 
 == Installation ==
 Extract the zip file and just drop the contents in the wp-content/plugins/ directory of your WordPress installation and then activate the Plugin from Plugins page.
@@ -116,9 +137,131 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 
 == Changelog ==
 
+= 12.8.1 =
+
+* Added: Export blocks to HTML code (find it in sidebar menu)
+* Added: Improved Style Manager block for HTML to blocks conversion
+* Added: When you select class, other classes will be hidden in class panel for more management of big number of classes
+* Fix: Map icon fix
+* Fix: Fix for converting blocks to slider
+* Added: gap, background, margin, padding shorthands
+
+= 12.7.1 =
+
+* Fix: Fixes for custom JS options in Element block, fix option in Welcome screen
+
+= 12.7 =
+
+* Added: Components [Extending Components in Greenshift](https://www.youtube.com/watch?v=JHtzQrsG8A8&pp=2AYB) 
+* Added: When you create sub selectors for class, it will be automatically populated latest classes of inner items of block
+
+= 12.6.4 =
+
+* Fix: library fix
+
+= 12.6.3 =
+
+* Added: Button preset variables to preset selector
+* Added: Button to remove all global classes in Stylebook
+
+= 12.6 =
+
+* Fix: Replaced GSAP draggable for interface
+* Fix: improved authorization for API endpoints
+
+= 12.5.7 =
+
+* Added: Updated Stylemanager HTML to blocks conversion
+* Fix: icon fixes for some blocks
+
+= 12.5.5 =
+
+* Added: New dynamic placeholder {{THUMBNAIL_URL}}
+
+= 12.5.4 =
+
+* Added: If block has classic class that is controlled by Style Manager, you can select it directly from block 
+* Added: Local class locator opens relevant class 
+* Added: HTML to blocks in Stylemanager now supports Full page importing and automatic placing styles and scripts 
+
+
+= 12.5.2 =
+
+* Added: StyleManager Copy styles to local classes supports also style options that are not presented in UI. They will be copied to custom css of local class.
+* Added: Box sizing option for Layout panel
+* Fix: fix for interaction layers in dublicated blocks
+* Fix: fix for cases when sub selectors can't add any styles
+
+
+= 12.5.1 =
+
+* Added: StyleManager HTML to blocks now better convert SVG
+* Added: Descendant styles option for Style Manager
+
+= 12.5 =
+
+* Added: Gemini 3 Flash model for AI helper
+* Added: Preset variables can be changed from sidebar 
+* Added: Improved HTML to blocks conversion in Style Manager block
+* Added: Improved Taxonomy retrieval for Repeater block
+* Added: Improved HTML to blocks conversion in Style Manager block
+* Added: GreenLight blocks have green icon in inserter
+* Added: Sliding panel can be closed by clicking on initial trigger element
+
+= 12.4.1 =
+
+* Added: GPT Image 1.5 model for AI Image Generator
+* Added: GPT 5.2 for AI helper
+* Added: Css to classes converter for Style Manager block supports multiple subselectors divided by comma
+
+= 12.4 =
+
+* Added: Style Manager block has option to convert HTML to blocks
+* Added: Style Manager block has option to convert CSS to classes of stylemanager
+* Added: New dynamic placeholder {{TERM_LINKS:taxonomy}}
+* Added: Variable selector in Unit Controls shows only custom made variables and exclude preset variables
+
+= 12.3.3 =
+
+* Added: StyleManager block has option to remove unused classes
+* Added: Filter to change id of reusable block in shortcode
+* Added: Stylebook changes, global color presets can be added in color section also
+
+
+= 12.3.1 =
+
+* Added: Improved UI prompt for AI Helpers
+* Added: Nana Banana Pro Preview model for AI Image Generator
+* Added: Gemini 3 Pro for AI helper
+* Added: GPT 5.1 for AI helper
+* Added: New option for AI helper for building blocks - Try Improved UI prompt
+
+= 12.3 =
+
+* Added: Contact Form presets
+* Added: changed placeholder for text blocks to make it more white labeled
+
+= 12.2.9 =
+
+* Added: Fix for menu block
+
+= 12.2.8 =
+
+* Fix: Fix for chart block data sanitization
+
+= 12.2.7 =
+
+* Improvements: Image prompts for AI Helpers
+* Added: Claude Haiku 4.5 model
+* Added: Web Fetch for AI helper tools, you can put links in prompt now and ask to generate content based on content of page, works only for Gemini and Claude models
+* Added: {{LOREM}} placeholder for text blocks
+* Fix: google map block fix
+* Fix: removal of selectors in Stylebook
+
 = 12.2.5 =
 
 * Added: Claude 4.5 sonnet model 
+* Added: [Making Blocks programmatically](https://greenshiftwp.com/adding-blocks-programatically-in-greenshift/) 
 * Fix: Fixed button Element variables 
 
 = 12.2.4 =
@@ -240,7 +383,7 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 
 = 11.5.4 =
 
-* Added: Gemini 2.5 model for AI design models. Also changed Gemini model to updated gemini-2.5-pro-preview-05-06 version. Please resave your model in Greenshift Settings - AI
+* Added: Gemini 2.5 model for AI design models. Also changed Gemini model to updated gemini-3-flash-preview-preview-05-06 version. Please resave your model in Greenshift Settings - AI
 * Added: Few fixes for AI Helper tools
 * Added: When you duplicate block with local classes, it will reference to original block instead of copying all attributes of class
 * Added: fixes for accordion, model viewer, multiple conditions for interaction layers

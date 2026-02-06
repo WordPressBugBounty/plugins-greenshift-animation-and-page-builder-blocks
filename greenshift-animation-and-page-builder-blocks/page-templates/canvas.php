@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="profile" href="https://gmpg.org/xfn/11" />
         <?php if ( ! current_theme_supports( 'title-tag' ) ) : ?>
-            <title><?php echo wp_get_document_title(); ?></title>
+            <title><?php echo esc_html(wp_get_document_title()); ?></title>
         <?php endif; ?>
         <?php wp_head(); ?>
     </head>

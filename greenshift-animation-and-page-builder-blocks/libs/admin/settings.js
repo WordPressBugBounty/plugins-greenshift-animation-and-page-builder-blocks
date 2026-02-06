@@ -8,7 +8,7 @@ jQuery(document).ready(function ($) {
 		$.ajax({
 			method: "POST",
 			url: greenShift_params.ajaxUrl,
-			data: { action: 'gspb_settings_add_font', i: count },
+			data: { action: 'gspb_settings_add_font', i: count, nonce: greenShift_params.add_font_nonce },
 		})
 			.success(function (data) {
 				$container.find('.fonts-wrap').append(data.html)

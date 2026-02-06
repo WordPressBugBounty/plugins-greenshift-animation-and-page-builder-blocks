@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="profile" href="https://gmpg.org/xfn/11" />
     <?php if (!current_theme_supports('title-tag')) : ?>
-        <title><?php echo wp_get_document_title(); ?></title>
+        <title><?php echo esc_html(wp_get_document_title()); ?></title>
     <?php endif; ?>
     <?php wp_head(); ?>
 </head>
@@ -36,7 +36,7 @@ if (!defined('ABSPATH')) {
             <?php wp_body_open(); ?>
             <?php while (have_posts()) : the_post(); ?>
                 <div class="entry-content wp-block-post-content">
-                    <?php echo ''.$the_content.''; ?>
+                    <?php echo $the_content; ?>
                 </div>
             <?php endwhile; ?>
             <?php wp_footer(); ?>

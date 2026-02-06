@@ -496,7 +496,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gschartinit',
 		GREENSHIFT_DIR_URL . 'libs/apexchart/init.js',
 		array(),
-		'1.1',
+		'1.2',
 		true
 	);
 	wp_localize_script(
@@ -590,7 +590,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greenpanel',
 		GREENSHIFT_DIR_URL . 'libs/greenpanel/index.js',
 		array(),
-		'1.9',
+		'2.0',
 		true
 	);
 
@@ -674,7 +674,7 @@ function gspb_greenShift_register_scripts_blocks(){
 
 	wp_register_script(
 		'gspb_osmap',
-		'https://unpkg.com/leaflet@1.9.3/dist/leaflet.js',
+		GREENSHIFT_DIR_URL . 'libs/map/leaflet.js',
 		array(),
 		'1.9.3',
 		true
@@ -682,7 +682,7 @@ function gspb_greenShift_register_scripts_blocks(){
 
 	wp_register_style(
 		'gspb_osmap_style',
-		'https://unpkg.com/leaflet@1.9.3/dist/leaflet.css',
+		GREENSHIFT_DIR_URL . 'libs/map/leaflet.css',
 		array(),
 		'1.9.3'
 	);
@@ -737,25 +737,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'12.0'
+		'12.7'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'12.0'
+		'12.7'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'12.0'
+		'12.7'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'12.0'
+		'12.7'
 	);
 
 	//Script for ajax reusable loading
@@ -802,7 +802,8 @@ function gspb_greenShift_register_scripts_blocks(){
 		array(
 			'ajaxUrl' => admin_url('admin-ajax.php'),
 			'install_nonce' => wp_create_nonce('gspb_install_addon_nonce'),
-			'activate_nonce' => wp_create_nonce('gspb_activate_addon_nonce')
+			'activate_nonce' => wp_create_nonce('gspb_activate_addon_nonce'),
+			'add_font_nonce' => wp_create_nonce('gspb_add_font_nonce')
 		)
 	);
 
@@ -824,7 +825,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'delete_with_user'      =>  false,	
 		'template' 				=>  $blocktemplate,
 		'template_lock'         =>  'all',
-		'label'    				=>  __( 'GreenShift Stylebook', 'greenshift-animation-and-page-builder-blocks' ),
+		'label'    				=>  esc_html__( 'GreenShift Stylebook', 'greenshift-animation-and-page-builder-blocks' ),
 	);
 	register_post_type( 'gspbstylebook', $args );
 
@@ -947,7 +948,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				if(!$source){return '';}
 				$p = new WP_HTML_Tag_Processor( $html );
 				if ( $p->next_tag( 'spline-viewer' )) {
-					$p->set_attribute( 'url', $source);
+					$p->set_attribute( 'url', esc_url($source));
 				}
 				$html = $p->get_updated_html();
 			}
@@ -980,7 +981,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				if(empty($end)){return '';}
 				$p = new WP_HTML_Tag_Processor( $html );
 				if ( $p->next_tag( array( 'class_name' => 'gs-counter' ) ) ) {
-					$p->set_attribute( 'data-end', $end);
+					$p->set_attribute( 'data-end', esc_attr($end));
 				}
 				$html = $p->get_updated_html();
 			}
@@ -1138,6 +1139,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				$link = $block['attrs']['containerLink'];
 				$linknew = apply_filters('greenshiftseo_url_filter', $link);
 				$linknew = apply_filters('rh_post_offer_url_filter', $linknew);
+				$linknew = esc_url($linknew);
 				$html = str_replace($link, $linknew, $html);
 			}
 			if (!empty($block['attrs']['mobileSmartScroll']) && !empty($block['attrs']['carouselScroll'])) {
@@ -1206,7 +1208,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				if($endtime){
 					$p = new WP_HTML_Tag_Processor( $html );
 					if ( $p->next_tag( array( 'class_name' => 'gs-countdown' ) ) ) {
-						$p->set_attribute( 'data-endtime', $endtime);
+						$p->set_attribute( 'data-endtime', esc_attr($endtime));
 					}
 					$html = $p->get_updated_html();
 
@@ -1242,7 +1244,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 
 				$p = new WP_HTML_Tag_Processor( $html );
 				if ( $p->next_tag( array( 'class_name' => 'gs-countdown' ) ) ) {
-					$p->set_attribute( 'data-endtime', $formattedDateTime);
+					$p->set_attribute( 'data-endtime', esc_attr($formattedDateTime));
 				}
 				$html = $p->get_updated_html();
 			}
@@ -1260,7 +1262,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 						}
 						$p = new WP_HTML_Tag_Processor( $html );
 						if ( $p->next_tag( array( 'class_name' => 'gs-countdown' ) ) ) {
-							$p->set_attribute( 'data-endtime', $endtime);
+							$p->set_attribute( 'data-endtime', esc_attr($endtime));
 						}
 						$html = $p->get_updated_html();
 					}
@@ -1397,7 +1399,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				if(!$td_url){return '';}
 				$p = new WP_HTML_Tag_Processor( $html );
 				if ( $p->next_tag( 'model-viewer' )) {
-					$p->set_attribute( 'src', $td_url);
+					$p->set_attribute( 'src', esc_url($td_url));
 				}
 				$html = $p->get_updated_html();
 			}
@@ -1412,7 +1414,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				}
 				$p = new WP_HTML_Tag_Processor( $html );
 				if ( $p->next_tag( 'model-viewer' )) {
-					$p->set_attribute( 'ios-src', $usdz_url);
+					$p->set_attribute( 'ios-src', esc_url($usdz_url));
 				}
 				$html = $p->get_updated_html();
 			}
@@ -1443,13 +1445,13 @@ function gspb_greenShift_block_script_assets($html, $block)
 					$replaced = GSPB_field_array_to_value($replaced, ', ');
 					if($replaced){
 						if ( $p->next_tag( array( 'class_name' => 'gs-video-element' ) ) ) {
-							$p->set_attribute( 'data-src', $replaced);
+							$p->set_attribute( 'data-src', esc_url($replaced));
 						}
 						if ( $p->next_tag( array( 'class_name' => 'gs-video-element' ) ) ) {
-							$p->set_attribute( 'data-src', $replaced);
+							$p->set_attribute( 'data-src', esc_url($replaced));
 						}
 						if($p->next_tag( array( 'tag_name' => 'meta') ) && $p->get_attribute( 'itemprop' ) == 'embedUrl' ) {
-							$p->set_attribute( 'content', $replaced);
+							$p->set_attribute( 'content', esc_attr($replaced));
 						}
 						//Poster
 						if($block['attrs']['provider'] != 'video'){
@@ -1468,10 +1470,10 @@ function gspb_greenShift_block_script_assets($html, $block)
 						$replaced = GSPB_make_dynamic_video($html, $block['attrs'], $block, $field, $src, true);
 						if($replaced){
 							if ( $p->next_tag( array( 'class_name' => 'gs-video-element' ) ) ) {
-								$p->set_attribute( 'data-src', $replaced);
+								$p->set_attribute( 'data-src', esc_url($replaced));
 							}
 							if($p->next_tag( array( 'tag_name' => 'meta') ) && $p->get_attribute( 'itemprop' ) == 'embedUrl' ) {
-								$p->set_attribute( 'content', $replaced);
+								$p->set_attribute( 'content', esc_attr($replaced));
 							}
 
 							//Poster
@@ -1722,9 +1724,10 @@ function gspb_greenShift_block_inline_head($html, $block){
 					if(($type == 'preset' || $type == 'global') && !empty($class['value'])){
 						$css = greenshift_get_style_from_class_array($class['value'], $type, $inline = false);
 						if($css){
-							$class_style = '<style>' . wp_kses_post($css) . '</style>';
+							$class_style = $css;
 							$class_style = gspb_get_final_css($class_style);
 							$class_style = htmlspecialchars_decode($class_style);
+							$class_style = '<style>' . wp_strip_all_tags($class_style) . '</style>';
 							$html = $html . $class_style;
 						}
 					}
@@ -1741,11 +1744,12 @@ function gspb_greenShift_block_inline_head($html, $block){
 					$dynamic_style = gspb_render_style_attributes($block['attrs']['styleAttributes'], '.'.$block['attrs']['localId'], '', isset($block['attrs']['enableSpecificity']) ? $block['attrs']['enableSpecificity'] : false);
 				}
 			}else{
-				$dynamic_style = wp_kses_post($block['attrs']['inlineCssStyles']);
+				$dynamic_style = $block['attrs']['inlineCssStyles'];
 			}
 			$dynamic_style = gspb_get_final_css($dynamic_style);
 			$dynamic_style = gspb_quick_minify_css($dynamic_style);
 			$dynamic_style = htmlspecialchars_decode($dynamic_style);
+			$dynamic_style = wp_strip_all_tags($dynamic_style);
 			if (function_exists('GSPB_make_dynamic_image') && !empty($block['attrs']['background']['dynamicEnable'])) {
 				$dynamic_style = GSPB_make_dynamic_image($dynamic_style, $block['attrs'], $block, $block['attrs']['background'], $block['attrs']['background']['image']);
 			}
@@ -2177,7 +2181,7 @@ function gspb_global_assets()
 			$color_css = ':root{';
 			foreach ($options['colours'] as $key=>$element) {
 				if (!empty($element)) {
-					$color_css .= '--gs-color'.$key . ':' . $element . ';';
+					$color_css .= '--gs-color'.esc_attr($key) . ':' . esc_attr($element) . ';';
 				}
 			}
 			$color_css .= '}';
@@ -2292,11 +2296,9 @@ function gspb_global_assets()
 			
 			// Add global JavaScript variables for separated animation classes
 			if (!empty($clip_classes) || !empty($animation_classes)) {
-				$js_variables = '<script>';
-				$js_variables .= 'window.clipClasses = ' . json_encode($clip_classes) . ';';
-				$js_variables .= 'window.animationClasses = ' . json_encode($animation_classes) . ';';
-				$js_variables .= '</script>';
-				echo $js_variables;
+				$js_code = 'window.clipClasses = ' . wp_json_encode($clip_classes) . ';';
+				$js_code .= 'window.animationClasses = ' . wp_json_encode($animation_classes) . ';';
+				wp_print_inline_script_tag($js_code);
 			}
 		}
 	
@@ -2306,7 +2308,7 @@ function gspb_global_assets()
 			$gs_global_css = htmlspecialchars_decode($gs_global_css);
 			wp_register_style('greenshift-global-css', false);
 			wp_enqueue_style('greenshift-global-css');
-			wp_add_inline_style('greenshift-global-css', $gs_global_css);
+			wp_add_inline_style('greenshift-global-css', wp_strip_all_tags($gs_global_css));
 		}
 
 		if (!empty($options['global_interactions']) && is_array($options['global_interactions'])) {
@@ -2315,7 +2317,7 @@ function gspb_global_assets()
 			foreach ($options['global_interactions'] as $index => $value) {
 				if(!empty($value)){
 					$has_value = true;
-					$script .= 'GSPB_Trigger_Actions("front", document.querySelectorAll(".'.esc_attr($index).'"), window, document, null, \''.json_encode($value).'\');';
+					$script .= 'GSPB_Trigger_Actions("front", document.querySelectorAll(".'.esc_attr($index).'"), window, document, null, \''.wp_json_encode($value).'\');';
 				}
 			}
 			if($has_value){
@@ -2374,9 +2376,13 @@ function gspb_global_assets()
 		}
 
 		if($stylesrender){
+
+			// Escape CSS to prevent potential security issues
+			$safe_stylesrender = wp_strip_all_tags($stylesrender);
+
 			wp_register_style('greenshift-editor-css', false);
 			wp_enqueue_style('greenshift-editor-css');
-			wp_add_inline_style('greenshift-editor-css', $stylesrender);
+			wp_add_inline_style('greenshift-editor-css', $safe_stylesrender);
 		}
 
 		$global_classes = !empty($options['global_classes']) ? $options['global_classes'] : '';
@@ -2412,9 +2418,10 @@ function gspb_global_assets()
 			foreach ($options['elements'] as $key=>$element) {
 				if (!empty($element['admincss'])) {
 					$element_css =  $element['admincss'];
+					$safe_element_css = wp_strip_all_tags($element_css);
 					wp_register_style('greenshift-global-element-id-'.$key, false);
 					wp_enqueue_style('greenshift-global-element-id-'.$key);
-					wp_add_inline_style('greenshift-global-element-id-'.$key, $element_css);
+					wp_add_inline_style('greenshift-global-element-id-'.$key, $safe_element_css);
 				}
 			}
 		}
@@ -2423,7 +2430,7 @@ function gspb_global_assets()
 			$color_css = 'body{';
 			foreach ($options['colours'] as $key=>$element) {
 				if (!empty($element)) {
-					$color_css .= '--gs-color'.$key . ':' . $element . ';';
+					$color_css .= '--gs-color'.esc_attr($key) . ':' . esc_attr($element) . ';';
 				}
 			}
 			$color_css .= '}';
@@ -2437,7 +2444,7 @@ function gspb_global_assets()
 			body:has(.gspb_inspector_btn--darkmode--active) .editor-styles-wrapper{';
 			foreach ($options['darkmodecolors'] as $key=>$element) {
 				if (!empty($element)) {
-					$nightcolor_css .= $key . ':' . $element . ';';
+					$nightcolor_css .= esc_attr($key) . ':' . esc_attr($element) . ';';
 				}
 			}
 			$nightcolor_css .= '}';
@@ -2456,7 +2463,7 @@ function gspb_global_assets()
 			$gradient_css .= '}';
 			wp_register_style('greenshift-global-gradients', false);
 			wp_enqueue_style('greenshift-global-gradients');
-			wp_add_inline_style('greenshift-global-gradients', $gradient_css);
+			wp_add_inline_style('greenshift-global-gradients', wp_strip_all_tags($gradient_css));
 		}
 
 		$variablearray = !empty($options['variables']) ? $options['variables'] : '';
@@ -2492,7 +2499,7 @@ function gspb_global_assets()
 			foreach ($options['global_interactions'] as $index => $value) {
 				if(!empty($value)){
 					$has_value = true;
-					$script .= 'GSPB_Trigger_Actions("front", document.querySelectorAll(".'.esc_attr($index).'"), window, document, null, \''.json_encode($value).'\');';
+					$script .= 'GSPB_Trigger_Actions("front", document.querySelectorAll(".'.esc_attr($index).'"), window, document, null, \''.wp_json_encode($value).'\');';
 				}
 			}
 			if($has_value){
@@ -2516,9 +2523,19 @@ function gspb_global_assets()
 
 function greenshift_app_pass_validation( $request ) {
     // Verify the application password
-    if ( wp_validate_application_password(false) ) {
-        // Application password is valid, grant access
-        return true;
+    $user_id = wp_validate_application_password( false );
+    
+    if ( $user_id ) {
+        // Application password is valid, now check user role
+        $user = get_user_by( 'id', $user_id );
+        
+        // Check if user is administrator or editor
+        if ( $user && in_array( 'administrator', $user->roles ) ) {
+            return true;
+        } else {
+            // User doesn't have required role
+            return new WP_Error( 'rest_forbidden', esc_html__( 'Insufficient permissions. Only administrators are allowed.', 'greenshift-animation-and-page-builder-blocks' ), array( 'status' => 403 ) );
+        }
     } else {
         // Application password is invalid, deny access
         return new WP_Error( 'rest_forbidden', esc_html__( 'Invalid application password.', 'greenshift-animation-and-page-builder-blocks' ), array( 'status' => 401 ) );
@@ -2655,8 +2672,8 @@ function gspb_register_route()
 		[
 			'methods' => 'GET',
 			'callback' => 'gspb_get_csv_to_json',
-			'permission_callback' => function () {
-				return true;
+			'permission_callback' => function (WP_REST_Request $request) {
+				return current_user_can('edit_posts');
 			},
 			'args' => array(
 				'url' => array(
@@ -2673,28 +2690,6 @@ function gspb_register_route()
 					'required' => false,
 				),
 				'remove_columns' => array(
-					'type' => 'string',
-					'required' => false,
-				),
-			),
-		]
-	]);
-
-	register_rest_route('greenshift/v1', '/proxy-api/', [
-		[
-			'methods' => 'POST',
-			'callback' => 'gspb_make_proxy_api_request',
-			'permission_callback' => '__return_true',
-			'args' => array(
-				'type' => array(
-					'type' => 'string',
-					'required' => true,
-				),
-				'taxonomy' => array(
-					'type' => 'string',
-					'required' => false,
-				),
-				'post_type' => array(
 					'type' => 'string',
 					'required' => false,
 				),
@@ -3015,6 +3010,11 @@ function gspb_update_css_settings($request)
 		
 		if ($css) {
 			update_post_meta($id, '_gspb_post_css', $css);
+		} else {
+            $current_css = get_post_meta($id, '_gspb_post_css', true);
+            if($current_css){
+			    delete_post_meta($id, '_gspb_post_css');
+            }
 		}
 
 		return json_encode(array(
@@ -3528,241 +3528,8 @@ function gspb_get_csv_to_json(WP_REST_Request $request)
 	return apply_filters('gspb_csv_to_array', $result);
 }
 
-function gspb_make_proxy_api_request(WP_REST_Request $request)
-{
-	$nonce = $request->get_header('X-WP-Nonce');
-    
-    if (!wp_verify_nonce($nonce, 'wp_rest')) {
-        return new WP_Error('rest_forbidden', __('Unauthorized Nonce', 'greenshift-animation-and-page-builder-blocks'), ['status' => 403]);
-    }
-	$type = sanitize_text_field($request->get_param('type'));
-	// Get body parameters from the request
-	$body = $request->get_body();
-	if (!empty($body)) {
-		$body = json_decode($body, true);
-	} else {
-		$body = array();
-	}
-	
-	// Fallback to get_json_params() if the above method didn't work
-	if (empty($body) || !is_array($body)) {
-		$body = $request->get_json_params();
-		if (empty($body) || !is_array($body)) {
-			$body = array();
-		}
-	}
-	$result = null;
-	
-	if ($type === 'openaicompletion') {
-		$api_key = get_option('gspb_global_settings');
-		$api_key = $api_key['openaiapi'];
-		
-		if (empty($api_key)) {
-			return new WP_Error('missing_api_key', 'OpenAI API key is missing', array('status' => 400));
-		}
-		
-		$endpoint = 'https://api.openai.com/v1/chat/completions';
-		$headers = array(
-			'Authorization' => 'Bearer ' . $api_key,
-			'Content-Type' => 'application/json'
-		);
-	} else if($type === 'openairesponse'){
-		$api_key = get_option('gspb_global_settings');
-		$api_key = $api_key['openaiapi'];
-		
-		if (empty($api_key)) {
-			return new WP_Error('missing_api_key', 'OpenAI API key is missing', array('status' => 400));
-		}
-		$endpoint = 'https://api.openai.com/v1/responses';
-		$headers = array(
-			'Authorization' => 'Bearer ' . $api_key,
-			'Content-Type' => 'application/json'
-		);
-	} else if($type === 'media_upload'){
-		// Check if user is logged in
-		if (!is_user_logged_in()) {
-			return new WP_Error('unauthorized', 'User must be logged in to upload files', array('status' => 401));
-		}
 
-		// Check if user has upload capabilities
-		if (!current_user_can('upload_files')) {
-			return new WP_Error('forbidden', 'User does not have permission to upload files', array('status' => 403));
-		}
 
-		// Verify if file was uploaded
-		if (empty($_FILES['file'])) {
-			return new WP_Error('no_file', 'No file was uploaded', array('status' => 400));
-		}
-
-		// Get WordPress upload directory
-		$upload_dir = wp_upload_dir();
-		$custom_dir = $upload_dir['basedir'] . '/api_upload';
-		
-		// Create custom upload directory if it doesn't exist
-		if (!file_exists($custom_dir)) {
-			wp_mkdir_p($custom_dir);
-			
-			// Create .htaccess to prevent directory listing but allow file access
-			$htaccess_content = "Options -Indexes\n";
-			file_put_contents($custom_dir . '/.htaccess', $htaccess_content);
-		}
-
-		// Get file details
-		$file = $_FILES['file'];
-		$filename = sanitize_file_name($file['name']);
-		$tmp_name = $file['tmp_name'];
-
-		// Enhanced security checks
-		$allowed_types = array(
-			'image/jpeg',
-			'image/jpg',
-			'image/png',
-			'image/gif',
-			'image/webp',
-			'image/heic',
-			'image/heif',
-			'application/pdf',
-			'application/text',
-		);
-
-		// Verify file type using WordPress function
-		$filetype = wp_check_filetype($filename);
-		$mime_type = !empty($filetype['ext']) ? $filetype['ext'] : '';
-		if (!$mime_type || !in_array($filetype['type'], $allowed_types)) {
-			return new WP_Error('invalid_file_type', 'File type not allowed', array('status' => 400));
-		}
-
-		// Check file size (limit to 10MB)
-		$max_size = 10 * 1024 * 1024;
-		if ($file['size'] > $max_size) {
-			return new WP_Error('file_too_large', 'File size exceeds limit of 10MB', array('status' => 400));
-		}
-
-		// Generate unique filename with timestamp
-		$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
-		$new_filename = sprintf(
-			'%s_%s.%s',
-			uniqid(),
-			time(),
-			$file_ext
-		);
-		$destination = $custom_dir . '/' . $new_filename;
-
-		// Move file to destination
-		if (!move_uploaded_file($tmp_name, $destination)) {
-			// Clean up on failure
-			if (file_exists($tmp_name)) {
-				unlink($tmp_name);
-			}
-			return new WP_Error('upload_failed', 'Failed to upload file', array('status' => 500));
-		}
-
-		// Add file to WordPress media library
-		$attachment = array(
-			'post_mime_type' => $mime_type,
-			'post_title' => sanitize_file_name($filename),
-			'post_content' => '',
-			'post_status' => 'inherit'
-		);
-
-		$attach_id = wp_insert_attachment($attachment, $destination);
-		if (is_wp_error($attach_id)) {
-			// Clean up on failure
-			unlink($destination);
-			return $attach_id;
-		}
-
-		// Generate metadata for the attachment
-		require_once(ABSPATH . 'wp-admin/includes/image.php');
-		$attach_data = wp_generate_attachment_metadata($attach_id, $destination);
-		wp_update_attachment_metadata($attach_id, $attach_data);
-
-		// Return success response with file details
-		return array(
-			'success' => true,
-			'file_url' => wp_get_attachment_url($attach_id),
-			'file_path' => $destination,
-			'attachment_id' => $attach_id,
-			'mime_type' => $mime_type,
-			'file_size' => $file['size']
-		);
-	} else {
-		return new WP_Error('invalid_type', 'Invalid API type specified', array('status' => 400));
-	}
-
-	// Check if streaming is enabled
-	$is_streaming = isset($body['stream']) && $body['stream'] === true;
-
-	if ($is_streaming) {
-		// Set proper headers for streaming
-		header('Content-Type: text/event-stream');
-		header('Cache-Control: no-cache');
-		header('Connection: keep-alive');
-		header('X-Accel-Buffering: no'); // Important for Nginx
-		
-		// Ensure output buffering is handled properly
-		if (ob_get_level() > 0) {
-			ob_end_flush();
-		}
-		
-		// Initialize cURL
-		$ch = curl_init($endpoint);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Authorization: Bearer ' . $api_key,
-			'Content-Type: application/json'
-		]);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
-		curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) {
-			// Process each chunk of data
-			echo $data; // Simply forward the data as-is
-			
-			// Force flush after each chunk
-			if (ob_get_level() > 0) {
-				ob_flush();
-			}
-			flush();
-			
-			return strlen($data);
-		});
-		
-		$response = curl_exec($ch);
-		
-		if (curl_errno($ch)) {
-			echo "data: " . json_encode(['error' => curl_error($ch)]) . "\n\n";
-			flush();
-		}
-		
-		curl_close($ch);
-		exit;
-	} else {
-		// Standard non-streaming request
-		$response = wp_safe_remote_post($endpoint, array(
-			'headers' => $headers,
-			'body' => json_encode($body),
-			'timeout' => 120
-		));
-		
-		if (is_wp_error($response)) {
-			return $response;
-		}
-		
-		$response_code = wp_remote_retrieve_response_code($response);
-		$response_body = wp_remote_retrieve_body($response);
-		
-		if ($response_code !== 200) {
-			return new WP_Error(
-				'api_error',
-				'Error from OpenAI API: ' . $response_body,
-				array('status' => $response_code)
-			);
-		}
-		
-		$result = json_decode($response_body, true);
-	}
-	
-	return $result;
-}
 
 //////////////////////////////////////////////////////////////////
 // USDZ support until WP will have it
@@ -3795,6 +3562,11 @@ add_action('wp_ajax_gspb_get_saved_block', 'gspb_get_saved_block');
 if (!function_exists('gspb_get_all_layouts')) {
 	function gspb_get_all_layouts()
 	{
+		if (!current_user_can('edit_posts')) {
+			wp_send_json_error('Insufficient permissions', 403);
+		}
+		check_ajax_referer('gspb_nonce', 'security');
+
 		$get_args  = array('timeout' => 200, 'sslverify' => false);
 		$category  = intval($_POST['category_id']);
 		$page      = !empty($_POST['page']) ? intval($_POST['page']) : 1;
@@ -3829,7 +3601,7 @@ if (!function_exists('gspb_get_all_layouts')) {
 				'data' => $decoded_data,
 			);
 
-			echo json_encode($response_data);
+			echo wp_json_encode($response_data);
 		}
 
 		wp_die();
@@ -3837,7 +3609,7 @@ if (!function_exists('gspb_get_all_layouts')) {
 }
 
 function gspb_isIncludedDomain($url, $included_domains) {
-    $parsed_url = parse_url($url);
+    $parsed_url = wp_parse_url($url);
     if (!isset($parsed_url['host'])) {
         return false; // Not a valid URL
     }
@@ -3866,9 +3638,9 @@ if (!function_exists('gspb_get_layout')) {
 		$public_assets_url = '';
 		if(!empty($_POST['download_url']) || !empty($_POST['download_url_animated'])){
 			if(!empty($_POST['download_animated']) && $_POST['download_animated'] == 'yes' && !empty($_POST['download_url_animated'])){
-				$apiUrl   = esc_url($_POST['download_url_animated']);
+				$apiUrl   = esc_url(sanitize_text_field(wp_unslash($_POST['download_url_animated'])));
 			}else{
-				$apiUrl   = esc_url($_POST['download_url']);
+				$apiUrl   = esc_url(sanitize_text_field(wp_unslash($_POST['download_url'])));
 			}
 			$included_domains = ["wpsoul.net", "greenshiftwp.com", "wpsoul.com"];
 			if (gspb_isIncludedDomain($apiUrl, $included_domains)) {
@@ -4025,7 +3797,7 @@ if (!function_exists('gspb_get_layout')) {
 					$responsecss = wp_safe_remote_get($cssUrl, $get_args);
 					$request_resultcss = wp_remote_retrieve_body($responsecss);
 					if ($request_resultcss) {
-						$layout_styles = strip_tags($request_resultcss);
+						$layout_styles = wp_strip_all_tags($request_resultcss);
 						$layout_styles = trim($layout_styles, '"');
 						update_post_meta($pageid, '_gspb_post_css', $layout_styles);
 					}
@@ -4042,25 +3814,44 @@ if (!function_exists('gspb_get_layout')) {
 if (!function_exists('gspb_get_categories')) {
 	function gspb_get_categories()
 	{
+		if (!current_user_can('edit_posts')) {
+			wp_send_json_error('Insufficient permissions', 403);
+		}
+		check_ajax_referer('gspb_nonce', 'security');
+
 		$get_args = array(
 			'timeout'   => 200,
 			'sslverify' => false,
 		);
-		$id       = intval($_POST['category_id']);
+		$id       = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
 		$apiUrl   = TEMPLATE_SERVER_URL . '/wp-json/wp/v2/categories?parent=' . $id;
 		$response = wp_safe_remote_get($apiUrl, $get_args);
-		$request_result = wp_remote_retrieve_body($response);
-		if ($request_result == '') {
-			return false;
-		} else {
-			echo wp_remote_retrieve_body($response);
+		
+		if (is_wp_error($response)) {
+			wp_send_json_error('Failed to fetch categories', 500);
 		}
-		wp_die();
+		
+		$request_result = wp_remote_retrieve_body($response);
+		if ($request_result === '') {
+			wp_send_json_error('Empty response', 404);
+		}
+		
+		$data = json_decode($request_result, true);
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			wp_send_json_error('Invalid JSON response', 500);
+		}
+		
+		wp_send_json($data);
 	}
 }
 
 function gspb_get_saved_block()
 {
+	if (!current_user_can('edit_posts')) {
+		wp_send_json_error('Insufficient permissions', 403);
+	}
+	check_ajax_referer('gspb_nonce', 'security');
+
 	$args = array(
 		'post_type'   => 'wp_block',
 		'post_status' => 'publish',
@@ -4076,7 +3867,7 @@ function gspb_get_saved_block()
 	$wp_blocks = $get_posts->query($r);
 	$response = array(
 		'blocks' => $wp_blocks,
-		'admin' => admin_url()
+		'admin' => esc_url(admin_url())
 	);
 	wp_send_json_success($response);
 }
@@ -4100,9 +3891,6 @@ function greenshift_new_add_type_to_script($tag, $handle, $source){
 	if ('anchor-polyfill' === $handle) {
         $tag = '<script src="'. $source .'" type="module"></script>';
     } 
-	if ('gspb_map' === $handle || 'google-maps' === $handle) {
-        $tag = '<script src="'. $source .'" async></script>';
-    } 
     return $tag;
 }
 
@@ -4112,112 +3900,4 @@ function gspb_large_value_autoload( $autoload, $option ) {
         return true;
     }
     return $autoload;
-}
-
-
-// Addon installation functions
-add_action('wp_ajax_gspb_install_addon', 'gspb_install_addon');
-add_action('wp_ajax_gspb_activate_addon', 'gspb_activate_addon');
-function gspb_install_addon() {
-	// Check user capabilities
-	if (!current_user_can('install_plugins')) {
-		wp_die(json_encode(array('success' => false, 'message' => 'Insufficient permissions')));
-	}
-
-	// Verify nonce
-	if (!wp_verify_nonce($_POST['nonce'], 'gspb_install_addon_nonce')) {
-		wp_die(json_encode(array('success' => false, 'message' => 'Security check failed')));
-	}
-
-	$addon_slug = sanitize_text_field($_POST['addon_slug']);
-	$download_url = esc_url_raw($_POST['download_url']);
-
-	// Check if plugin folder already exists
-	$plugin_dir = WP_PLUGIN_DIR . '/' . $addon_slug;
-	if (is_dir($plugin_dir)) {
-		// Plugin folder exists, try to activate it
-		$plugin_file = $addon_slug . '/' . $addon_slug . '.php';
-		
-		// Check if plugin file exists
-		if (file_exists(WP_PLUGIN_DIR . '/' . $plugin_file)) {
-			$result = activate_plugin($plugin_file);
-			if (is_wp_error($result)) {
-				wp_die(json_encode(array('success' => false, 'message' => 'Activation failed: ' . $result->get_error_message())));
-			}
-			wp_die(json_encode(array('success' => true, 'message' => 'Plugin activated successfully')));
-		} else {
-			// Plugin folder exists but main file not found, remove folder and install fresh
-			if (!gspb_remove_directory($plugin_dir)) {
-				wp_die(json_encode(array('success' => false, 'message' => 'Failed to remove existing plugin folder')));
-			}
-			// Continue with fresh installation
-		}
-	}
-
-	// Include required WordPress files for installation
-	if (!function_exists('download_url')) {
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-	}
-	if (!function_exists('WP_Upgrader')) {
-		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-	}
-	if (!function_exists('Plugin_Upgrader')) {
-		require_once ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php';
-	}
-
-	// Download the plugin zip file
-	$temp_file = download_url($download_url);
-	if (is_wp_error($temp_file)) {
-		wp_die(json_encode(array('success' => false, 'message' => 'Failed to download plugin: ' . $temp_file->get_error_message())));
-	}
-
-	// Install the plugin
-	$upgrader = new Plugin_Upgrader();
-	$result = $upgrader->install($temp_file);
-
-	// Clean up temp file
-	if (file_exists($temp_file)) {
-		unlink($temp_file);
-	}
-
-	if (is_wp_error($result)) {
-		wp_die(json_encode(array('success' => false, 'message' => 'Installation failed: ' . $result->get_error_message())));
-	}
-
-	if ($result === true) {
-		// Try to activate the newly installed plugin
-		$plugin_file = $addon_slug . '/' . $addon_slug . '.php';
-		$activate_result = activate_plugin($plugin_file);
-		if (is_wp_error($activate_result)) {
-			wp_die(json_encode(array('success' => true, 'message' => 'Plugin installed but activation failed: ' . $activate_result->get_error_message())));
-		}
-		wp_die(json_encode(array('success' => true, 'message' => 'Plugin installed and activated successfully')));
-	} else {
-		wp_die(json_encode(array('success' => false, 'message' => 'Installation failed')));
-	}
-}
-
-if (!function_exists('gspb_activate_addon')) {
-    function gspb_activate_addon() {
-        // Check user capabilities
-        if (!current_user_can('activate_plugins')) {
-            wp_die(json_encode(array('success' => false, 'message' => 'Insufficient permissions')));
-        }
-
-        // Verify nonce
-        if (!wp_verify_nonce($_POST['nonce'], 'gspb_activate_addon_nonce')) {
-            wp_die(json_encode(array('success' => false, 'message' => 'Security check failed')));
-        }
-
-        $plugin_file = sanitize_text_field($_POST['plugin_file']);
-
-        // Activate the plugin
-        $result = activate_plugin($plugin_file);
-
-        if (is_wp_error($result)) {
-            wp_die(json_encode(array('success' => false, 'message' => 'Activation failed: ' . $result->get_error_message())));
-        }
-
-        wp_die(json_encode(array('success' => true, 'message' => 'Plugin activated successfully')));
-    }
 }

@@ -87,8 +87,23 @@ function greenshift_import_download()
 
 		check_admin_referer('greenshift_import_download', 'greenshift_import_nonce');
 
-		$design_type = $_GET['greenshift_import_download'];
-		$design_import_posts_export = $_GET['design_import_posts'];
+		$design_type = sanitize_text_field( wp_unslash( $_GET['greenshift_import_download'] ) );
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below based on context
+		$design_import_posts_raw = wp_unslash( $_GET['design_import_posts'] );
+
+		// Ensure we have an array
+		if ( ! is_array( $design_import_posts_raw ) ) {
+			$design_import_posts_raw = explode( ',', $design_import_posts_raw );
+		}
+
+		if ( $design_type === 'settings' ) {
+			// For settings, sanitize as keys
+			$design_import_posts_export = array_map( 'sanitize_key', $design_import_posts_raw );
+		} else {
+			// For posts, sanitize as integers (post IDs)
+			$design_import_posts_export = array_map( 'absint', $design_import_posts_raw );
+			$design_import_posts_export = array_filter( $design_import_posts_export ); // Remove zeros
+		}
 
 		if(empty($design_type) || empty($design_import_posts_export)){
 			exit;
@@ -96,10 +111,10 @@ function greenshift_import_download()
 
 		$importcontent = '';
 
-		if($design_type == 'settings'){
+		if($design_type === 'settings'){
 			$data = get_option( 'gspb_global_settings', array() );
 			$data = wp_array_slice_assoc($data, $design_import_posts_export);
-			$importcontent = json_encode( $data, JSON_PRETTY_PRINT );
+			$importcontent = wp_json_encode( $data, JSON_PRETTY_PRINT );
 		}
 		else{
 			$importcontent = '<?xml version="1.0" encoding="' . get_bloginfo('charset') . '" ?>
@@ -200,7 +215,7 @@ function greenshift_import_download()
 			header('Content-Type: text/xml; charset=' . get_option('blog_charset'), true);
 		}
 
-		echo ''.$importcontent;
+		echo wp_kses_post($importcontent);
 		exit;
 	}
 }
@@ -214,8 +229,8 @@ add_action('admin_post_greenshift_export', 'greenshift_import_download');
  */
 function greenshift_design_importer($file='') {
 
-	$label_updated = __( 'Updated', 'greenshift-animation-and-page-builder-blocks' );
-	$label_imported = __( 'Imported', 'greenshift-animation-and-page-builder-blocks' );
+	$label_updated = esc_html__( 'Updated', 'greenshift-animation-and-page-builder-blocks' );
+	$label_imported = esc_html__( 'Imported', 'greenshift-animation-and-page-builder-blocks' );
 
 	if($file){
 		$xml = simplexml_load_file($file);
@@ -228,6 +243,7 @@ function greenshift_design_importer($file='') {
 			return false;
 		} else if ( ! file_exists( $file['file'] ) ) {
 			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'greenshift-animation-and-page-builder-blocks' ) . '</strong><br />';
+			/* translators: code of file */
 			printf( esc_html__( 'The export file could not be found at <code>%s</code>. It is likely that this was caused by a permissions problem.', 'greenshift-animation-and-page-builder-blocks' ), esc_html( $file['file'] ) );
 			echo '</p>';
 			return false;
@@ -328,19 +344,19 @@ function greenshift_design_importer($file='') {
 
 		$post_type_name = '';
 		if ( $post_type === 'wp_template' ) {
-			$post_type_name = __( 'template', 'greenshift-animation-and-page-builder-blocks' );
+			$post_type_name = esc_html__( 'template', 'greenshift-animation-and-page-builder-blocks' );
 		} elseif ( $post_type === 'wp_template_part' ) {
-			$post_type_name = __( 'template part', 'greenshift-animation-and-page-builder-blocks' );
+			$post_type_name = esc_html__( 'template part', 'greenshift-animation-and-page-builder-blocks' );
 		} elseif ( $post_type === 'wp_global_styles' ) {
-			$post_type_name = __( 'custom styles', 'greenshift-animation-and-page-builder-blocks' );
+			$post_type_name = esc_html__( 'custom styles', 'greenshift-animation-and-page-builder-blocks' );
 		}elseif ( $post_type === 'wp_block' ) {
-			$post_type_name = __( 'reusable templates', 'greenshift-animation-and-page-builder-blocks' );
+			$post_type_name = esc_html__( 'reusable templates', 'greenshift-animation-and-page-builder-blocks' );
 		}elseif ( $post_type === 'post' ) {
-			$post_type_name = __( 'posts', 'greenshift-animation-and-page-builder-blocks' );
+			$post_type_name = esc_html__( 'posts', 'greenshift-animation-and-page-builder-blocks' );
 		}elseif ( $post_type === 'page' ) {
-			$post_type_name = __( 'pages', 'greenshift-animation-and-page-builder-blocks' );
+			$post_type_name = esc_html__( 'pages', 'greenshift-animation-and-page-builder-blocks' );
 		}elseif ( $post_type === 'product' ) {
-			$post_type_name = __( 'products', 'greenshift-animation-and-page-builder-blocks' );
+			$post_type_name = esc_html__( 'products', 'greenshift-animation-and-page-builder-blocks' );
 		}else{
 			$post_type_name = $post_type;
 		}
@@ -521,13 +537,13 @@ function greenshift_design_importer($file='') {
 	if(!empty($updated_types)){
 		$updated_types = array_unique($updated_types);
 		$updated_types = implode(', ', $updated_types);
-		echo '<li class="imported is-font-weight-600"><span class="dashicons-before dashicons-saved"></span> ' . esc_html( $label_updated ) . ': ' . $updated_types .'</li>';
+		echo '<li class="imported is-font-weight-600"><span class="dashicons-before dashicons-saved"></span> ' . esc_html( $label_updated ) . ': ' .esc_attr( $updated_types) .'</li>';
 	}
 
 	if(!empty($new_types)){
 		$new_types = array_unique($new_types);
 		$new_types = implode(', ', $new_types);
-		echo '<li class="imported is-font-weight-600"><span class="dashicons-before dashicons-saved"></span> ' . esc_html( $label_imported ) . ': ' . $new_types .'</li>';
+		echo '<li class="imported is-font-weight-600"><span class="dashicons-before dashicons-saved"></span> ' . esc_html( $label_imported ) . ': ' . esc_attr($new_types) .'</li>';
 	}
 
 	if(!empty($thumbnails_old_ids)){
@@ -610,7 +626,7 @@ function greenshift_import_post_exists( $post_name = '', $post_type = '', $theme
 
 			$post_id_update = 0;
 
-			$template_posts = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_name = '" . $post_name . "' AND post_type = '" . $post_type . "'" );
+			$template_posts = $wpdb->get_results( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type = %s", $post_name, $post_type ) );
 
 			if ( $template_posts ) {
 				foreach ( $template_posts as $template_post ) {
@@ -632,7 +648,7 @@ function greenshift_import_post_exists( $post_name = '', $post_type = '', $theme
 
 		} else  {
 
-			$post_id = $wpdb->get_row( "SELECT ID FROM $wpdb->posts WHERE post_name = '" . $post_name . "' AND post_type = '" . $post_type . "'" );
+			$post_id = $wpdb->get_row( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type = %s", $post_name, $post_type ) );
 			if ( $post_id ) {
 				$todo = array( 'post_id' => $post_id->ID, 'action' => 'update' );
 			} else {
@@ -721,7 +737,7 @@ function greenshift_import_block_attrs_replace( $base_blog_url, $content ) {
 function greenshift_process_attachment( $post, $url ) {
 
 		// Extract the file name from the URL.
-		$path      = parse_url( $url, PHP_URL_PATH );
+		$path      = wp_parse_url( $url, PHP_URL_PATH );
 		$file_name = '';
 		if ( is_string( $path ) ) {
 			$file_name = basename( $path );
@@ -733,7 +749,7 @@ function greenshift_process_attachment( $post, $url ) {
 
 		$tmp_file_name = wp_tempnam( $file_name );
 		if ( ! $tmp_file_name ) {
-			return new WP_Error( 'import_no_file', __( 'Could not create temporary file.', 'greenshift-animation-and-page-builder-blocks' ) );
+			return new WP_Error( 'import_no_file', esc_html__( 'Could not create temporary file.', 'greenshift-animation-and-page-builder-blocks' ) );
 		}
 
 		// Fetch the remote URL and write it to the placeholder file.
@@ -750,12 +766,12 @@ function greenshift_process_attachment( $post, $url ) {
 		);
 
 		if ( is_wp_error( $remote_response ) ) {
-			@unlink( $tmp_file_name );
+			wp_delete_file( $tmp_file_name );
 			return new WP_Error(
 				'import_file_error',
 				sprintf(
 					/* translators: 1: The WordPress error message. 2: The WordPress error code. */
-					__( 'Request failed due to an error: %1$s (%2$s)', 'greenshift-animation-and-page-builder-blocks' ),
+					esc_html__( 'Request failed due to an error: %1$s (%2$s)', 'greenshift-animation-and-page-builder-blocks' ),
 					esc_html( $remote_response->get_error_message() ),
 					esc_html( $remote_response->get_error_code() )
 				)
@@ -766,12 +782,12 @@ function greenshift_process_attachment( $post, $url ) {
 
 		// Make sure the fetch was successful.
 		if ( 200 !== $remote_response_code ) {
-			@unlink( $tmp_file_name );
+			wp_delete_file( $tmp_file_name );
 			return new WP_Error(
 				'import_file_error',
 				sprintf(
 					/* translators: 1: The HTTP error message. 2: The HTTP error code. */
-					__( 'Remote server returned the following unexpected result: %1$s (%2$s)', 'greenshift-animation-and-page-builder-blocks' ),
+					esc_html__( 'Remote server returned the following unexpected result: %1$s (%2$s)', 'greenshift-animation-and-page-builder-blocks' ),
 					get_status_header_desc( $remote_response_code ),
 					esc_html( $remote_response_code )
 				)
@@ -782,26 +798,27 @@ function greenshift_process_attachment( $post, $url ) {
 
 		// Request failed.
 		if ( ! $headers ) {
-			@unlink( $tmp_file_name );
-			return new WP_Error( 'import_file_error', __( 'Remote server did not respond', 'greenshift-animation-and-page-builder-blocks' ) );
+			wp_delete_file( $tmp_file_name );
+			return new WP_Error( 'import_file_error', esc_html__( 'Remote server did not respond', 'greenshift-animation-and-page-builder-blocks' ) );
 		}
 
 		$filesize = (int) filesize( $tmp_file_name );
 
 		if ( 0 === $filesize ) {
-			@unlink( $tmp_file_name );
-			return new WP_Error( 'import_file_error', __( 'Zero size file downloaded', 'greenshift-animation-and-page-builder-blocks' ) );
+			wp_delete_file( $tmp_file_name );
+			return new WP_Error( 'import_file_error', esc_html__( 'Zero size file downloaded', 'greenshift-animation-and-page-builder-blocks' ) );
 		}
 
 		if ( ! isset( $headers['content-encoding'] ) && isset( $headers['content-length'] ) && $filesize !== (int) $headers['content-length'] ) {
-			@unlink( $tmp_file_name );
-			return new WP_Error( 'import_file_error', __( 'Downloaded file has incorrect size', 'greenshift-animation-and-page-builder-blocks' ) );
+			wp_delete_file( $tmp_file_name );
+			return new WP_Error( 'import_file_error', esc_html__( 'Downloaded file has incorrect size', 'greenshift-animation-and-page-builder-blocks' ) );
 		}
 
 		$max_size = (int) apply_filters( 'import_attachment_size_limit', 0 );
 		if ( ! empty( $max_size ) && $filesize > $max_size ) {
-			@unlink( $tmp_file_name );
-			return new WP_Error( 'import_file_error', sprintf( __( 'Remote file is too large, limit is %s', 'greenshift-animation-and-page-builder-blocks' ), size_format( $max_size ) ) );
+			wp_delete_file( $tmp_file_name );
+			/* translators: limit file size */
+			return new WP_Error( 'import_file_error', sprintf( esc_html__( 'Remote file is too large, limit is %s', 'greenshift-animation-and-page-builder-blocks' ), size_format( $max_size ) ) );
 		}
 
 		// Handle the upload like _wp_handle_upload() does.
@@ -816,7 +833,7 @@ function greenshift_process_attachment( $post, $url ) {
 		}
 
 		if ( ( ! $type || ! $ext ) && ! current_user_can( 'unfiltered_upload' ) ) {
-			return new WP_Error( 'import_file_error', __( 'Sorry, this file type is not permitted for security reasons.', 'greenshift-animation-and-page-builder-blocks' ) );
+			return new WP_Error( 'import_file_error', esc_html__( 'Sorry, this file type is not permitted for security reasons.', 'greenshift-animation-and-page-builder-blocks' ) );
 		}
 
 		$uploads = wp_upload_dir( $post['upload_date'] );
@@ -830,8 +847,8 @@ function greenshift_process_attachment( $post, $url ) {
 		$move_new_file = copy( $tmp_file_name, $new_file );
 
 		if ( ! $move_new_file ) {
-			@unlink( $tmp_file_name );
-			return new WP_Error( 'import_file_error', __( 'The uploaded file could not be moved', 'greenshift-animation-and-page-builder-blocks' ) );
+			wp_delete_file( $tmp_file_name );
+			return new WP_Error( 'import_file_error', esc_html__( 'The uploaded file could not be moved', 'greenshift-animation-and-page-builder-blocks' ) );
 		}
 
 		// Set correct file permissions.
@@ -855,7 +872,7 @@ function greenshift_process_attachment( $post, $url ) {
 	if ( $info ) {
 		$post['post_mime_type'] = $info['type'];
 	} else {
-		return new WP_Error( 'attachment_processing_error', __( 'Invalid file type', 'greenshift-animation-and-page-builder-blocks' ) );
+		return new WP_Error( 'attachment_processing_error', esc_html__( 'Invalid file type', 'greenshift-animation-and-page-builder-blocks' ) );
 	}
 
 	$post['guid'] = $upload['url'];

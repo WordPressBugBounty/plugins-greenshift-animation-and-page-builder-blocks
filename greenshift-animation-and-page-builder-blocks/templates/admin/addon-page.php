@@ -374,7 +374,7 @@ wp_enqueue_script('gsadminsettings');
                                             <a class="gspb-buttonbox" href="https://greenshiftwp.com/block-gallery/#animation" target="_blank" rel="noopener"><?php esc_html_e("Details and Demo", 'greenshift-animation-and-page-builder-blocks'); ?></a>
                                         </li>
                                         <?php if (($is_active || defined('REHUB_ADMIN_DIR')) && !defined('GREENSHIFTGSAP_DIR_URL')) : ?>
-                                            <li class="gspb-cta "><button class="button button-primary gspb-install-addon" data-download-url="https://shop.greenshiftwp.com/update-plugin/greenshiftgsap.zip"><?php esc_html_e("Install", "greenshift-animation-and-page-builder-blocks"); ?></button></li>
+                                            <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/update-plugin/greenshiftgsap.zip" target="_blank"><?php esc_html_e("Download", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
                                         <?php elseif ($is_active && defined('GREENSHIFTGSAP_DIR_URL')) : ?>
                                             <li class="gspb-cta"></li>
                                         <?php else : ?>
@@ -406,7 +406,7 @@ wp_enqueue_script('gsadminsettings');
                                             <a class="gspb-buttonbox" href="https://greenshiftwp.com/block-gallery/#query" target="_blank" rel="noopener"><?php esc_html_e("Details and Demo", 'greenshift-animation-and-page-builder-blocks'); ?></a>
                                         </li>
                                         <?php if ($is_active && !defined('GREENSHIFTQUERY_DIR_URL')) : ?>
-                                            <li class="gspb-cta"><button class="button button-primary gspb-install-addon" data-download-url="https://shop.greenshiftwp.com/update-plugin/greenshiftquery.zip"><?php esc_html_e("Install", "greenshift-animation-and-page-builder-blocks"); ?></button></li>
+                                            <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/update-plugin/greenshiftquery.zip" target="_blank"><?php esc_html_e("Download", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
                                         <?php elseif ($is_active && defined('GREENSHIFTQUERY_DIR_URL')) : ?>
                                             <li class="gspb-cta"></li>
                                         <?php else : ?>
@@ -438,7 +438,7 @@ wp_enqueue_script('gsadminsettings');
                                             <a class="gspb-buttonbox" href="https://greenshiftwp.com/block-gallery/#seo" target="_blank" rel="noopener"><?php esc_html_e("Details and Demo", 'greenshift-animation-and-page-builder-blocks'); ?></a>
                                         </li>
                                         <?php if ($is_active && !defined('GREENSHIFTSEO_DIR_URL')) : ?>
-                                            <li class="gspb-cta"><button class="button button-primary gspb-install-addon" data-download-url="https://shop.greenshiftwp.com/update-plugin/greenshiftseo.zip"><?php esc_html_e("Install", "greenshift-animation-and-page-builder-blocks"); ?></button></li>
+                                            <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/update-plugin/greenshiftseo.zip" target="_blank"><?php esc_html_e("Download", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
                                         <?php elseif ($is_active && defined('GREENSHIFTSEO_DIR_URL')) : ?>
                                             <li class="gspb-cta"></li>
                                         <?php else : ?>
@@ -472,7 +472,7 @@ wp_enqueue_script('gsadminsettings');
                                             <a class="gspb-buttonbox" href="https://greenshiftwp.com/block-gallery/#chart" target="_blank" rel="noopener"><?php esc_html_e("Details and Demo", 'greenshift-animation-and-page-builder-blocks'); ?></a>
                                         </li>
                                         <?php if ($is_active && !defined('GSCBN_VERSION')) : ?>
-                                            <li class="gspb-cta"><button class="button button-primary gspb-install-addon" data-download-url="https://shop.greenshiftwp.com/update-plugin/greenshiftchart.zip"><?php esc_html_e("Install", "greenshift-animation-and-page-builder-blocks"); ?></button></li>
+                                            <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/update-plugin/greenshiftchart.zip" target="_blank"><?php esc_html_e("Download", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
                                         <?php elseif ($is_active && defined('GSCBN_VERSION')) : ?>
                                             <li class="gspb-cta"></li>
                                         <?php else : ?>
@@ -506,7 +506,7 @@ wp_enqueue_script('gsadminsettings');
                                             <a class="gspb-buttonbox" href="https://greenshiftwp.com/block-gallery/#woocommerce" target="_blank" rel="noopener"><?php esc_html_e("Details and Demo", 'greenshift-animation-and-page-builder-blocks'); ?></a>
                                         </li>
                                         <?php if ($is_active && !defined('GREENSHIFTWOO_DIR_URL')) : ?>
-                                            <li class="gspb-cta"><button class="button button-primary gspb-install-addon" data-download-url="https://shop.greenshiftwp.com/update-plugin/greenshiftwoo.zip"><?php esc_html_e("Install", "greenshift-animation-and-page-builder-blocks"); ?></button></li>
+                                            <li class="gspb-cta"><a class="button button-primary" href="https://shop.greenshiftwp.com/update-plugin/greenshiftwoo.zip" target="_blank"><?php esc_html_e("Download", "greenshift-animation-and-page-builder-blocks"); ?></a></li>
                                         <?php elseif ($is_active && defined('GREENSHIFTWOO_DIR_URL')) : ?>
                                             <li class="gspb-cta"></li>
                                         <?php else : ?>

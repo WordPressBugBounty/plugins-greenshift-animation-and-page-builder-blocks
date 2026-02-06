@@ -225,7 +225,7 @@ Determines how the block's content is handled:
 
 ### 12.Scripts
 
--   If you need to use scripts, use native support for blocks inside attributes `customJs` and `customJsEnabled` parameters.
+-   If you need to use scripts, use native support for blocks inside attributes `customJs` and `customJsEnabled` parameters. You can use also import function
 
 -   *Example:*
     ```html
@@ -293,6 +293,193 @@ Slider blocks use the Swiper.js library and have extensive configuration options
 -   **`enableKeyboard`**: Enable keyboard navigation
 -   **`enableMousewheel`**: Enable mousewheel navigation
 
+### 15. Dynamic Blocks
+
+Dynamic blocks allow you to display content that changes based on post data, user information, site data, and more. Dynamic content is wrapped in `<dynamictext></dynamictext>` tags and configured through the `dynamictext` parameter.
+
+#### Basic Dynamic Block Structure
+
+```html
+<!-- wp:greenshift-blocks/element {"id":"gsbp-example","textContent":"\u003cdynamictext\u003eHello world!\u003c/dynamictext\u003e","dynamictext":{"dynamicEnable":true,"dynamicType":"postdata","dynamicSource":"latest_item","dynamicPostData":"post_title"},"localId":"gsbp-example"} -->
+<div class="gsbp-example"><dynamictext>Hello world!</dynamictext></div>
+<!-- /wp:greenshift-blocks/element -->
+```
+
+#### Complete Dynamic Query Grid Example
+
+```html
+<!-- wp:greenshift-blocks/querygrid {"id":"gsbp-5ca4fa6", "data_source":"query","query_filters":{"post_type":"post"}, "displayStyle":"custom", "styleAttributesWrapper":{"display":["flex"],"columnGap":["var(\u002d\u002dwp\u002d\u002dpreset\u002d\u002dspacing\u002d\u002d50, 1.5rem)"],"rowGap":["var(\u002d\u002dwp\u002d\u002dpreset\u002d\u002dspacing\u002d\u002d50, 1.5rem)"],"flexWrap":["wrap"],"flexColumns_Extra":4,"flexWidths_Extra":{"desktop":{"name":"25/25/25/25","widths":[25,25,25,25]},"tablet":{"name":"50/50/50/50","widths":[50,50,50,50]},"mobile":{"name":"100/100/100/100","widths":[100,100,100,100]}}},"styleAttributesItem":{"borderBottomLeftRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dborder-radius\u002d\u002dsmall, 10px)"],"borderBottomRightRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dborder-radius\u002d\u002dsmall, 10px)"],"borderTopLeftRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dborder-radius\u002d\u002dsmall, 10px)"],"borderTopRightRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dborder-radius\u002d\u002dsmall, 10px)"],"borderRadiusCustom_Extra":false,"borderRadiusLink_Extra":true}} -->
+<!-- wp:greenshift-blocks/element {"id":"gsbp-a6342f9","tag":"a","type":"inner","dynamiclink":{"dynamicEnable":true,"dynamicType":"postdata","dynamicSource":"latest_item","dynamicPostData":"permalink"},"localId":"gsbp-a6342f9"} -->
+<a><!-- wp:greenshift-blocks/element {"id":"gsbp-7a5ed66","tag":"img","type":"inner","dynamiclink":{"dynamicEnable":true,"dynamicType":"postdata","dynamicSource":"latest_item","dynamicPostData":"post_image"},"localId":"gsbp-7a5ed66","styleAttributes":{"width":["100%"],"height":["180px"],"objectFit":["cover"],"borderBottomLeftRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dborder-radius\u002d\u002dsmall, 10px)"],"borderBottomRightRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dborder-radius\u002d\u002dsmall, 10px)"],"borderTopLeftRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dborder-radius\u002d\u002dsmall, 10px)"],"borderTopRightRadius":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dborder-radius\u002d\u002dsmall, 10px)"],"borderRadiusCustom_Extra":false,"borderRadiusLink_Extra":true}} -->
+<img class="gsbp-7a5ed66" loading="lazy"/>
+<!-- /wp:greenshift-blocks/element --></a>
+<!-- /wp:greenshift-blocks/element -->
+
+<!-- wp:greenshift-blocks/element {"id":"gsbp-10a3f57","textContent":"\u003cdynamictext\u003e\u003c/dynamictext\u003e","dynamictext":{"dynamicEnable":true,"dynamicType":"taxonomyvalue","dynamicSource":"latest_item","dynamicPostType":"post","dynamicPostId":0,"dynamicPostData":"post_title","dynamicTaxonomyValue":"category","dynamicTaxonomyLink":true,"dynamicTaxonomyDivider":", "},"localId":"gsbp-10a3f57","styleAttributes":{"fontSize":["var(\u002d\u002dwp\u002d\u002dpreset\u002d\u002dfont-size\u002d\u002dxs, 0.85rem)"],"lineHeight":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dline-height\u002d\u002dxs, 1.15rem)"],"marginTop":["10px"],"opacity":["0.7"]},"isVariation":"divtext","metadata":{"name":"Taxonomy"}} -->
+<div class="gsbp-10a3f57"><dynamictext></dynamictext></div>
+<!-- /wp:greenshift-blocks/element -->
+
+<!-- wp:greenshift-blocks/element {"id":"gsbp-6410c04","tag":"a","type":"inner","dynamiclink":{"dynamicEnable":true,"dynamicType":"postdata","dynamicSource":"latest_item","dynamicPostData":"permalink"},"localId":"gsbp-6410c04","href":"\u003cdynamictext\u003e\u003c/dynamictext\u003e","styleAttributes":{"textDecoration":["none"]}} -->
+<a class="gsbp-6410c04" href="<dynamictext&gt;</dynamictext&gt;"><!-- wp:greenshift-blocks/element {"id":"gsbp-2acd12c","textContent":"\u003cdynamictext\u003eHello world!\u003c/dynamictext\u003e","dynamictext":{"dynamicEnable":true,"dynamicType":"postdata","dynamicSource":"latest_item","dynamicPostData":"post_title"},"localId":"gsbp-2acd12c","styleAttributes":{"fontSize":["var(\u002d\u002dwp\u002d\u002dpreset\u002d\u002dfont-size\u002d\u002dr, 1.2rem)"],"fontWeight":["600"],"lineHeight":["1.4em"],"marginTop":["8px"],"marginBottom":["0px"]},"isVariation":"divtext","metadata":{"name":"Post Title"}} -->
+<div class="gsbp-2acd12c"><dynamictext>Hello world!</dynamictext></div>
+<!-- /wp:greenshift-blocks/element --></a>
+<!-- /wp:greenshift-blocks/element -->
+
+<!-- wp:greenshift-blocks/element {"id":"gsbp-d0e8cf8","textContent":"\u003cdynamictext\u003eSeptember 28, 2025\u003c/dynamictext\u003e","tag":"span","dynamictext":{"dynamicEnable":true,"dynamicType":"postdata","dynamicSource":"latest_item","dynamicPostData":"post_modified"},"localId":"gsbp-d0e8cf8","styleAttributes":{"fontSize":["var(\u002d\u002dwp\u002d\u002dpreset\u002d\u002dfont-size\u002d\u002dxs, 0.85rem)"],"lineHeight":["var(\u002d\u002dwp\u002d\u002dcustom\u002d\u002dline-height\u002d\u002dxs, 1.15rem)"],"opacity":[0.5]}} -->
+<span class="gsbp-d0e8cf8"><dynamictext>September 28, 2025</dynamictext></span>
+<!-- /wp:greenshift-blocks/element -->
+<!-- /wp:greenshift-blocks/querygrid -->
+```
+
+#### Query Loop Configuration
+
+For arguments, use the same as available in WP Query as json in query_filters. For wrapper styles, use styleAttributesWrapper and for item style use styleAttributesItem. These attributes except the same parameters as styleAttributes in greenshift-blocks/element block.
+
+#### Dynamic Text Configuration (`dynamictext`)
+
+The `dynamictext` parameter contains all dynamic content configuration:
+
+**Core Parameters:**
+-   **`dynamicEnable: true`**: Enables dynamic content functionality
+-   **`dynamicType`**: Type of dynamic content (see options below)
+-   **`dynamicSource`**: Source selection - `"latest_item"` or `"definite_item"`
+-   **`dynamicPostType`**: Post type to query (optional, uses current if empty)
+-   **`dynamicPostId`**: Specific post ID (for definite_item source)
+
+#### Available Dynamic Types
+
+**1. Post Data (`dynamicType: "postdata"`)**
+-   **`dynamicPostData`** options:
+    -   `"post_title"` - Post title
+    -   `"post_image"` - Featured image
+    -   `"ID"` - Post ID
+    -   `"post_date"` - Publish date
+    -   `"post_modified"` - Last modified date
+    -   `"post_excerpt"` - Post excerpt
+    -   `"comment_count"` - Number of comments
+    -   `"permalink"` - Post URL
+    -   `"fullcontent"` - Full content without formatting
+    -   `"fullcontentfilters"` - Formatted content
+    -   `"post_author"` - Author name
+    -   `"post_name"` - Post slug
+    -   `"post_parent_title"` - Parent post title
+    -   `"post_parent_link"` - Parent post link
+
+**2. Author Data (`dynamicType: "authordata"`)**
+-   **`dynamicAuthorData`** options:
+    -   `"display_name"` - Author display name
+    -   `"description"` - Author bio
+    -   `"user_level"` - User level
+    -   `"user_registered"` - Registration date
+    -   `"user_email"` - Author email
+    -   `"user_login"` - Username
+    -   `"user_url"` - Author website
+    -   `"user_avatar_url"` - Avatar image URL
+    -   `"user_status"` - User status
+    -   `"ID"` - Author ID
+    -   `"meta"` - Custom author meta (requires `dynamicAuthorField`)
+
+**3. Current User Data (`dynamicType: "user_data"`)**
+-   Same options as Author Data but for currently logged-in user
+
+**4. Taxonomy Value (`dynamicType: "taxonomyvalue"`)**
+-   **`dynamicTaxonomyValue`**: Taxonomy name (e.g., `"category"`, `"post_tag"`)
+-   **`dynamicTaxonomyLink: true`**: Show taxonomy terms as links
+-   **`dynamicTaxonomyDivider`**: Separator between terms (e.g., `", "`)
+
+**5. Custom Meta Field (`dynamicType: "custom"`)**
+-   **`dynamicField`**: Custom field name or meta key
+
+**6. Taxonomy Meta (`dynamicType: "taxonomy"`)**
+-   **`dynamicTaxonomy`**: Taxonomy name
+-   **`dynamicTaxonomyField`**: Field to retrieve from taxonomy
+-   **`dynamicTaxonomyType`**: Data type (`"name"`, `"description"`, or meta)
+
+**7. Site Data (`dynamicType: "sitedata"`)**
+-   **`dynamicSiteData`** options:
+    -   `"siteoption"` - WordPress option
+    -   `"acfsiteoption"` - ACF site option
+    -   `"name"` - Site name
+    -   `"description"` - Site description
+    -   `"year"` - Current year
+    -   `"month"` - Current month
+    -   `"today"` - Today's date
+    -   `"todayplus1"` - Tomorrow
+    -   `"todayplus2"` - Day after tomorrow
+    -   `"todayplus3"` - 3 days from now
+    -   `"todayplus7"` - 1 week from now
+    -   `"querystring"` - URL query parameter
+    -   `"transient"` - WordPress transient
+
+**8. Repeater (`dynamicType: "repeater"`)**
+-   **`repeaterField`**: Repeater field name
+-   Works within repeater contexts
+
+#### Dynamic Link Configuration (`dynamiclink`)
+
+dynamiclink attribute supports the same options as dynamictext. Use dynamiclink for link element and images, video elements.
+
+#### Dynamic Placeholders
+
+Dynamic placeholders can be used in query arguments and text content. Available placeholders:
+
+**Basic Placeholders:**
+-   `{{POST_ID}}` - Current post ID
+-   `{{POST_TITLE}}` - Current post title
+-   `{{POST_URL}}` - Current post URL
+-   `{{AUTHOR_ID}}` - Post author ID
+-   `{{AUTHOR_NAME}}` - Post author name
+-   `{{CURRENT_USER_ID}}` - Logged-in user ID
+-   `{{CURRENT_USER_NAME}}` - Logged-in user name
+-   `{{CURRENT_OBJECT_ID}}` - Current object ID
+-   `{{CURRENT_OBJECT_NAME}}` - Current object name
+-   `{{CURRENT_DATE_YMD}}` - Current date (YYYY-MM-DD)
+-   `{{CURRENT_DATE_YMD_HMS}}` - Current date and time
+-   `{{SITE_URL}}` - Site URL
+
+**Advanced Placeholders:**
+-   `{{TIMESTRING:today+10days}}` - Date calculations
+-   `{{GET:get_name}}` - URL GET parameters
+-   `{{META:meta_key}}` - Post meta
+-   `{{TERM_META:meta_key}}` - Taxonomy term meta
+-   `{{TERM_LINKS:taxonomy}}` - List of links for a post's terms
+-   `{{USER_META:meta_key}}` - User meta
+-   `{{COOKIE:cookie_name}}` - Cookie values
+-   `{{RANDOM:0-100}}` - Random numbers
+-   `{{RANDOM:red|blue|green}}` - Random selection
+
+#### Data Formatting (`postprocessor`)
+
+This is used for further processing returned data
+
+Available formatting options:
+-   `"textformat"` - Use if returned data has WYSIWYG formatting
+-   `"mailto"` - Email links
+-   `"tel"` - Convert to Phone links
+-   `"postlink"` - Post links
+-   `"idtofile"` - Convert ID of file to file link
+-   `"idtofileurl"` - Convert ID of file to file URL
+-   `"idtoimageurl"` - ID to image URL (full size)
+-   `"idtoimageurlthumb"` - ID to image URL (thumbnail)
+-   `"ymd"` - Date YYYYMMDD to WordPress date
+-   `"ytmd"` - Date yyyy-mm-dd to WordPress date
+-   `"unixtowp"` - Unix time to WordPress date
+-   `"ymdhis"` - Date Y-m-d H:i:s to WordPress date
+-   `"ymdtodiff"` - Date difference with current
+-   `"datecustom"` - Custom date format (requires `dateformat`)
+-   `"numberformat"` - Number formatting
+-   `"numberformatenglish"` - English number formatting
+-   `"numeric"` - Only numeric values
+-   `"json"` - Array to JSON
+
+#### Additional Parameters
+
+-   **`fallbackValue`**: Fallback text when no data is found
+-   **`avatarSize`**: Avatar size for user avatars
+-   **`dynamicPostImageSize`**: Image size for post images
+-   **`dateformat`**: Custom date format string
+
+
 ### Preset / Interactive Blocks (`isVariation`)
 
 There are some special interactive blocks that have additional rules and attributes.
@@ -333,9 +520,10 @@ There are some special interactive blocks that have additional rules and attribu
 
 **Accordion Element**
 
+
 ```html
-<!-- wp:greenshift-blocks/element {"id":"gsbp-4893b17","dynamicGClasses":[{"value":"gs_accordion_273","type":"local","label":"gs_accordion_273","localed":false,"css":"","attributes":{"styleAttributes":{}},"originalBlock":"greenshift-blocks/element","selectors":[{"value":" \u003e .gs_item","attributes":{"styleAttributes":{"borderRadiusLink_Extra":true,"borderTopLeftRadius":["8px"],"borderBottomLeftRadius":["8px"],"borderTopRightRadius":["8px"],"borderBottomRightRadius":["8px"],"overflow":["hidden"],"borderWidth":["1px"],"borderStyle":["solid"],"borderColor":["var(--wp--preset--color--border, #00000012)"],"borderCustom_Extra":false,"borderLink_Extra":false}},"css":".gs_accordion_273 \u003e .gs_item{border-top-left-radius:8px;border-bottom-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;overflow:hidden;border-width:1px;border-style:solid;border-color:var(--wp--preset--color--border, #00000012);}"},{"value":" .gs_title","attributes":{"styleAttributes":{"marginTop":["0px"],"marginRight":["0px"],"marginBottom":["0px"],"marginLeft":["0px"],"paddingTop":["0px"],"paddingRight":["0px"],"paddingBottom":["0px"],"paddingLeft":["0px"]}},"css":".gs_accordion_273 .gs_title{margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;}"},{"value":" .gs_title button","attributes":{"styleAttributes":{"fontSize":["1rem"],"backgroundColor":["#0000000d"],"borderCustom_Extra":true,"border":["none"],"paddingTop":["1rem"],"paddingBottom":["1rem"],"paddingRight":["1.5rem"],"paddingLeft":["1.5rem"],"fontWeight":["normal"],"textDecoration":["none"],"display":["flex"],"justifyContent":["space-between"],"alignItems":["center"],"width":["100%"],"color":["#000000"],"cursor":["pointer"],"columnGap":["5px"]}},"css":".gs_accordion_273 .gs_title button{font-size:1rem;background-color:#0000000d;border:none;padding-top:1rem;padding-bottom:1rem;padding-right:1.5rem;padding-left:1.5rem;font-weight:normal;text-decoration:none;display:flex;justify-content:space-between;align-items:center;width:100%;color:#000000;cursor:pointer;column-gap:5px;}"},{"value":" .gs_title .gs_icon","attributes":{"styleAttributes":{"width":["17px"],"height":["17px"],"transition":["all 0.5s ease"]}},"css":".gs_accordion_273 .gs_title .gs_icon{width:17px;height:17px;transition:all 0.5s ease;}"},{"value":"\u003e .gs_item \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["0px"],"overflow":["hidden"],"transition":["max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1)"],"opacity":["0"]}},"css":".gs_accordion_273 \u003e .gs_item \u003e .gs_content{max-height:0px;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);opacity:0;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["5000px"],"opacity":["1"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_content{max-height:5000px;opacity:1;}"},{"value":" .gs_content \u003e .gs_content_inner","attributes":{"styleAttributes":{"paddingTop":["25px"],"paddingRight":["25px"],"paddingBottom":["25px"],"paddingLeft":["25px"],"fontSize":["1rem"],"lineHeight":["1.3rem"]}},"css":".gs_accordion_273 .gs_content \u003e .gs_content_inner{padding-top:25px;padding-right:25px;padding-bottom:25px;padding-left:25px;font-size:1rem;line-height:1.3rem;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_title .gs_icon","attributes":{"styleAttributes":{"transform":["rotate(90deg)"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_title .gs_icon{transform:rotate(90deg);}"}]}],"type":"inner","className":"gs_accordion_273","localId":"gsbp-4893b17","styleAttributes":{"position":["relative"],"display":["flex"],"flexDirection":["column"],"rowGap":["15px"],"columnGap":["15px"],"alignItems":["stretch"],"justifyContent":["flex-start"]},"isVariation":"accordion","dynamicAttributes":[{"name": "data-type", "value":"accordion-component"}]} -->
-<div class="gs_accordion_273 gsbp-4893b17"><!-- wp:greenshift-blocks/element {"id":"gsbp-1d542bc","type":"inner","className":"gs_item","localId":"gsbp-1d542bc","metadata":{"name":"Accordion Item"}} -->
+<!-- wp:greenshift-blocks/element {"id":"gsbp-4893b17","dynamicGClasses":[{"value":"gs_accordion_273","type":"local","label":"gs_accordion_273","localed":false,"css":"","attributes":{"styleAttributes":{}},"originalBlock":"greenshift-blocks/element","selectors":[{"value":" \u003e .gs_item","attributes":{"styleAttributes":{"borderRadiusLink_Extra":true,"borderTopLeftRadius":["8px"],"borderBottomLeftRadius":["8px"],"borderTopRightRadius":["8px"],"borderBottomRightRadius":["8px"],"overflow":["hidden"],"borderWidth":["1px"],"borderStyle":["solid"],"borderColor":["var(\u002d\u002dwp\u002d\u002dpreset\u002d\u002dcolor\u002d\u002dborder, #00000012)"],"borderCustom_Extra":false,"borderLink_Extra":false}},"css":".gs_accordion_273 \u003e .gs_item{border-top-left-radius:8px;border-bottom-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;overflow:hidden;border-width:1px;border-style:solid;border-color:var(\u002d\u002dwp\u002d\u002dpreset\u002d\u002dcolor\u002d\u002dborder, #00000012);}"},{"value":" .gs_title","attributes":{"styleAttributes":{"marginTop":["0px"],"marginRight":["0px"],"marginBottom":["0px"],"marginLeft":["0px"],"paddingTop":["0px"],"paddingRight":["0px"],"paddingBottom":["0px"],"paddingLeft":["0px"]}},"css":".gs_accordion_273 .gs_title{margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;}"},{"value":" .gs_title button","attributes":{"styleAttributes":{"fontSize":["1rem"],"backgroundColor":["#0000000d"],"borderCustom_Extra":true,"border":["none"],"paddingTop":["1rem"],"paddingBottom":["1rem"],"paddingRight":["1.5rem"],"paddingLeft":["1.5rem"],"fontWeight":["normal"],"textDecoration":["none"],"display":["flex"],"justifyContent":["space-between"],"alignItems":["center"],"width":["100%"],"color":["#000000"],"cursor":["pointer"],"columnGap":["5px"]}},"css":".gs_accordion_273 .gs_title button{font-size:1rem;background-color:#0000000d;border:none;padding-top:1rem;padding-bottom:1rem;padding-right:1.5rem;padding-left:1.5rem;font-weight:normal;text-decoration:none;display:flex;justify-content:space-between;align-items:center;width:100%;color:#000000;cursor:pointer;column-gap:5px;}"},{"value":" .gs_title .gs_icon","attributes":{"styleAttributes":{"width":["17px"],"height":["17px"],"transition":["all 0.5s ease"]}},"css":".gs_accordion_273 .gs_title .gs_icon{width:17px;height:17px;transition:all 0.5s ease;}"},{"value":"\u003e .gs_item \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["0px"],"overflow":["hidden"],"transition":["max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1)"],"opacity":["0"]}},"css":".gs_accordion_273 \u003e .gs_item \u003e .gs_content{max-height:0px;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.42, 0, 0.58, 1), opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);opacity:0;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_content","attributes":{"styleAttributes":{"maxHeight":["5000px"],"opacity":["1"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_content{max-height:5000px;opacity:1;}"},{"value":" .gs_content \u003e .gs_content_inner","attributes":{"styleAttributes":{"paddingTop":["25px"],"paddingRight":["25px"],"paddingBottom":["25px"],"paddingLeft":["25px"],"fontSize":["1rem"],"lineHeight":["1.3rem"]}},"css":".gs_accordion_273 .gs_content \u003e .gs_content_inner{padding-top:25px;padding-right:25px;padding-bottom:25px;padding-left:25px;font-size:1rem;line-height:1.3rem;}"},{"value":" \u003e .gs_item[data-active] \u003e .gs_title .gs_icon","attributes":{"styleAttributes":{"transform":["rotate(90deg)"]}},"css":".gs_accordion_273 \u003e .gs_item[data-active] \u003e .gs_title .gs_icon{transform:rotate(90deg);}"}]}],"type":"inner","className":"gs_accordion_273 gs_collapsible","localId":"gsbp-4893b17","dynamicAttributes":[{"name":"data-type","value":"accordion-component"}],"styleAttributes":{"position":["relative"],"display":["flex"],"flexDirection":["column"],"rowGap":["15px"],"columnGap":["15px"],"alignItems":["stretch"],"justifyContent":["flex-start"]},"isVariation":"accordion"} -->
+<div class="gs_accordion_273 gs_collapsible gsbp-4893b17" data-type="accordion-component"><!-- wp:greenshift-blocks/element {"id":"gsbp-1d542bc","type":"inner","className":"gs_item","localId":"gsbp-1d542bc","metadata":{"name":"Accordion Item"}} -->
 <div class="gs_item"><!-- wp:greenshift-blocks/element {"id":"gsbp-792c75d","tag":"h3","type":"inner","className":"gs_title","localId":"gsbp-792c75d","metadata":{"name":"Accordion Title"}} -->
 <h3 class="gs_title"><!-- wp:greenshift-blocks/element {"id":"gsbp-594799c","tag":"button","type":"inner","className":"gs_click_sync","localId":"gsbp-594799c","formAttributes":{"type":"button"},"dynamicAttributes":[{"name":"aria-expanded","value":"false"}]} -->
 <button class="gs_click_sync" type="button" aria-expanded="false"><!-- wp:greenshift-blocks/element {"id":"gsbp-26b9872","textContent":"Accordion Title","tag":"span","className":"gs_name","localId":"gsbp-26b9872"} -->
@@ -547,7 +735,7 @@ This block is used for lightboxes with video and play button
 
 **Charts Elements**
 
-It's possible also to create Chart block, it's based on ApexCharts.js and uses specific data. Charts have special extra attribute chartData where data related to chart is stored. Make sure that chartData has options parameter like chartData:{options: {chart: {...}}}
+It's possible also to create Chart block, it's based on ApexCharts.js and uses specific data. Charts have special extra attribute chartData where data related to chart is stored. Make sure that chartData has options parameter like chartData:{options: {chart: {...}}}. Make sure that you do not have double slash in options.
 
 There are several types of charts. Here are examples, follow them when you do conversion: 
 
@@ -570,8 +758,16 @@ There are several types of charts. Here are examples, follow them when you do co
 *Bar chart*
 
 ```html
-<!-- wp:greenshift-blocks/element {"id":"gsbp-6a376a3","type":"chart","localId":"gsbp-6a376a3","dynamicAttributes":[{"name":"data-series-0","value":"","dynamicEnable":false},{"name":"data-series","value":"","dynamicEnable":false},{"name":"data-xaxis-categories","value":"","dynamicEnable":false},{"name":"data-series-1","value":"","dynamicEnable":false},{"name":"data-series-2","value":"","dynamicEnable":false}],"styleAttributes":{"height":["350px"]},"chartData":{"options":"{\n  \u0022series\u0022: [\n    {\n      \u0022name\u0022: \u0022Inflation\u0022,\n      \u0022data\u0022: [\n        2.3,\n        3.1,\n        4,\n        10.1,\n        4,\n        3.6,\n        3.2,\n        2.3,\n        1.4,\n        0.8,\n        0.5,\n        0.2\n      ]\n    }\n  ],\n  \u0022chart\u0022: {\n    \u0022height\u0022: \u0022350px\u0022,\n    \u0022type\u0022: \u0022bar\u0022\n  },\n  \u0022plotOptions\u0022: {\n    \u0022bar\u0022: {\n      \u0022borderRadius\u0022: 10,\n      \u0022dataLabels\u0022: {\n        \u0022position\u0022: \u0022top\u0022\n      }\n    }\n  },\n  \u0022dataLabels\u0022: {\n    \u0022enabled\u0022: true,\n    \u0022offsetY\u0022: -20,\n    \u0022style\u0022: {\n      \u0022fontSize\u0022: \u002212px\u0022,\n      \u0022colors\u0022: [\n        \u0022#304758\u0022\n      ]\n    }\n  },\n  \u0022xaxis\u0022: {\n    \u0022categories\u0022: [\n      \u0022Jan\u0022,\n      \u0022Feb\u0022,\n      \u0022Mar\u0022,\n      \u0022Apr\u0022,\n      \u0022May\u0022,\n      \u0022Jun\u0022,\n      \u0022Jul\u0022,\n      \u0022Aug\u0022,\n      \u0022Sep\u0022,\n      \u0022Oct\u0022,\n      \u0022Nov\u0022,\n      \u0022Dec\u0022\n    ],\n    \u0022position\u0022: \u0022top\u0022,\n    \u0022axisBorder\u0022: {\n      \u0022show\u0022: false\n    },\n    \u0022axisTicks\u0022: {\n      \u0022show\u0022: false\n    },\n    \u0022crosshairs\u0022: {\n      \u0022fill\u0022: {\n        \u0022type\u0022: \u0022gradient\u0022,\n        \u0022gradient\u0022: {\n          \u0022colorFrom\u0022: \u0022#D8E3F0\u0022,\n          \u0022colorTo\u0022: \u0022#BED1E6\u0022,\n          \u0022stops\u0022: [\n            0,\n            100\n          ],\n          \u0022opacityFrom\u0022: 0.4,\n          \u0022opacityTo\u0022: 0.5\n        }\n      }\n    },\n    \u0022tooltip\u0022: {\n      \u0022enabled\u0022: true\n    }\n  },\n  \u0022yaxis\u0022: {\n    \u0022axisBorder\u0022: {\n      \u0022show\u0022: false\n    },\n    \u0022axisTicks\u0022: {\n      \u0022show\u0022: false\n    }\n  },\n  \u0022title\u0022: {\n    \u0022text\u0022: \u0022Monthly Inflation in Argentina, 2002\u0022,\n    \u0022floating\u0022: true,\n    \u0022offsetY\u0022: 330,\n    \u0022align\u0022: \u0022center\u0022,\n    \u0022style\u0022: {\n      \u0022color\u0022: \u0022#444\u0022\n    }\n  }\n}","init":true},"isVariation":"chart"} -->
-<div class="gsbp-6a376a3" data-chart-data="&quot;{\n  \&quot;series\&quot;: [\n    {\n      \&quot;name\&quot;: \&quot;Inflation\&quot;,\n      \&quot;data\&quot;: [\n        2.3,\n        3.1,\n        4,\n        10.1,\n        4,\n        3.6,\n        3.2,\n        2.3,\n        1.4,\n        0.8,\n        0.5,\n        0.2\n      ]\n    }\n  ],\n  \&quot;chart\&quot;: {\n    \&quot;height\&quot;: \&quot;350px\&quot;,\n    \&quot;type\&quot;: \&quot;bar\&quot;\n  },\n  \&quot;plotOptions\&quot;: {\n    \&quot;bar\&quot;: {\n      \&quot;borderRadius\&quot;: 10,\n      \&quot;dataLabels\&quot;: {\n        \&quot;position\&quot;: \&quot;top\&quot;\n      }\n    }\n  },\n  \&quot;dataLabels\&quot;: {\n    \&quot;enabled\&quot;: true,\n    \&quot;offsetY\&quot;: -20,\n    \&quot;style\&quot;: {\n      \&quot;fontSize\&quot;: \&quot;12px\&quot;,\n      \&quot;colors\&quot;: [\n        \&quot;#304758\&quot;\n      ]\n    }\n  },\n  \&quot;xaxis\&quot;: {\n    \&quot;categories\&quot;: [\n      \&quot;Jan\&quot;,\n      \&quot;Feb\&quot;,\n      \&quot;Mar\&quot;,\n      \&quot;Apr\&quot;,\n      \&quot;May\&quot;,\n      \&quot;Jun\&quot;,\n      \&quot;Jul\&quot;,\n      \&quot;Aug\&quot;,\n      \&quot;Sep\&quot;,\n      \&quot;Oct\&quot;,\n      \&quot;Nov\&quot;,\n      \&quot;Dec\&quot;\n    ],\n    \&quot;position\&quot;: \&quot;top\&quot;,\n    \&quot;axisBorder\&quot;: {\n      \&quot;show\&quot;: false\n    },\n    \&quot;axisTicks\&quot;: {\n      \&quot;show\&quot;: false\n    },\n    \&quot;crosshairs\&quot;: {\n      \&quot;fill\&quot;: {\n        \&quot;type\&quot;: \&quot;gradient\&quot;,\n        \&quot;gradient\&quot;: {\n          \&quot;colorFrom\&quot;: \&quot;#D8E3F0\&quot;,\n          \&quot;colorTo\&quot;: \&quot;#BED1E6\&quot;,\n          \&quot;stops\&quot;: [\n            0,\n            100\n          ],\n          \&quot;opacityFrom\&quot;: 0.4,\n          \&quot;opacityTo\&quot;: 0.5\n        }\n      }\n    },\n    \&quot;tooltip\&quot;: {\n      \&quot;enabled\&quot;: true\n    }\n  },\n  \&quot;yaxis\&quot;: {\n    \&quot;axisBorder\&quot;: {\n      \&quot;show\&quot;: false\n    },\n    \&quot;axisTicks\&quot;: {\n      \&quot;show\&quot;: false\n    }\n  },\n  \&quot;title\&quot;: {\n    \&quot;text\&quot;: \&quot;Monthly Inflation in Argentina, 2002\&quot;,\n    \&quot;floating\&quot;: true,\n    \&quot;offsetY\&quot;: 330,\n    \&quot;align\&quot;: \&quot;center\&quot;,\n    \&quot;style\&quot;: {\n      \&quot;color\&quot;: \&quot;#444\&quot;\n    }\n  }\n}&quot;" data-chart-id="gsbp-6a376a3" data-series-0="" data-series="" data-xaxis-categories="" data-series-1="" data-series-2=""></div>
+<!-- wp:greenshift-blocks/element {"id":"gsbp-9413efa","inlineCssStyles":".gsbp-9413efa{height:350px;}","type":"chart","localId":"gsbp-9413efa","dynamicAttributes":[{"name":"data-series-0","value":"","dynamicEnable":false},{"name":"data-series","value":"","dynamicEnable":false},{"name":"data-xaxis-categories","value":"","dynamicEnable":false},{"name":"data-series-1","value":"","dynamicEnable":false},{"name":"data-series-2","value":"","dynamicEnable":false}],"styleAttributes":{"height":["350px"]},"chartData":{"options":"{\n  \u0022series\u0022: [\n    {\n      \u0022name\u0022: \u0022Inflation\u0022,\n      \u0022data\u0022: [\n        2.3,\n        3.1,\n        4,\n        10.1\n      ]\n    }\n  ],\n  \u0022chart\u0022: {\n    \u0022height\u0022: \u0022350px\u0022,\n    \u0022type\u0022: \u0022bar\u0022\n  },\n  \u0022plotOptions\u0022: {\n    \u0022bar\u0022: {\n      \u0022borderRadius\u0022: 10,\n      \u0022dataLabels\u0022: {\n        \u0022position\u0022: \u0022top\u0022\n      }\n    }\n  },\n  \u0022dataLabels\u0022: {\n    \u0022enabled\u0022: true,\n    \u0022offsetY\u0022: -20,\n    \u0022style\u0022: {\n      \u0022fontSize\u0022: \u002212px\u0022,\n      \u0022colors\u0022: [\n        \u0022#304758\u0022\n      ]\n    }\n  },\n  \u0022xaxis\u0022: {\n    \u0022categories\u0022: [\n      \u0022Jan\u0022,\n      \u0022Feb\u0022,\n      \u0022Mar\u0022,\n      \u0022Apr\u0022\n    ],\n    \u0022position\u0022: \u0022top\u0022,\n    \u0022axisBorder\u0022: {\n      \u0022show\u0022: false\n    },\n    \u0022axisTicks\u0022: {\n      \u0022show\u0022: false\n    },\n    \u0022crosshairs\u0022: {\n      \u0022fill\u0022: {\n        \u0022type\u0022: \u0022gradient\u0022,\n        \u0022gradient\u0022: {\n          \u0022colorFrom\u0022: \u0022#D8E3F0\u0022,\n          \u0022colorTo\u0022: \u0022#BED1E6\u0022,\n          \u0022stops\u0022: [\n            0,\n            100\n          ],\n          \u0022opacityFrom\u0022: 0.4,\n          \u0022opacityTo\u0022: 0.5\n        }\n      }\n    },\n    \u0022tooltip\u0022: {\n      \u0022enabled\u0022: true\n    }\n  },\n  \u0022yaxis\u0022: {\n    \u0022axisBorder\u0022: {\n      \u0022show\u0022: false\n    },\n    \u0022axisTicks\u0022: {\n      \u0022show\u0022: false\n    }\n  },\n  \u0022title\u0022: {\n    \u0022text\u0022: \u0022Monthly Inflation in Argentina, 2002\u0022,\n    \u0022floating\u0022: true,\n    \u0022offsetY\u0022: 330,\n    \u0022align\u0022: \u0022center\u0022,\n    \u0022style\u0022: {\n      \u0022color\u0022: \u0022#444\u0022\n    }\n  }\n}","init":false},"isVariation":"chart"} -->
+<div class="gsbp-9413efa" data-chart-data="&quot;{\n  \&quot;series\&quot;: [\n    {\n      \&quot;name\&quot;: \&quot;Inflation\&quot;,\n      \&quot;data\&quot;: [\n        2.3,\n        3.1,\n        4,\n        10.1\n      ]\n    }\n  ],\n  \&quot;chart\&quot;: {\n    \&quot;height\&quot;: \&quot;350px\&quot;,\n    \&quot;type\&quot;: \&quot;bar\&quot;\n  },\n  \&quot;plotOptions\&quot;: {\n    \&quot;bar\&quot;: {\n      \&quot;borderRadius\&quot;: 10,\n      \&quot;dataLabels\&quot;: {\n        \&quot;position\&quot;: \&quot;top\&quot;\n      }\n    }\n  },\n  \&quot;dataLabels\&quot;: {\n    \&quot;enabled\&quot;: true,\n    \&quot;offsetY\&quot;: -20,\n    \&quot;style\&quot;: {\n      \&quot;fontSize\&quot;: \&quot;12px\&quot;,\n      \&quot;colors\&quot;: [\n        \&quot;#304758\&quot;\n      ]\n    }\n  },\n  \&quot;xaxis\&quot;: {\n    \&quot;categories\&quot;: [\n      \&quot;Jan\&quot;,\n      \&quot;Feb\&quot;,\n      \&quot;Mar\&quot;,\n      \&quot;Apr\&quot;\n    ],\n    \&quot;position\&quot;: \&quot;top\&quot;,\n    \&quot;axisBorder\&quot;: {\n      \&quot;show\&quot;: false\n    },\n    \&quot;axisTicks\&quot;: {\n      \&quot;show\&quot;: false\n    },\n    \&quot;crosshairs\&quot;: {\n      \&quot;fill\&quot;: {\n        \&quot;type\&quot;: \&quot;gradient\&quot;,\n        \&quot;gradient\&quot;: {\n          \&quot;colorFrom\&quot;: \&quot;#D8E3F0\&quot;,\n          \&quot;colorTo\&quot;: \&quot;#BED1E6\&quot;,\n          \&quot;stops\&quot;: [\n            0,\n            100\n          ],\n          \&quot;opacityFrom\&quot;: 0.4,\n          \&quot;opacityTo\&quot;: 0.5\n        }\n      }\n    },\n    \&quot;tooltip\&quot;: {\n      \&quot;enabled\&quot;: true\n    }\n  },\n  \&quot;yaxis\&quot;: {\n    \&quot;axisBorder\&quot;: {\n      \&quot;show\&quot;: false\n    },\n    \&quot;axisTicks\&quot;: {\n      \&quot;show\&quot;: false\n    }\n  },\n  \&quot;title\&quot;: {\n    \&quot;text\&quot;: \&quot;Monthly Inflation in Argentina, 2002\&quot;,\n    \&quot;floating\&quot;: true,\n    \&quot;offsetY\&quot;: 330,\n    \&quot;align\&quot;: \&quot;center\&quot;,\n    \&quot;style\&quot;: {\n      \&quot;color\&quot;: \&quot;#444\&quot;\n    }\n  }\n}&quot;" data-chart-id="gsbp-9413efa" data-series-0="" data-series="" data-xaxis-categories="" data-series-1="" data-series-2=""></div>
+<!-- /wp:greenshift-blocks/element -->
+```
+
+*Horizontal Bar chart*
+
+```html
+<!-- wp:greenshift-blocks/element {"id":"gsbp-3c4d5e6","inlineCssStyles":".gsbp-3c4d5e6{height:350px;}","type":"chart","localId":"gsbp-3c4d5e6","dynamicAttributes":[{"name":"data-series-0","value":"","dynamicEnable":false},{"name":"data-series","value":"","dynamicEnable":false},{"name":"data-xaxis-categories","value":"","dynamicEnable":false},{"name":"data-series-1","value":"","dynamicEnable":false},{"name":"data-series-2","value":"","dynamicEnable":false}],"styleAttributes":{"height":["350px"]},"chartData":{"options":"{\n  \u0022series\u0022: [\n    {\n      \u0022data\u0022: [\n        400,\n        430,\n        448\n      ]\n    }\n  ],\n  \u0022chart\u0022: {\n    \u0022type\u0022: \u0022bar\u0022,\n    \u0022height\u0022: \u0022350px\u0022\n  },\n  \u0022plotOptions\u0022: {\n    \u0022bar\u0022: {\n      \u0022borderRadius\u0022: 4,\n      \u0022borderRadiusApplication\u0022: \u0022end\u0022,\n      \u0022horizontal\u0022: true\n    }\n  },\n  \u0022dataLabels\u0022: {\n    \u0022enabled\u0022: false\n  },\n  \u0022xaxis\u0022: {\n    \u0022categories\u0022: [\n      \u0022South Korea\u0022,\n      \u0022Canada\u0022,\n      \u0022United Kingdom\u0022\n    ]\n  }\n}","init":true},"isVariation":"chart"} -->
+<div class="gsbp-3c4d5e6" data-chart-data="&quot;{\n  \&quot;series\&quot;: [\n    {\n      \&quot;data\&quot;: [\n        400,\n        430,\n        448\n      ]\n    }\n  ],\n  \&quot;chart\&quot;: {\n    \&quot;type\&quot;: \&quot;bar\&quot;,\n    \&quot;height\&quot;: \&quot;350px\&quot;\n  },\n  \&quot;plotOptions\&quot;: {\n    \&quot;bar\&quot;: {\n      \&quot;borderRadius\&quot;: 4,\n      \&quot;borderRadiusApplication\&quot;: \&quot;end\&quot;,\n      \&quot;horizontal\&quot;: true\n    }\n  },\n  \&quot;dataLabels\&quot;: {\n    \&quot;enabled\&quot;: false\n  },\n  \&quot;xaxis\&quot;: {\n    \&quot;categories\&quot;: [\n      \&quot;South Korea\&quot;,\n      \&quot;Canada\&quot;,\n      \&quot;United Kingdom\&quot;\n    ]\n  }\n}&quot;" data-chart-id="gsbp-3c4d5e6" data-series-0="" data-series="" data-xaxis-categories="" data-series-1="" data-series-2=""></div>
 <!-- /wp:greenshift-blocks/element -->
 ```
 

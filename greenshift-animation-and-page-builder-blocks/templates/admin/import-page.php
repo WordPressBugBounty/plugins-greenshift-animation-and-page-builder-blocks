@@ -174,7 +174,7 @@ if (!current_user_can('manage_options')) {
                             echo('<div class="notice notice-warning notice-priority"><p>' . sprintf(
                                 /* translators: %1$s: opening <a> tag with themes.php admin link, %2$s: closing </a> tag */
                                 esc_html__('This site does not have Full Site Editing enabled. Please install and activate a %1$sblock theme%2$s. Recommended theme - %3$sGreenshift%2$s', 'greenshift-animation-and-page-builder-blocks'),
-                                '<a href="' . admin_url('themes.php') . '">',
+                                '<a href="' . esc_url(admin_url('themes.php')) . '">',
                                 '</a>',
                                 '<a href="https://wordpress.org/themes/greenshift/" target="_blank">',
                             ) . '</p></div>');
@@ -206,9 +206,9 @@ if (!current_user_can('manage_options')) {
                                                     ) );
 
                                                     if ( ! is_wp_error( $updated_term ) ) {
-                                                        echo 'Fixed term ID before importing: ' . $term->term_id . ': ' . esc_html( $new_name ) . '<br>';
+                                                        echo 'Fixed term ID before importing: ' . (int)$term->term_id . ': ' . esc_html( $new_name ) . '<br>';
                                                     } else {
-                                                        echo 'Error updating term ID ' . $term->term_id . ': ' . $updated_term->get_error_message() . '<br>';
+                                                        echo 'Error updating term ID ' . (int)$term->term_id . ': ' . esc_attr($updated_term->get_error_message()) . '<br>';
                                                     }
                                                 }
                                             }
@@ -314,11 +314,11 @@ if (!current_user_can('manage_options')) {
                                                                         $theme_active_span = '<span class="is-theme-active is-font-weight-400">' . esc_html__(' (active theme)', 'greenshift-animation-and-page-builder-blocks') . '</span>';
                                                                     }
 
-                                                                    echo '<div class="is-design-theme-group' . $theme_active_div_class . '">';
+                                                                    echo '<div class="is-design-theme-group' . esc_attr($theme_active_div_class) . '">';
                                                                     if ($theme_name === '' || $theme_name === 'Undefinedtheme') {
                                                                         echo '<p class="is-design-theme-name is-font-weight-600"><em>' . esc_html__('Unknown theme', 'greenshift-animation-and-page-builder-blocks') . '</em></p>';
                                                                     } else {
-                                                                        echo '<p class="is-design-theme-name is-font-weight-600">' . esc_html(wp_get_theme($theme_name)) . $theme_active_span . '</p>';
+                                                                        echo '<p class="is-design-theme-name is-font-weight-600">' . esc_html(wp_get_theme($theme_name)) . esc_html($theme_active_span) . '</p>';
                                                                     }
                                                                     foreach ($theme_posts as $theme_post) {
                                                                         if ($theme_post['type'] === 'wp_template') {
@@ -329,8 +329,8 @@ if (!current_user_can('manage_options')) {
                                                                             $type_name = '';
                                                                         }
                                                                         echo '<p class="is-design-option"><label for="design_import_posts">
-                                                <input type="checkbox" name="design_import_posts[]" class="design_import_posts" value="' . $theme_post['id'] . '" />
-                                                <span class="is-font-weight-600">' . $theme_post['title'] . '</span>' . $type_name . '
+                                                <input type="checkbox" name="design_import_posts[]" class="design_import_posts" value="' . esc_attr($theme_post['id']) . '" />
+                                                <span class="is-font-weight-600">' . esc_html($theme_post['title']) . '</span>' . esc_html($type_name) . '
                                             </label></p>
                                             ';
                                                                     }
@@ -411,8 +411,8 @@ if (!current_user_can('manage_options')) {
                                                             if (!empty($reusableblocks)) {
                                                                 foreach ($reusableblocks as $index => $block) {
                                                                     echo '<p class="is-design-option"><label for="design_import_posts">
-                                                    <input type="checkbox" name="design_import_posts[]" class="design_import_posts" value="' . $block['id'] . '" />
-                                                    <span class="is-font-weight-600">' . $block['title'] . '</span></label></p>';
+                                                    <input type="checkbox" name="design_import_posts[]" class="design_import_posts" value="' . esc_attr($block['id']) . '" />
+                                                    <span class="is-font-weight-600">' . esc_html($block['title']) . '</span></label></p>';
                                                                 }
                                                             } else {
                                                                 echo '<p class="is-design-option">
@@ -436,26 +436,34 @@ if (!current_user_can('manage_options')) {
                                         <div class="column is-column-upload">
                                             <h2><span class="dashicons-before dashicons-upload"></span> <?php esc_html_e('Import your Greenshift global settings', 'greenshift-animation-and-page-builder-blocks'); ?></h2>
                                             <?php
-                                            if (isset($_POST['importaction']) && $_POST['importaction'] === 'greenshift_import_settings') {
-                                                if (!isset($_FILES['import_file'])) {
+                                            if (isset($_POST['importaction']) && sanitize_text_field(wp_unslash($_POST['importaction'])) === 'greenshift_import_settings') {
+                                                if (!isset($_FILES['import_file']) || empty($_FILES['import_file']['tmp_name'])) {
                                                     echo '<p style="color:red">' . esc_html__('Please select a JSON file to import.', 'greenshift-animation-and-page-builder-blocks') . '</p>';
                                                 } else {
 
                                                     check_admin_referer('greenshift_import_settings', 'greenshift_import_settings_nonce');
-                                                    $json_file_name = $_FILES['import_file']['name'];
-                                                    $json_file_path = $_FILES['import_file']['tmp_name'];
+                                                    $json_file_name = isset($_FILES['import_file']['name']) ? sanitize_file_name(wp_unslash($_FILES['import_file']['name'])) : '';
+                                                    $json_file_path = isset($_FILES['import_file']['tmp_name']) ? sanitize_text_field($_FILES['import_file']['tmp_name']) : '';
 
-                                                    // Read JSON file
-                                                    $json_data = file_get_contents($json_file_path);
-                                                    $data = json_decode($json_data, true);
-                                                    $data = greenshift_sanitize_multi_array($data);
-                                                    $default_settings = get_option('gspb_global_settings');
-                                                    $newargs = wp_parse_args($data, $default_settings);
+                                                    if (empty($json_file_path) || !is_uploaded_file($json_file_path)) {
+                                                        echo '<p style="color:red">' . esc_html__('Invalid file upload.', 'greenshift-animation-and-page-builder-blocks') . '</p>';
+                                                    } else {
+                                                        // Read JSON file
+                                                        $json_data = file_get_contents($json_file_path);
+                                                        $data = json_decode($json_data, true);
+                                                        
+                                                        if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
+                                                            echo '<p style="color:red">' . esc_html__('Invalid JSON file.', 'greenshift-animation-and-page-builder-blocks') . '</p>';
+                                                        } else {
+                                                            $data = greenshift_sanitize_multi_array($data);
+                                                            $default_settings = get_option('gspb_global_settings');
+                                                            $newargs = wp_parse_args($data, $default_settings);
 
-                                                    update_option('gspb_global_settings', $newargs);
+                                                            update_option('gspb_global_settings', $newargs);
 
-
-                                                    echo '<p style="color:green">' . esc_html__('Data imported successfully from', 'greenshift-animation-and-page-builder-blocks') . ' ' . $json_file_name . '</p>';
+                                                            echo '<p style="color:green">' . esc_html__('Data imported successfully from', 'greenshift-animation-and-page-builder-blocks') . ' ' . esc_html($json_file_name) . '</p>';
+                                                        }
+                                                    }
                                                 }
                                             } else {
                                             ?>
@@ -540,8 +548,8 @@ if (!current_user_can('manage_options')) {
                                                             if (!empty($reusableblocks)) {
                                                                 foreach ($reusableblocks as $index => $block) {
                                                                     echo '<p class="is-design-option"><label for="design_import_posts">
-                                                    <input type="checkbox" name="design_import_posts[]" class="design_import_posts" value="' . $block['id'] . '" />
-                                                    <span class="is-font-weight-600">' . $block['title'] . '</span></label></p>';
+                                                    <input type="checkbox" name="design_import_posts[]" class="design_import_posts" value="' . esc_attr($block['id']) . '" />
+                                                    <span class="is-font-weight-600">' . esc_html($block['title']) . '</span></label></p>';
                                                                 }
                                                             } else {
                                                                 echo '<p class="is-design-option">

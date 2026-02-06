@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 
             <div class="wp-block-greenshift-blocks-container gspb_container gspb_container-gsbp-7b4f8e8f-1a69" id="gspb_container-id-gsbp-7b4f8e8f-1a69">
                 <div class="greenshift_form">
-                    <p style="float:left; margin-right:25px;"><img src="<?php echo GREENSHIFT_DIR_URL . 'libs/logo_300.png'; ?>" height="100" width="100" /></p>
+                    <p style="float:left; margin-right:25px;"><img src="<?php echo esc_url(GREENSHIFT_DIR_URL . 'libs/logo_300.png'); ?>" height="100" width="100" /></p>
                     <p class="gs_main_text"><?php esc_html_e("Thank you for using Greenshift. For any bug report or questions, please, contact us:", 'greenshift-animation-and-page-builder-blocks'); ?></p>
                     <div class="gs_main_text">
                         <a href="https://shop.greenshiftwp.com/contact-us/" target="_blank">

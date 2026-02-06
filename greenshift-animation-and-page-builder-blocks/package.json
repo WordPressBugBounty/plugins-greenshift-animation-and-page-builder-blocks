@@ -34,7 +34,6 @@
     "csso": "^4.2.0",
     "debounce-promise": "^3.1.2",
     "extract-json-string": "^1.0.1",
-    "gsap": "^3.12.2",
     "icomoon-react": "^2.0.19",
     "is-svg": "^4.3.1",
     "lodash": "^4.17.21",

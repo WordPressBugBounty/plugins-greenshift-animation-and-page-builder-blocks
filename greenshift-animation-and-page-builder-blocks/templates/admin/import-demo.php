@@ -196,7 +196,7 @@ if (!current_user_can('manage_options')) {
                         <div class="greenshift_form">
                             <div class="design-import">
                                 <div class="demo_image">
-                                    <img src="<?php echo GREENSHIFT_DIR_URL . 'templates/admin/img/demo1.jpg'; ?>" alt="demo-import">
+                                    <img src="<?php echo esc_url(GREENSHIFT_DIR_URL . 'templates/admin/img/demo1.jpg'); ?>" alt="demo-import">
                                 </div>
                                 <div class="demo_content">
                                     <h2>Woocommerce Demo shop</h2>
@@ -206,12 +206,12 @@ if (!current_user_can('manage_options')) {
                                         <?php if ($is_woo_active) { ?>
                                             <span class="addon_active"><?php esc_html_e("Woocommerce addon is active.", 'greenshift-animation-and-page-builder-blocks'); ?></span><br />
                                         <?php } else { ?>
-                                            <span class="addon_required"><a href="<?php echo admin_url('admin.php?page=greenshift_upgrade'); ?>"><?php esc_html_e("Woocommerce addon is required", 'greenshift-animation-and-page-builder-blocks'); ?></a></span><br />
+                                            <span class="addon_required"><a href="<?php echo esc_url(admin_url('admin.php?page=greenshift_upgrade')); ?>"><?php esc_html_e("Woocommerce addon is required", 'greenshift-animation-and-page-builder-blocks'); ?></a></span><br />
                                         <?php } ?>
                                         <?php if ($is_query_active) { ?>
                                             <span class="addon_active"><?php esc_html_e("Query addon is active.", 'greenshift-animation-and-page-builder-blocks'); ?></span><br />
                                         <?php } else { ?>
-                                            <span class="addon_required"><a href="<?php echo admin_url('admin.php?page=greenshift_upgrade'); ?>"><?php esc_html_e("Query addon is required", 'greenshift-animation-and-page-builder-blocks'); ?></a></span><br />
+                                            <span class="addon_required"><a href="<?php echo esc_url(admin_url('admin.php?page=greenshift_upgrade')); ?>"><?php esc_html_e("Query addon is required", 'greenshift-animation-and-page-builder-blocks'); ?></a></span><br />
                                         <?php } ?>
 
                                     </p>
@@ -250,7 +250,7 @@ if (!current_user_can('manage_options')) {
                                     if (isset($_GET['design_import']) && isset($_POST['importfile']) && current_user_can('import') && isset($_GET["_wpnonce"])) {
                                         check_admin_referer('import-upload', '_wpnonce');
                                         echo '<div class="hideimportbutton">' . esc_html__("Show details", "greenshift-animation-and-page-builder-blocks") . ' +</div>';
-                                        @greenshift_design_importer($_POST['importfile']);
+                                        greenshift_design_importer(sanitize_url($_POST['importfile']));
                                     }
                                     ?>
                                 </div>

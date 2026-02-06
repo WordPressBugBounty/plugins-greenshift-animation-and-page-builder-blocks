@@ -1060,6 +1060,7 @@ function greenshift_get_style_from_class_array($value, $type = 'preset', $inline
 							$styletocopy = $option['css'];
 							$styletocopy = gspb_get_final_css($styletocopy);
 							$styletocopy = htmlspecialchars_decode($styletocopy);
+							$styletocopy = wp_strip_all_tags($styletocopy);
 							$styleStore->addClassStyle($value, $styletocopy);
 						}
 						else{
@@ -1074,6 +1075,7 @@ function greenshift_get_style_from_class_array($value, $type = 'preset', $inline
 									$styletocopy = $selector['css'];
 									$styletocopy = gspb_get_final_css($styletocopy);
 									$styletocopy = htmlspecialchars_decode($styletocopy);
+									$styletocopy = wp_strip_all_tags($styletocopy);
 									$styleStore->addClassStyle($value.$selector['value'], $styletocopy);
 								}
 								else{
@@ -1250,7 +1252,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		if (strpos($value, '{{POST_TITLE}}') !== false){
 			global $post;
 			if(!empty($post) && is_object($post)){
-				$value = str_replace('{{POST_TITLE}}', $post->post_title, $value);
+				$value = str_replace('{{POST_TITLE}}', esc_html($post->post_title), $value);
 			}
 		}
 		if (strpos($value, '{{POST_URL}}') !== false){
@@ -1268,7 +1270,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		if (strpos($value, '{{AUTHOR_NAME}}') !== false){
 			global $post;
 			if(!empty($post) && is_object($post)){
-				$value = str_replace('{{AUTHOR_NAME}}', get_the_author_meta('display_name', $post->post_author), $value);
+				$value = str_replace('{{AUTHOR_NAME}}', esc_html(get_the_author_meta('display_name', $post->post_author)), $value);
 			}
 		}
 		if (strpos($value, '{{CURRENT_USER_ID}}') !== false){
@@ -1280,7 +1282,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		if (strpos($value, '{{CURRENT_USER_NAME}}') !== false){
 			$current_user = wp_get_current_user();
 			if(!empty($current_user) && is_object($current_user)){
-				$value = str_replace('{{CURRENT_USER_NAME}}', $current_user->display_name, $value);
+				$value = str_replace('{{CURRENT_USER_NAME}}', esc_html($current_user->display_name), $value);
 			}
 		}
 		if (strpos($value, '{{CURRENT_OBJECT_ID}}') !== false){
@@ -1292,7 +1294,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		if (strpos($value, '{{CURRENT_OBJECT_NAME}}') !== false){
 			$current_object = get_queried_object();
 			if(!empty($current_object) && is_object($current_object)){
-				$value = str_replace('{{CURRENT_OBJECT_NAME}}', $current_object->name, $value);
+				$value = str_replace('{{CURRENT_OBJECT_NAME}}', esc_html($current_object->name), $value);
 			}
 		}
 		if (strpos($value, '{{INCREMENT:') !== false){
@@ -1312,17 +1314,8 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			if(!empty($matches[1])){
 				foreach($matches[1] as $val){
 					if(isset($_GET[$val])){
-						$value = str_replace('{{GET:'.$val.'}}', $_GET[$val], $value);
+						$value = str_replace('{{GET:'.$val.'}}', sanitize_text_field(wp_unslash($_GET[$val])), $value);
 					}
-				}
-			}
-		}
-		if (strpos($value, '{{SETTING:') !== false){
-			$pattern = '/\{SETTING:(.*?)\}/';
-			preg_match_all($pattern, $value, $matches);
-			if(!empty($matches[1])){
-				foreach($matches[1] as $val){
-					$value = str_replace('{{SETTING:'.$val.'}}', get_option($val), $value);
 				}
 			}
 		}
@@ -1334,8 +1327,9 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 				if(!empty($post) && is_object($post)){
 					$id = $post->ID;
 					foreach($matches[1] as $meta_key){
+						$meta_key = sanitize_key($meta_key);
 						$meta_value = get_post_meta($id, $meta_key, true);
-						$value = str_replace('{{META:'.$meta_key.'}}', $meta_value, $value);
+						$value = str_replace('{{META:'.$meta_key.'}}', esc_html($meta_value), $value);
 					}
 				}
 			}
@@ -1347,7 +1341,28 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 				$term_id = get_queried_object_id();
 				if(!empty($term_id)){
 					foreach($matches[1] as $val){
-						$value = str_replace('{{TERM_META:'.$val.'}}', get_term_meta($term_id, $val, true), $value);
+						$meta_key = sanitize_key($val);
+						$value = str_replace('{{TERM_META:'.$val.'}}', esc_html(get_term_meta($term_id, $meta_key, true)), $value);
+					}
+				}
+			}
+		}
+		if (strpos($value, '{{TERM_LINKS:') !== false) {
+			$pattern = '/\{\{TERM_LINKS:([^}]+)\}\}/';
+			preg_match_all($pattern, $value, $matches);
+			if (!empty($matches[1])) {
+				foreach ($matches[1] as $taxonomy) {
+					global $post;
+					if (!empty($post) && is_object($post)) {
+						$id = $post->ID;
+						$term_links = get_the_term_list($id, $taxonomy, '', ', ', '');
+						if ($term_links && !is_wp_error($term_links)) {
+							$value = str_replace('{{TERM_LINKS:' . $taxonomy . '}}', $term_links, $value);
+						} else {
+							$value = str_replace('{{TERM_LINKS:' . $taxonomy . '}}', '', $value);
+						}
+					} else {
+						$value = str_replace('{{TERM_LINKS:' . $taxonomy . '}}', '', $value);
 					}
 				}
 			}
@@ -1375,7 +1390,8 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 				$user_id = get_current_user_id();
 				if(!empty($user_id)){
 					foreach($matches[1] as $val){
-						$value = str_replace('{{USER_META:'.$val.'}}', get_user_meta($user_id, $val, true), $value);
+						$meta_key = sanitize_key($val);
+						$value = str_replace('{{USER_META:'.$val.'}}', esc_html(get_user_meta($user_id, $meta_key, true)), $value);
 					}
 				}
 			}
@@ -1386,7 +1402,8 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			if(!empty($matches[1])){
 				foreach($matches[1] as $val){
 					if(!empty($_COOKIE[$val])){
-						$value = str_replace('{{COOKIE:'.$val.'}}', $_COOKIE[$val], $value);
+						$cookie_value = sanitize_text_field(wp_unslash($_COOKIE[$val]));
+						$value = str_replace('{{COOKIE:'.$val.'}}', $cookie_value, $value);
 					}
 				}
 			}
@@ -1395,9 +1412,9 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			$pattern = '/\{\{FORM:([^|}]+)(?:\|([^}]+))?\}\}/';
 			preg_match_all($pattern, $value, $matches, PREG_SET_ORDER);
 			foreach ($matches as $match) {
-				$field = $match[1];
-				$fallback = isset($match[2]) ? $match[2] : '';
-				$replacement = !empty($extra_data[$field]) ? $extra_data[$field] : $fallback;
+				$field = sanitize_key($match[1]);
+				$fallback = isset($match[2]) ? esc_html($match[2]) : '';
+				$replacement = !empty($extra_data[$field]) ? esc_html($extra_data[$field]) : $fallback;
 				$value = str_replace($match[0], $replacement, $value);
 			}
 		}
@@ -1415,7 +1432,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 						if (count($range) === 2 && is_numeric(trim($range[0])) && is_numeric(trim($range[1]))) {
 							$min = (float) trim($range[0]);
 							$max = (float) trim($range[1]);
-							$replacement = $min + (mt_rand() / mt_getrandmax()) * ($max - $min);
+							$replacement = $min + (wp_rand() / mt_getrandmax()) * ($max - $min);
 						}
 					}
 					// If the value includes "|" then randomly select a value from the list.
@@ -1436,8 +1453,9 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		if(strpos($value, '{{PLUGIN_URL}}') !== false){
 			$value = str_replace('{{PLUGIN_URL}}', GREENSHIFT_DIR_URL, $value);
 		}
+		
 	}
-	return $value;
+	return apply_filters('gspb_dynamic_placeholders', $value, $extra_data, $runindex, $response);
 }
 //////////////////////////////////////////////////////////////////
 

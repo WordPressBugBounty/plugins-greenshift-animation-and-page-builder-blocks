@@ -261,7 +261,7 @@ class GSToc{
               for($j = 0; $j < count($class_matches[1]); $j++) {
                 $headings[$i]["classes"] = explode(" ", $class_matches[1][$j]);
               }
-              $headings[$i]["name"] = strip_tags($matches[3][$i]);
+              $headings[$i]["name"] = wp_strip_all_tags($matches[3][$i]);
             }
             return $headings;
     }
