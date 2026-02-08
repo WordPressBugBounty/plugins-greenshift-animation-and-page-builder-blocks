@@ -1273,6 +1273,33 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 				$value = str_replace('{{AUTHOR_NAME}}', esc_html(get_the_author_meta('display_name', $post->post_author)), $value);
 			}
 		}
+		if (strpos($value, '{{POST_DATE}}') !== false){
+			global $post;
+			if(!empty($post) && is_object($post)){
+				$value = str_replace('{{POST_DATE}}', esc_html(get_the_date('', $post)), $value);
+			}
+		}
+		if (strpos($value, '{{POST_DATE_MODIFIED}}') !== false){
+			global $post;
+			if(!empty($post) && is_object($post)){
+				$value = str_replace('{{POST_DATE_MODIFIED}}', esc_html(get_the_modified_date('', $post)), $value);
+			}
+		}
+		if (strpos($value, '{{THUMBNAIL_URL}}') !== false){
+			global $post;
+			if(!empty($post) && is_object($post)){
+				$thumb_id = get_post_thumbnail_id($post->ID);
+				$thumb_url = $thumb_id ? esc_url(wp_get_attachment_image_url($thumb_id, 'full')) : '';
+				$value = str_replace('{{THUMBNAIL_URL}}', $thumb_url, $value);
+			}
+		}
+		if (strpos($value, '{{AUTHOR_AVATAR_URL}}') !== false){
+			global $post;
+			if(!empty($post) && is_object($post)){
+				$avatar_url = get_avatar_url($post->post_author, array('size' => 512));
+				$value = str_replace('{{AUTHOR_AVATAR_URL}}', esc_url($avatar_url), $value);
+			}
+		}
 		if (strpos($value, '{{CURRENT_USER_ID}}') !== false){
 			$user_id = get_current_user_id();
 			if(!empty($user_id)){
@@ -1335,14 +1362,37 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			}
 		}
 		if (strpos($value, '{{TERM_META:') !== false){
-			$pattern = '/\{TERM_META:(.*?)\}/';
+			$pattern = '/\{\{TERM_META:(.*?)\}\}/';
 			preg_match_all($pattern, $value, $matches);
 			if(!empty($matches[1])){
-				$term_id = get_queried_object_id();
-				if(!empty($term_id)){
-					foreach($matches[1] as $val){
+				global $post;
+				foreach($matches[1] as $val){
+					$val = trim($val);
+					$has_taxonomy = strpos($val, '|') !== false;
+					if ($has_taxonomy) {
+						$parts = explode('|', $val, 2);
+						$meta_key = sanitize_key(trim($parts[0]));
+						$taxonomy = sanitize_key(trim($parts[1]));
+						$meta_values = array();
+						if(!empty($post) && is_object($post)){
+							$terms = get_the_terms($post->ID, $taxonomy);
+							if($terms && !is_wp_error($terms)){
+								foreach($terms as $term){
+									$tm = get_term_meta($term->term_id, $meta_key, true);
+									if($tm !== '' && $tm !== false){
+										$meta_values[] = $tm;
+									}
+								}
+							}
+						}
+						$value = str_replace('{{TERM_META:'.$val.'}}', esc_html(implode(', ', $meta_values)), $value);
+					} else {
+						// No taxonomy: current queried term (e.g. on term archive)
+						$term_id = get_queried_object_id();
 						$meta_key = sanitize_key($val);
-						$value = str_replace('{{TERM_META:'.$val.'}}', esc_html(get_term_meta($term_id, $meta_key, true)), $value);
+						if(!empty($term_id)){
+							$value = str_replace('{{TERM_META:'.$val.'}}', esc_html(get_term_meta($term_id, $meta_key, true)), $value);
+						}
 					}
 				}
 			}
@@ -1384,7 +1434,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		}
 			
 		if (strpos($value, '{{USER_META:') !== false){
-			$pattern = '/\{USER_META:(.*?)\}/';
+			$pattern = '/\{\{USER_META:(.*?)\}\}/';
 			preg_match_all($pattern, $value, $matches);
 			if(!empty($matches[1])){
 				$user_id = get_current_user_id();
@@ -1392,6 +1442,20 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 					foreach($matches[1] as $val){
 						$meta_key = sanitize_key($val);
 						$value = str_replace('{{USER_META:'.$val.'}}', esc_html(get_user_meta($user_id, $meta_key, true)), $value);
+					}
+				}
+			}
+		}
+		if (strpos($value, '{{AUTHOR_META:') !== false){
+			$pattern = '/\{\{AUTHOR_META:(.*?)\}\}/';
+			preg_match_all($pattern, $value, $matches);
+			if(!empty($matches[1])){
+				global $post;
+				if(!empty($post) && is_object($post)){
+					$author_id = $post->post_author;
+					foreach($matches[1] as $val){
+						$meta_key = sanitize_key($val);
+						$value = str_replace('{{AUTHOR_META:'.$val.'}}', esc_html(get_user_meta($author_id, $meta_key, true)), $value);
 					}
 				}
 			}

@@ -427,8 +427,12 @@ Dynamic placeholders can be used in query arguments and text content. Available 
 -   `{{POST_ID}}` - Current post ID
 -   `{{POST_TITLE}}` - Current post title
 -   `{{POST_URL}}` - Current post URL
+-   `{{POST_DATE}}` - Current post publish date
+-   `{{POST_DATE_MODIFIED}}` - Current post last modified date
 -   `{{AUTHOR_ID}}` - Post author ID
 -   `{{AUTHOR_NAME}}` - Post author name
+-   `{{AUTHOR_AVATAR_URL}}` - Post author avatar image URL
+-   `{{THUMBNAIL_URL}}` - Current post featured image (thumbnail) URL
 -   `{{CURRENT_USER_ID}}` - Logged-in user ID
 -   `{{CURRENT_USER_NAME}}` - Logged-in user name
 -   `{{CURRENT_OBJECT_ID}}` - Current object ID
@@ -441,7 +445,9 @@ Dynamic placeholders can be used in query arguments and text content. Available 
 -   `{{TIMESTRING:today+10days}}` - Date calculations
 -   `{{GET:get_name}}` - URL GET parameters
 -   `{{META:meta_key}}` - Post meta
--   `{{TERM_META:meta_key}}` - Taxonomy term meta
+-   `{{AUTHOR_META:meta_key}}` - Post author meta (author of current post)
+-   `{{TERM_META:meta_key}}` - Taxonomy term meta (from all taxonomies of current post)
+-   `{{TERM_META:meta_key|taxonomy}}` - Term meta for a specific taxonomy
 -   `{{TERM_LINKS:taxonomy}}` - List of links for a post's terms
 -   `{{USER_META:meta_key}}` - User meta
 -   `{{COOKIE:cookie_name}}` - Cookie values
