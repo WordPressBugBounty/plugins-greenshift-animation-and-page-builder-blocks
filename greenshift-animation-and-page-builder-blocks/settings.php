@@ -1676,16 +1676,23 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			check_ajax_referer('gsreusable', 'security');
 			$post_id = intval($_POST['post_id']);
 			$content_post = get_post($post_id);
-			$content = '';
-			if(is_object($content_post)){
-				$content = $content_post->post_content;
-				$content = apply_filters('the_content', $content);
-				$content = str_replace('strokewidth', 'stroke-width', $content);
-				$content = str_replace('strokedasharray', 'stroke-dasharray', $content);
-				$content = str_replace('stopcolor', 'stop-color', $content);
-				$content = str_replace('loading="lazy"', '', $content);
-				if($content_post->post_type != 'wp_block') $content = 'Please use this feature only for reusable blocks';
+			// Check if post is published and not private or draft
+			if (!is_object($content_post) || $content_post->post_type !== 'wp_block') {
+				wp_send_json_error('Invalid post');
 			}
+		
+			// Check post status - only serve published blocks
+			if ($content_post->post_status !== 'publish') {
+				wp_send_json_error('Block not published');
+			}
+			$content = '';
+			$content = $content_post->post_content;
+			$content = apply_filters('the_content', $content);
+			$content = str_replace('strokewidth', 'stroke-width', $content);
+			$content = str_replace('strokedasharray', 'stroke-dasharray', $content);
+			$content = str_replace('stopcolor', 'stop-color', $content);
+			$content = str_replace('loading="lazy"', '', $content);
+			
 			if ($content) {
 				wp_send_json_success($content);
 			} else {
