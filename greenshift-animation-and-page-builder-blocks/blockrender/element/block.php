@@ -134,6 +134,7 @@ class Element
 			$supported_attributes[] = 'poster';
 			$supported_attributes[] = 'title';
 			$supported_attributes[] = 'icon';
+			$supported_attributes[] = 'className';
 			return $supported_attributes;
 		});
 
@@ -657,9 +658,9 @@ class Element
 				if(!empty($value['dynamicEnable']) && function_exists('GSPB_make_dynamic_text')){
 					$dynamicAttributes[$index]['value'] = GSPB_make_dynamic_text($dynamicAttributes[$index]['value'], $block['attrs'], $block, $value);
 				}else{
-					$value = sanitize_text_field($value['value']);
-					$dynamicAttributes[$index]['value'] = greenshift_dynamic_placeholders($value);
-					if(!empty($value['name']) && strpos($value['name'], 'on') === 0){
+					$sanitized_value = sanitize_text_field($value['value']);
+					$dynamicAttributes[$index]['value'] = greenshift_dynamic_placeholders($sanitized_value);
+					if(!empty($dynamicAttributes[$index]['name']) && strpos($dynamicAttributes[$index]['name'], 'on') === 0){
 						$dynamicAttributes[$index]['value'] = '';
 					}
 				}
@@ -874,7 +875,7 @@ class Element
 				if(!empty($overrides['textContent'])){
 					$html = str_replace($block['attrs']['textContent'], esc_html($overrides['textContent']), $html);
 				}
-				if(!empty($overrides['src']) || !empty($overrides['alt']) || !empty($overrides['href']) || !empty($overrides['title']) || !empty($overrides['poster'])){
+				if(!empty($overrides['src']) || !empty($overrides['alt']) || !empty($overrides['href']) || !empty($overrides['title']) || !empty($overrides['poster']) || !empty($overrides['className'])){
 					$p = new \WP_HTML_Tag_Processor( $html );
 					$p->next_tag();
 					if(!empty($overrides['src'])){
@@ -891,6 +892,10 @@ class Element
 					}
 					if(!empty($overrides['poster'])){
 						$p->set_attribute( 'poster', esc_url($overrides['poster']));
+					}
+					if(!empty($overrides['className'])){
+						$idClass = !empty($block['attrs']['localId']) ? $block['attrs']['localId'] : '';
+						$p->set_attribute( 'class', esc_attr($overrides['className']).' '.$idClass);
 					}
 					$html = $p->get_updated_html();
 				}

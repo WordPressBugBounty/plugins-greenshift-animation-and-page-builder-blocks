@@ -1076,23 +1076,14 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="openaiapimodel">
-																		<option value="gpt-5.1" <?php selected($openaiapimodel, 'gpt-5.1'); ?>> gpt-5.1 </option>
-																		<option value="gpt-4.1-mini" <?php selected($openaiapimodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
-																		<option value="gpt-5" <?php selected($openaiapimodel, 'gpt-5'); ?>> gpt-5 </option>
-																		<option value="gpt-5-mini" <?php selected($openaiapimodel, 'gpt-5-mini'); ?>> gpt-5-mini </option>
-																		<option value="gpt-5.2-pro" <?php selected($openaiapimodel, 'gpt-5.2-pro'); ?>> gpt-5.2-pro </option>
 																		<option value="gpt-5.2" <?php selected($openaiapimodel, 'gpt-5.2'); ?>> gpt-5.2 </option>
-																		<option value="o1" <?php selected($openaiapimodel, 'o1'); ?>> o1 </option>
-																		<option value="o1-mini" <?php selected($openaiapimodel, 'o1-mini'); ?>> o1-mini </option>
-																		<option value="o3" <?php selected($openaiapimodel, 'o3'); ?>> o3 </option>
-																		<option value="o1-pro" <?php selected($openaiapimodel, 'o1-pro'); ?>> o1-pro </option>
-																		<option value="o4-mini" <?php selected($openaiapimodel, 'o4-mini'); ?>> o4-mini </option>
+																		<option value="gpt-5.2-pro" <?php selected($openaiapimodel, 'gpt-5.2-pro'); ?>> gpt-5.2-pro </option>
 																		<option value="gemini-3-flash-preview" <?php selected($openaiapimodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
 																		<option value="gemini-2.5-flash" <?php selected($openaiapimodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
 																		<option value="gemini-3-pro-preview" <?php selected($openaiapimodel, 'gemini-3-pro-preview'); ?>> gemini-3-pro-preview </option>
-																		<option value="claude-sonnet-4-5" <?php selected($openaiapimodel, 'claude-sonnet-4-5'); ?>> claude-sonnet-4-5 </option>
+																		<option value="claude-sonnet-4-6" <?php selected($openaiapimodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
 																		<option value="claude-haiku-4-5" <?php selected($openaiapimodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
-																		<option value="claude-opus-4-5-20251101" <?php selected($openaiapimodel, 'claude-opus-4-5-20251101'); ?>> claude-opus-4-5-20251101 </option>
+																		<option value="claude-opus-4-6" <?php selected($openaiapimodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
 																		<option value="deepseek-chat" <?php selected($openaiapimodel, 'deepseek-chat'); ?>> deepseek-chat </option>
 																	</select>
 																</td>
@@ -1103,19 +1094,15 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="aihelpermodel">
-																		<option value="gpt-5.1" <?php selected($aihelpermodel, 'gpt-5.1'); ?>> gpt-5.1 </option>
-																		<option value="gpt-4.1-mini" <?php selected($aihelpermodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
+																		<option value="gpt-5.2" <?php selected($aihelpermodel, 'gpt-5.2'); ?>> gpt-5.2 </option>
 																		<option value="gpt-5" <?php selected($aihelpermodel, 'gpt-5'); ?>> gpt-5 </option>
-																		<option value="gpt-5-mini" <?php selected($aihelpermodel, 'gpt-5-mini'); ?>> gpt-5-mini </option>
 																		<option value="gpt-5.2-pro" <?php selected($aihelpermodel, 'gpt-5.2-pro'); ?>> gpt-5.2-pro </option>
-																		<option value="o3" <?php selected($aihelpermodel, 'o3'); ?>> o3 </option>
-																		<option value="o4-mini" <?php selected($aihelpermodel, 'o4-mini'); ?>> o4-mini </option>
 																		<option value="gemini-3-flash-preview" <?php selected($aihelpermodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
 																		<option value="gemini-3-pro-preview" <?php selected($aihelpermodel, 'gemini-3-pro-preview'); ?>> gemini-3-pro-preview </option>
 																		<option value="gemini-2.5-flash" <?php selected($aihelpermodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
 																		<option value="claude-haiku-4-5" <?php selected($aihelpermodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
-																		<option value="claude-sonnet-4-5" <?php selected($aihelpermodel, 'claude-sonnet-4-5'); ?>> claude-sonnet-4-5 </option>
-																		<option value="claude-opus-4-5-20251101" <?php selected($aihelpermodel, 'claude-opus-4-5-20251101'); ?>> claude-opus-4-5-20251101 </option>
+																		<option value="claude-sonnet-4-6" <?php selected($aihelpermodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
+																		<option value="claude-opus-4-6" <?php selected($aihelpermodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
 
 																	</select>
 																</td>
@@ -1128,7 +1115,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<select name="aiimagemodel">
 																		<option value="gemini-2.5-flash-image-preview" <?php selected($aiimagemodel, 'gemini-2.5-flash-image-preview'); ?>> Google Flash 2.5 </option>
 																		<option value="gemini-3-pro-image-preview" <?php selected($aiimagemodel, 'gemini-3-pro-image-preview'); ?>> Google Pro 3 Preview </option>
-																		<option value="gpt-image-1" <?php selected($aiimagemodel, 'gpt-image-1'); ?>> GPT Image 1 </option>
+																		<option value="gpt-image-1" <?php selected($aiimagemodel, 'gpt-image-1'); ?>> GPT Image 1.5 </option>
 																		<option value="gpt-image-1.5" <?php selected($aiimagemodel, 'gpt-image-1.5'); ?>> GPT Image 1.5 </option>
 																		
 																	</select>
@@ -1141,9 +1128,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																<td>
 																	<select name="aidesignmodel">
 																		<option value="claude-haiku-4-5" <?php selected($aidesignmodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
-																		<option value="claude-sonnet-4-5" <?php selected($aidesignmodel, 'claude-sonnet-4-5'); ?>> claude-sonnet-4-5 </option>
-																		<option value="claude-opus-4-5-20251101" <?php selected($aidesignmodel, 'claude-opus-4-5-20251101'); ?>> claude-opus-4-5-20251101 </option>
+																		<option value="claude-sonnet-4-6" <?php selected($aidesignmodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
+																		<option value="claude-opus-4-6" <?php selected($aidesignmodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
 																		<option value="gemini-3-flash-preview" <?php selected($aidesignmodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
+																		<option value="gemini-3-pro-preview" <?php selected($aidesignmodel, 'gemini-3-pro-preview'); ?>> gemini-3-pro-preview </option>
 																		
 																		
 																	</select>
@@ -1486,7 +1474,25 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				}
 
 				$gspb_json_filename = 'settings_backup.json';
-				$gspb_backup_data = json_encode($global_settings, JSON_PRETTY_PRINT);
+
+				// Exclude API keys from backup
+				$backup_settings = $global_settings;
+				$keys_to_exclude = [
+					'googleapi',
+					'turnstile_site_key',
+					'turnstile_secret_key',
+					'openaiapi',
+					'claudeapi',
+					'deepseekapi',
+					'geminiapi'
+				];
+				foreach ($keys_to_exclude as $key) {
+					if (isset($backup_settings[$key])) {
+						unset($backup_settings[$key]);
+					}
+				}
+
+				$gspb_backup_data = json_encode($backup_settings, JSON_PRETTY_PRINT);
 
 				if (!$wp_filesystem->put_contents($dir . $gspb_json_filename, $gspb_backup_data)) {
 					throw new Exception(esc_html__('JSON is not saved due the permission!!!', 'greenshift-animation-and-page-builder-blocks'));
@@ -1684,6 +1690,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			// Check post status - only serve published blocks
 			if ($content_post->post_status !== 'publish') {
 				wp_send_json_error('Block not published');
+			}
+			// Don't serve content if post is password protected
+			if (!empty($content_post->post_password)) {
+				wp_send_json_error('Block is password protected');
 			}
 			$content = '';
 			$content = $content_post->post_content;

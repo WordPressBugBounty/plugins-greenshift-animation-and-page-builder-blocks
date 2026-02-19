@@ -6,7 +6,7 @@
  * Author: Wpsoul
  * Author URI: https://greenshiftwp.com
  * Plugin URI: https://greenshiftwp.com
- * Version: 12.8.3
+ * Version: 12.8.4
  * Text Domain: greenshift-animation-and-page-builder-blocks
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
@@ -178,6 +178,7 @@ require_once GREENSHIFT_DIR_PATH . 'includes/helper.php';
 require_once GREENSHIFT_DIR_PATH . 'settings.php';
 require_once GREENSHIFT_DIR_PATH . 'includes/jsoptimization.php';
 require_once GREENSHIFT_DIR_PATH . 'includes/importer.php';
+require_once GREENSHIFT_DIR_PATH . 'includes/abilities.php';
 
 require_once GREENSHIFT_DIR_PATH . '/edd/edd_start.php';
 add_action('plugins_loaded', 'gspb_GreenShift_plugin_init');

@@ -75,6 +75,10 @@ function gspb_get_final_css($gspb_css_content)
 		$gspb_css_content = str_replace('@media (max-width: 991.98px)', '@media (max-width: ' . $get_breakpoints["desktop_down"] . 'px)', $gspb_css_content);
 	}
 
+	if (!empty($gspb_css_content)) {
+		$gspb_css_content = wp_strip_all_tags($gspb_css_content);
+	}
+
 	return apply_filters('gspb_get_final_css', $gspb_css_content);
 }
 
@@ -2830,7 +2834,25 @@ function gspb_update_global_settings($request)
 		}
 
 		$gspb_json_filename = 'settings_backup.json';
-		$gspb_backup_data = json_encode( $settings, JSON_PRETTY_PRINT );
+
+		// Exclude API keys from backup
+		$backup_settings = $settings;
+		$keys_to_exclude = [
+			'googleapi',
+			'turnstile_site_key',
+			'turnstile_secret_key',
+			'openaiapi',
+			'claudeapi',
+			'deepseekapi',
+			'geminiapi'
+		];
+		foreach ($keys_to_exclude as $key) {
+			if (isset($backup_settings[$key])) {
+				unset($backup_settings[$key]);
+			}
+		}
+
+		$gspb_backup_data = json_encode( $backup_settings, JSON_PRETTY_PRINT );
 
 		if (!$wp_filesystem->put_contents($dir . $gspb_json_filename, $gspb_backup_data)) {
 			throw new Exception(__('JSON is not saved due the permission!!!', 'greenshift-animation-and-page-builder-blocks'));
