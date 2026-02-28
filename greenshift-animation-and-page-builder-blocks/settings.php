@@ -1113,7 +1113,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="aiimagemodel">
-																		<option value="gemini-2.5-flash-image-preview" <?php selected($aiimagemodel, 'gemini-2.5-flash-image-preview'); ?>> Google Flash 2.5 </option>
+																		<option value="gemini-3.1-flash-image-preview" <?php selected($aiimagemodel, 'gemini-3.1-flash-image-preview'); ?>> Google Flash 3.1 </option>
 																		<option value="gemini-3-pro-image-preview" <?php selected($aiimagemodel, 'gemini-3-pro-image-preview'); ?>> Google Pro 3 Preview </option>
 																		<option value="gpt-image-1" <?php selected($aiimagemodel, 'gpt-image-1'); ?>> GPT Image 1.5 </option>
 																		<option value="gpt-image-1.5" <?php selected($aiimagemodel, 'gpt-image-1.5'); ?>> GPT Image 1.5 </option>
