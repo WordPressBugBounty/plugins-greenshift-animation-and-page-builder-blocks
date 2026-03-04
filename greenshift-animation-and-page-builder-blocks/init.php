@@ -1699,22 +1699,39 @@ function gspb_greenShift_block_inline_styles($html, $block){
 			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
 				$dynamic_style = get_post_meta((int)$block['attrs']['ref'], '_gspb_post_css', true);
 				$dynamic_style = apply_filters('gspb_reusable_inline_styles', $dynamic_style);
-			}else if(!empty($block['attrs']['CSSRender'])){
-				if(!empty($block['attrs']['styleAttributes']) && !empty($block['attrs']['localId'])){
-					$dynamic_style = gspb_render_style_attributes($block['attrs']['styleAttributes'], '.'.$block['attrs']['localId'], '', isset($block['attrs']['enableSpecificity']) ? $block['attrs']['enableSpecificity'] : false);
+		}else if(!empty($block['attrs']['CSSRender'])){
+			$dynamic_style = '';
+			if(!empty($block['attrs']['styleAttributes']) && !empty($block['attrs']['localId'])){
+				$dynamic_style = gspb_render_style_attributes($block['attrs']['styleAttributes'], '.'.$block['attrs']['localId'], '', isset($block['attrs']['enableSpecificity']) ? $block['attrs']['enableSpecificity'] : false);
+			}
+			if(!empty($block['attrs']['dynamicGClasses'])){
+				foreach ($block['attrs']['dynamicGClasses'] as $class) {
+					if(!empty($class['type']) && $class['type'] == 'local'){
+						if(!empty($class['css'])){
+							$dynamic_style .= $class['css'];
+						}
+						if(!empty($class['selectors'])){
+							foreach ($class['selectors'] as $sub_selector) {
+								if(!empty($sub_selector['css'])){
+									$dynamic_style .= $sub_selector['css'];
+								}
+							}
+						}
+					}
 				}
-			}else{
-				$dynamic_style = $block['attrs']['inlineCssStyles'];
 			}
-			$dynamic_style = gspb_get_final_css($dynamic_style);
-			$dynamic_style = gspb_quick_minify_css($dynamic_style);
-			$dynamic_style = htmlspecialchars_decode($dynamic_style);
-			if (function_exists('GSPB_make_dynamic_image') && !empty($block['attrs']['background']['dynamicEnable'])) {
-				$dynamic_style = GSPB_make_dynamic_image($dynamic_style, $block['attrs'], $block, $block['attrs']['background'], $block['attrs']['background']['image']);
-			}
-			$dynamic_style = '<style>' . wp_strip_all_tags($dynamic_style) . '</style>';
-			$html = $dynamic_style . $html;
+		}else{
+			$dynamic_style = $block['attrs']['inlineCssStyles'];
 		}
+		$dynamic_style = gspb_get_final_css($dynamic_style);
+		$dynamic_style = gspb_quick_minify_css($dynamic_style);
+		$dynamic_style = htmlspecialchars_decode($dynamic_style);
+		if (function_exists('GSPB_make_dynamic_image') && !empty($block['attrs']['background']['dynamicEnable'])) {
+			$dynamic_style = GSPB_make_dynamic_image($dynamic_style, $block['attrs'], $block, $block['attrs']['background'], $block['attrs']['background']['image']);
+		}
+		$dynamic_style = '<style>' . wp_strip_all_tags($dynamic_style) . '</style>';
+		$html = $dynamic_style . $html;
+	}
 	}
 	return $html;
 }
@@ -1743,25 +1760,42 @@ function gspb_greenShift_block_inline_head($html, $block){
 			$styleStore = GreenShiftStyleStore::getInstance();
 			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
 				$dynamic_style = get_post_meta((int)$block['attrs']['ref'], '_gspb_post_css', true);
-			}else if(!empty($block['attrs']['CSSRender'])){
-				if(!empty($block['attrs']['styleAttributes']) && !empty($block['attrs']['localId'])){
-					$dynamic_style = gspb_render_style_attributes($block['attrs']['styleAttributes'], '.'.$block['attrs']['localId'], '', isset($block['attrs']['enableSpecificity']) ? $block['attrs']['enableSpecificity'] : false);
+		}else if(!empty($block['attrs']['CSSRender'])){
+			$dynamic_style = '';
+			if(!empty($block['attrs']['styleAttributes']) && !empty($block['attrs']['localId'])){
+				$dynamic_style = gspb_render_style_attributes($block['attrs']['styleAttributes'], '.'.$block['attrs']['localId'], '', isset($block['attrs']['enableSpecificity']) ? $block['attrs']['enableSpecificity'] : false);
+			}
+			if(!empty($block['attrs']['dynamicGClasses'])){
+				foreach ($block['attrs']['dynamicGClasses'] as $class) {
+					if(!empty($class['type']) && $class['type'] == 'local'){
+						if(!empty($class['css'])){
+							$dynamic_style .= $class['css'];
+						}
+						if(!empty($class['selectors'])){
+							foreach ($class['selectors'] as $sub_selector) {
+								if(!empty($sub_selector['css'])){
+									$dynamic_style .= $sub_selector['css'];
+								}
+							}
+						}
+					}
 				}
-			}else{
-				$dynamic_style = $block['attrs']['inlineCssStyles'];
 			}
-			$dynamic_style = gspb_get_final_css($dynamic_style);
-			$dynamic_style = gspb_quick_minify_css($dynamic_style);
-			$dynamic_style = htmlspecialchars_decode($dynamic_style);
-			$dynamic_style = wp_strip_all_tags($dynamic_style);
-			if (function_exists('GSPB_make_dynamic_image') && !empty($block['attrs']['background']['dynamicEnable'])) {
-				$dynamic_style = GSPB_make_dynamic_image($dynamic_style, $block['attrs'], $block, $block['attrs']['background'], $block['attrs']['background']['image']);
-			}
-			if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
-				$styleStore->addClassStyle('ref_'.greenshift_sanitize_id_key($block['attrs']['ref']), $dynamic_style);
-			}else{
-				$styleStore->addClassStyle(greenshift_sanitize_id_key($block['attrs']['id']), $dynamic_style);
-			}
+		}else{
+			$dynamic_style = $block['attrs']['inlineCssStyles'];
+		}
+		$dynamic_style = gspb_get_final_css($dynamic_style);
+		$dynamic_style = gspb_quick_minify_css($dynamic_style);
+		$dynamic_style = htmlspecialchars_decode($dynamic_style);
+		$dynamic_style = wp_strip_all_tags($dynamic_style);
+		if (function_exists('GSPB_make_dynamic_image') && !empty($block['attrs']['background']['dynamicEnable'])) {
+			$dynamic_style = GSPB_make_dynamic_image($dynamic_style, $block['attrs'], $block, $block['attrs']['background'], $block['attrs']['background']['image']);
+		}
+		if($block['blockName'] == 'core/block' && !empty($block['attrs']['ref'])){
+			$styleStore->addClassStyle('ref_'.greenshift_sanitize_id_key($block['attrs']['ref']), $dynamic_style);
+		}else{
+			$styleStore->addClassStyle(greenshift_sanitize_id_key($block['attrs']['id']), $dynamic_style);
+		}
 			//echo $styleStore->getStyles();
 		}
 	}

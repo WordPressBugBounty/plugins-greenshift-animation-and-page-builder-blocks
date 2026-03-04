@@ -241,6 +241,19 @@ class Element
 						}
 					}
 				}
+			} else if($block['attrs']['tag'] == 'img'){
+				if(!empty($block['attrs']['src']) && strpos($block['attrs']['src'], '{{') !== false){
+					$p = new \WP_HTML_Tag_Processor( $html );
+					$p->next_tag();
+					$p->set_attribute( 'src', esc_url(greenshift_dynamic_placeholders($block['attrs']['src'])));
+					$html = $p->get_updated_html();
+				}
+				if(!empty($block['attrs']['alt']) && strpos($block['attrs']['alt'], '{{') !== false){
+					$p = new \WP_HTML_Tag_Processor( $html );
+					$p->next_tag();
+					$p->set_attribute( 'alt', greenshift_dynamic_placeholders(esc_attr($block['attrs']['alt'])));
+					$html = $p->get_updated_html();
+				}
 			}
 		}
 
@@ -660,7 +673,7 @@ class Element
 				}else{
 					$sanitized_value = sanitize_text_field($value['value']);
 					$dynamicAttributes[$index]['value'] = greenshift_dynamic_placeholders($sanitized_value);
-					if(!empty($dynamicAttributes[$index]['name']) && strpos($dynamicAttributes[$index]['name'], 'on') === 0){
+					if(!empty($dynamicAttributes[$index]['name']) && stripos($dynamicAttributes[$index]['name'], 'on') === 0){
 						$dynamicAttributes[$index]['value'] = '';
 					}
 				}
