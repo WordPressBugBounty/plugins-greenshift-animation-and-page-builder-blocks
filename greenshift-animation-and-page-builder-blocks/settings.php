@@ -1080,7 +1080,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="gpt-5.2-pro" <?php selected($openaiapimodel, 'gpt-5.2-pro'); ?>> gpt-5.2-pro </option>
 																		<option value="gemini-3-flash-preview" <?php selected($openaiapimodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
 																		<option value="gemini-2.5-flash" <?php selected($openaiapimodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
-																		<option value="gemini-3-pro-preview" <?php selected($openaiapimodel, 'gemini-3-pro-preview'); ?>> gemini-3-pro-preview </option>
+																		
+																		<option value="gemini-3.1-pro-preview" <?php selected($openaiapimodel, 'gemini-3.1-pro-preview'); ?>> gemini-3.1-pro-preview </option>
 																		<option value="claude-sonnet-4-6" <?php selected($openaiapimodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
 																		<option value="claude-haiku-4-5" <?php selected($openaiapimodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
 																		<option value="claude-opus-4-6" <?php selected($openaiapimodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
@@ -1098,7 +1099,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="gpt-5" <?php selected($aihelpermodel, 'gpt-5'); ?>> gpt-5 </option>
 																		<option value="gpt-5.2-pro" <?php selected($aihelpermodel, 'gpt-5.2-pro'); ?>> gpt-5.2-pro </option>
 																		<option value="gemini-3-flash-preview" <?php selected($aihelpermodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
-																		<option value="gemini-3-pro-preview" <?php selected($aihelpermodel, 'gemini-3-pro-preview'); ?>> gemini-3-pro-preview </option>
+																		
+																		
+																		<option value="gemini-3.1-pro-preview" <?php selected($aihelpermodel, 'gemini-3.1-pro-preview'); ?>> gemini-3.1-pro-preview </option>
 																		<option value="gemini-2.5-flash" <?php selected($aihelpermodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
 																		<option value="claude-haiku-4-5" <?php selected($aihelpermodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
 																		<option value="claude-sonnet-4-6" <?php selected($aihelpermodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
@@ -1131,7 +1134,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="claude-sonnet-4-6" <?php selected($aidesignmodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
 																		<option value="claude-opus-4-6" <?php selected($aidesignmodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
 																		<option value="gemini-3-flash-preview" <?php selected($aidesignmodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
-																		<option value="gemini-3-pro-preview" <?php selected($aidesignmodel, 'gemini-3-pro-preview'); ?>> gemini-3-pro-preview </option>
+																		<option value="gemini-3.1-pro-preview" <?php selected($aidesignmodel, 'gemini-3.1-pro-preview'); ?>> gemini-3.1-pro-preview </option>
 																		
 																		
 																	</select>

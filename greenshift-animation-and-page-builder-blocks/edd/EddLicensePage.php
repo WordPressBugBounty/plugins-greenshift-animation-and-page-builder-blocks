@@ -29,121 +29,128 @@ function greenshift_edd_get_license_for_addon($addon)
 
 class EddLicensePage
 {
-	private $licensesData = [
-		'all_in_one' => [
-			'plugin_id' => EDD_ALL_IN_ONE_ADDON_ID,
-			'plugin_name' => EDD_ALL_IN_ONE_ADDON_NAME,
-			'license_key' => 'edd_license_key_all_in_one',
-			'expires_key' => 'edd_license_expires_all_in_one',
-			'license_status_key' => 'edd_license_status_all_in_one',
-			'license' => '',
-			'status' => '',
-			'expires' => '',
-			'license_limit' => '',
-			'included_in' => [],
-		],
-		'all_in_one_seo' => [
-			'plugin_id' => EDD_ALL_IN_ONE_SEO_ADDON_ID,
-			'plugin_name' => EDD_ALL_IN_ONE_SEO_ADDON_NAME,
-			'license_key' => 'edd_license_key_all_in_one_seo',
-			'expires_key' => 'edd_license_expires_all_in_one_seo',
-			'license_status_key' => 'edd_license_status_all_in_one_seo',
-			'license' => '',
-			'status' => '',
-			'expires' => '',
-			'license_limit' => '',
-			'included_in' => [],
-		],
-		'all_in_one_design' => [
-			'plugin_id' => EDD_ALL_IN_ONE_DESIGN_ADDON_ID,
-			'plugin_name' => EDD_ALL_IN_ONE_DESIGN_ADDON_NAME,
-			'license_key' => 'edd_license_key_all_in_one_design',
-			'expires_key' => 'edd_license_expires_all_in_one_design',
-			'license_status_key' => 'edd_license_status_all_in_one_design',
-			'license' => '',
-			'status' => '',
-			'expires' => '',
-			'license_limit' => '',
-			'included_in' => [],
-		],
-		'all_in_one_woo' => [
-			'plugin_id' => EDD_ALL_IN_ONE_WOO_ADDON_ID,
-			'plugin_name' => EDD_ALL_IN_ONE_WOO_ADDON_NAME,
-			'license_key' => 'edd_license_key_all_in_one_woo',
-			'expires_key' => 'edd_license_expires_all_in_one_woo',
-			'license_status_key' => 'edd_license_status_all_in_one_woo',
-			'license' => '',
-			'status' => '',
-			'expires' => '',
-			'license_limit' => '',
-			'included_in' => [],
-		],
-		'woocommerce_addon' => [
-			'plugin_id' => EDD_WOO_ADDON_ID,
-			'plugin_name' => EDD_WOO_ADDON_NAME,
-			'license_key' => 'edd_license_key_woocommerce_addon',
-			'expires_key' => 'edd_license_expires_woocommerce_addon',
-			'license_status_key' => 'edd_license_status_woocommerce_addon',
-			'license' => '',
-			'status' => '',
-			'expires' => '',
-			'license_limit' => '',
-			'included_in' => ['all_in_one', 'all_in_one_woo'],
-		],
-		'query_addon' => [
-			'plugin_id' => EDD_QUERY_ADDON_ID,
-			'plugin_name' => EDD_QUERY_ADDON_NAME,
-			'license_key' => 'edd_license_key_query_addon',
-			'expires_key' => 'edd_license_expires_query_addon',
-			'license_status_key' => 'edd_license_status_query_addon',
-			'license' => '',
-			'status' => '',
-			'expires' => '',
-			'license_limit' => '',
-			'included_in' => ['all_in_one', 'all_in_one_seo', 'all_in_one_design', 'all_in_one_woo'],
-		],
-		'chart_addon' => [
-			'plugin_id' => EDD_CHART_ADDON_ID,
-			'plugin_name' => EDD_CHART_ADDON_NAME,
-			'license_key' => 'edd_license_key_chart_addon',
-			'expires_key' => 'edd_license_expires_chart_addon',
-			'license_status_key' => 'edd_license_status_chart_addon',
-			'license' => '',
-			'status' => '',
-			'expires' => '',
-			'license_limit' => '',
-			'included_in' => ['all_in_one'],
-		],
-		'seo_addon' => [
-			'plugin_id' => EDD_SEO_ADDON_ID,
-			'plugin_name' => EDD_SEO_ADDON_NAME,
-			'license_key' => 'edd_license_key_seo_addon',
-			'expires_key' => 'edd_license_expires_seo_addon',
-			'license_status_key' => 'edd_license_status_seo_addon',
-			'license' => '',
-			'status' => '',
-			'expires' => '',
-			'license_limit' => '',
-			'included_in' => ['all_in_one', 'all_in_one_seo'],
-		],
-		'gsap_addon' => [
-			'plugin_id' => EDD_GSAP_ADDON_ID,
-			'plugin_name' => EDD_GSAP_ADDON_NAME,
-			'license_key' => 'edd_license_key_gsap_addon',
-			'expires_key' => 'edd_license_expires_gsap_addon',
-			'license_status_key' => 'edd_license_status_gsap_addon',
-			'license' => '',
-			'status' => '',
-			'expires' => '',
-			'license_limit' => '',
-			'included_in' => ['all_in_one', 'all_in_one_design'],
-		],
-	];
+	private $licensesData = [];
+
+	private function get_default_licenses_data()
+	{
+		return [
+			'all_in_one' => [
+				'plugin_id' => 223,
+				'plugin_name' => 'All in One Access',
+				'license_key' => 'edd_license_key_all_in_one',
+				'expires_key' => 'edd_license_expires_all_in_one',
+				'license_status_key' => 'edd_license_status_all_in_one',
+				'license' => '',
+				'status' => '',
+				'expires' => '',
+				'license_limit' => '',
+				'included_in' => [],
+			],
+			'all_in_one_seo' => [
+				'plugin_id' => 289,
+				'plugin_name' => 'SEO Pack',
+				'license_key' => 'edd_license_key_all_in_one_seo',
+				'expires_key' => 'edd_license_expires_all_in_one_seo',
+				'license_status_key' => 'edd_license_status_all_in_one_seo',
+				'license' => '',
+				'status' => '',
+				'expires' => '',
+				'license_limit' => '',
+				'included_in' => [],
+			],
+			'all_in_one_design' => [
+				'plugin_id' => 286,
+				'plugin_name' => 'Design Pack',
+				'license_key' => 'edd_license_key_all_in_one_design',
+				'expires_key' => 'edd_license_expires_all_in_one_design',
+				'license_status_key' => 'edd_license_status_all_in_one_design',
+				'license' => '',
+				'status' => '',
+				'expires' => '',
+				'license_limit' => '',
+				'included_in' => [],
+			],
+			'all_in_one_woo' => [
+				'plugin_id' => 5658,
+				'plugin_name' => 'Woocommerce Pack',
+				'license_key' => 'edd_license_key_all_in_one_woo',
+				'expires_key' => 'edd_license_expires_all_in_one_woo',
+				'license_status_key' => 'edd_license_status_all_in_one_woo',
+				'license' => '',
+				'status' => '',
+				'expires' => '',
+				'license_limit' => '',
+				'included_in' => [],
+			],
+			'woocommerce_addon' => [
+				'plugin_id' => 40,
+				'plugin_name' => 'Woocommerce Addon',
+				'license_key' => 'edd_license_key_woocommerce_addon',
+				'expires_key' => 'edd_license_expires_woocommerce_addon',
+				'license_status_key' => 'edd_license_status_woocommerce_addon',
+				'license' => '',
+				'status' => '',
+				'expires' => '',
+				'license_limit' => '',
+				'included_in' => ['all_in_one', 'all_in_one_woo'],
+			],
+			'query_addon' => [
+				'plugin_id' => 45,
+				'plugin_name' => 'Query Addon',
+				'license_key' => 'edd_license_key_query_addon',
+				'expires_key' => 'edd_license_expires_query_addon',
+				'license_status_key' => 'edd_license_status_query_addon',
+				'license' => '',
+				'status' => '',
+				'expires' => '',
+				'license_limit' => '',
+				'included_in' => ['all_in_one', 'all_in_one_seo', 'all_in_one_design', 'all_in_one_woo'],
+			],
+			'chart_addon' => [
+				'plugin_id' => 257,
+				'plugin_name' => 'Chart Addon',
+				'license_key' => 'edd_license_key_chart_addon',
+				'expires_key' => 'edd_license_expires_chart_addon',
+				'license_status_key' => 'edd_license_status_chart_addon',
+				'license' => '',
+				'status' => '',
+				'expires' => '',
+				'license_limit' => '',
+				'included_in' => ['all_in_one'],
+			],
+			'seo_addon' => [
+				'plugin_id' => 271,
+				'plugin_name' => 'Marketing and SEO Addon',
+				'license_key' => 'edd_license_key_seo_addon',
+				'expires_key' => 'edd_license_expires_seo_addon',
+				'license_status_key' => 'edd_license_status_seo_addon',
+				'license' => '',
+				'status' => '',
+				'expires' => '',
+				'license_limit' => '',
+				'included_in' => ['all_in_one', 'all_in_one_seo'],
+			],
+			'gsap_addon' => [
+				'plugin_id' => 280,
+				'plugin_name' => 'Advanced Animation Addon',
+				'license_key' => 'edd_license_key_gsap_addon',
+				'expires_key' => 'edd_license_expires_gsap_addon',
+				'license_status_key' => 'edd_license_status_gsap_addon',
+				'license' => '',
+				'status' => '',
+				'expires' => '',
+				'license_limit' => '',
+				'included_in' => ['all_in_one', 'all_in_one_design'],
+			],
+		];
+	}
 
 	public function __construct()
 	{
 		//    update_option('gspb_edd_licenses', []);
 		if (!is_admin()) return false;
+
+		$this->licensesData = $this->get_default_licenses_data();
 
 		$dbOptions = get_option('gspb_edd_licenses');
 		if (!empty($dbOptions)) $this->licensesData = $dbOptions;
@@ -755,8 +762,10 @@ class EddLicensePage
 add_action('wp', 'greenshift_add_cron_event');
 add_action('greenshift_check_cron_hook', 'greenshift_check_cron_exec');
 function greenshift_check_cron_exec()
-{
-	EddLicensePage::edd_check_and_update_licenses_static();
+{ 
+	if(class_exists('EddLicensePage')){
+		EddLicensePage::edd_check_and_update_licenses_static();
+	}
 }
 function greenshift_add_cron_event()
 {
