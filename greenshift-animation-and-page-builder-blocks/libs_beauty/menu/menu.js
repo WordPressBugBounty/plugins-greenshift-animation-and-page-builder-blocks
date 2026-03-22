@@ -104,19 +104,28 @@ class MenuActions {
                     if (navTriggers && navTriggers.length > 0) {
                         navTriggers.forEach(trigger => {
                             trigger.addEventListener('click', (e) => {
+                                const el = e.currentTarget;
+                                if (el.tagName === 'A') {
+                                    const href = el.getAttribute('href');
+                                    if (href !== null && href !== '' && href.startsWith('#')) {
+                                        e.preventDefault();
+                                    }
+                                }
                                 const topLevel = panelElement.querySelector('.gs-nav-top-level');
                                 if (!topLevel) return;
 
                                 // Get height from next sibling and set min-height
-                                let nextElement = e.currentTarget.nextElementSibling;
-                                if (nextElement.classList && !nextElement.classList.contains('gs-nav-sub-level')) {
-                                    nextElement = e.currentTarget.nextElementSibling.nextElementSibling;
+                                let nextElement = el.nextElementSibling;
+                                if (nextElement && nextElement.classList && !nextElement.classList.contains('gs-nav-sub-level')) {
+                                    nextElement = el.nextElementSibling.nextElementSibling;
                                 }
+                                let openedSubLevel = false;
                                 if (nextElement && nextElement.tagName !== 'STYLE' && nextElement.classList && nextElement.classList.contains('gs-nav-sub-level')) {
                                     const height = nextElement.offsetHeight;
                                     topLevel.style.setProperty('min-height', height + 'px');
                                     nextElement.style.setProperty('visibility', 'visible');
                                     nextElement.classList.add('activelevel');
+                                    openedSubLevel = true;
                                 }
 
                                 // Get current slide value or default to 0
@@ -131,6 +140,10 @@ class MenuActions {
                                 // Apply translateX transform with percentage unit
                                 const translateValue = newSlideValue + '%';
                                 this.setTransformAttribute(topLevel, 'translateX', translateValue);
+
+                                if (openedSubLevel) {
+                                    topLevel.parentNode.parentNode.scrollTo({ top: 0, behavior: 'smooth' });
+                                }
                             });
                         });
                     }
@@ -194,7 +207,6 @@ class MenuActions {
             });
         }
     }
-
 
     // Helper function to set transform attributes
     setTransformAttribute(element, attribute, value) {

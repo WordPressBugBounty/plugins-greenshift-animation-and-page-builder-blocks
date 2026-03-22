@@ -215,7 +215,8 @@ function greenshift_import_download()
 			header('Content-Type: text/xml; charset=' . get_option('blog_charset'), true);
 		}
 
-		echo wp_kses_post($importcontent);
+		// Export WXR/XML exactly as generated; sanitizing strips required XML nodes.
+		echo $importcontent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		exit;
 	}
 }

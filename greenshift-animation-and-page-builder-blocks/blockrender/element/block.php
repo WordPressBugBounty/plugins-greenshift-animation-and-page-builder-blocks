@@ -841,7 +841,7 @@ class Element
 
 		if(!empty($block['attrs']['customJs'])){
 			$global_js = get_option('gspb_block_js');
-			$id = $block['attrs']['id'];
+			$id = !empty($block['attrs']['id']) ? $block['attrs']['id'] : 1;
 			$smart_lazy_load = !empty($block['attrs']['smartLazyLoad']) ? $block['attrs']['smartLazyLoad'] : false;
 
 			if(!empty($global_js[$id])){

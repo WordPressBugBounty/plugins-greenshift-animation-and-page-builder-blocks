@@ -431,15 +431,11 @@ function convertNodeToBlock(node) {
 
   // Handle SVG
   if (tag === 'svg') {
-    const svgHTML = node.outerHTML || '<svg></svg>';
+    let svgHTML = node.outerHTML || '<svg></svg>';
     const params = {
       tag: 'svg',
-      icon: { icon: { svg: svgHTML, image: '' }, fill: 'currentColor', fillhover: 'currentColor', type: 'svg' }
+      icon: { icon: { svgRaw: svgHTML, image: '' }, type: 'svg' }
     };
-    const cls = node.attributes['class'];
-    if (cls) params.className = cls;
-    const idAttr = node.attributes['id'];
-    if (idAttr) params.anchor = idAttr;
     const w = node.attributes['width'];
     const h = node.attributes['height'];
     if (w || h) {
@@ -447,19 +443,8 @@ function convertNodeToBlock(node) {
       if (w) params.styleAttributes.width = [w.includes('px') ? w : `${w}px`];
       if (h) params.styleAttributes.height = [h.includes('px') ? h : `${h}px`];
     }
-    const SVG_STRIP_ATTRS = ['fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'class'];
-    let cleanSvg = svgHTML;
-    for (const attr of SVG_STRIP_ATTRS) {
-      cleanSvg = cleanSvg.replace(new RegExp(`\\s+${attr}="[^"]*"`, 'g'), '');
-    }
-    params.icon.icon.svg = cleanSvg;
-    cleanSvg = cleanSvg.replace(/\s+style="[^"]*"/g, '');
-    const xmlns = node.attributes['xmlns'];
-    if (xmlns) {
-      cleanSvg = cleanSvg.replace(/^(<svg)\s+xmlns="[^"]*"/, '$1');
-      cleanSvg = cleanSvg.replace(/<(?!\/?svg\b)([a-zA-Z][a-zA-Z0-9]*)/g, `<$1 xmlns="${xmlns}"`);
-    }
-    return `<!-- wp:greenshift-blocks/element ${wpJsonEncode(params)} -->\n${cleanSvg}\n<!-- /wp:greenshift-blocks/element -->`;
+
+    return `<!-- wp:greenshift-blocks/element ${wpJsonEncode(params)} -->\n${svgHTML}\n<!-- /wp:greenshift-blocks/element -->`;
   }
 
   const type = getTypeFromTag(tag);
@@ -568,6 +553,17 @@ function convertNodeToBlock(node) {
     if (Object.keys(fa).length > 0) params.formAttributes = fa;
   }
 
+  // Form tag attributes (method, action) – match elementcontainer.js blockProps
+  if (tag === 'form') {
+    const fa = {};
+    const method = node.attributes['method'];
+    fa.method = (method && method.toLowerCase() === 'post') ? 'post' : 'get';
+    const action = node.attributes['action'];
+    if (action) fa.action = action;
+    else fa.action = '';
+    params.formAttributes = fa;
+  }
+
   // Table cell attributes
   if (tag === 'td' || tag === 'th') {
     const colspan = node.attributes['colspan'];
@@ -644,6 +640,11 @@ function convertNodeToBlock(node) {
     if (fa.value) htmlAttrs += ` value="${escHtml(fa.value)}"`;
     if (fa.required) htmlAttrs += ` required`;
     if (fa.disabled) htmlAttrs += ` disabled`;
+  }
+  if (tag === 'form' && params.formAttributes) {
+    const fa = params.formAttributes;
+    htmlAttrs += ` method="${escHtml(fa.method || 'get')}"`;
+    htmlAttrs += ` action="${escHtml(fa.action != null ? fa.action : '')}"`;
   }
   if (tag === 'td' || tag === 'th') {
     if (params.colSpan) htmlAttrs += ` colspan="${params.colSpan}"`;

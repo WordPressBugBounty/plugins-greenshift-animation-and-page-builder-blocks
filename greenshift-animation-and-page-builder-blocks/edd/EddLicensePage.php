@@ -208,8 +208,8 @@ class EddLicensePage
 				['product' => $addon_key]
 			);
 		}
-?>
-		
+
+    	?>	
 		<div class="wp-block-greenshift-blocks-container alignfull gspb_container gspb_container-gsbp-ead11204-4841" id="gspb_container-id-gsbp-ead11204-4841">
 			<div class="wp-block-greenshift-blocks-container gspb_container gspb_container-gsbp-cbc3fa8c-bb26" id="gspb_container-id-gsbp-cbc3fa8c-bb26">
 
@@ -237,7 +237,7 @@ class EddLicensePage
 				</div>
 			</div>
 		</div>
-	<?php
+		<?php
 	}
 
 	public function edd_license_key_settings_section()
@@ -735,7 +735,7 @@ class EddLicensePage
 
 				case 'false':
 					$message = urldecode($_GET['message']);
-		?>
+				?>
 					<div class="error">
 						<p><?php echo wp_kses_post($message); ?></p>
 					</div>
@@ -748,7 +748,7 @@ class EddLicensePage
 					<div class="updated">
 						<p><?php esc_html_e('Activated succesfull.', 'greenshift-animation-and-page-builder-blocks') ?></p>
 					</div>
-<?php
+				<?php
 					// Developers can put a custom success message here for when activation is successful if they way.
 					break;
 			}
