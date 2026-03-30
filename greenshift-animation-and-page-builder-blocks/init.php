@@ -104,6 +104,21 @@ function gspb_quick_minify_css($css)
 // Hook: Frontend assets.
 add_action('init', 'gspb_greenShift_register_scripts_blocks');
 add_filter('render_block', 'gspb_greenShift_block_script_assets', 10, 2);
+add_filter('register_block_type_args', 'gspb_enable_full_align_for_html_block', 10, 2);
+function gspb_enable_full_align_for_html_block($args, $block_type)
+{
+	if ('core/html' !== $block_type) {
+		return $args;
+	}
+
+	if (empty($args['supports']) || !is_array($args['supports'])) {
+		$args['supports'] = array();
+	}
+
+	$args['supports']['align'] = array('wide', 'full');
+
+	return $args;
+}
 
 $enable_head_inline = !empty($global_gs_options['enable_head_inline']) ? $global_gs_options['enable_head_inline'] : '';
 //$enable_head_inline = function_exists('wp_is_block_theme') && wp_is_block_theme();
@@ -703,7 +718,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_api',
 		GREENSHIFT_DIR_URL . 'libs/api/index.js',
 		array(),
-		'1.8',
+		'1.9',
 		true
 	);
 
@@ -741,25 +756,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'12.8'
+		'12.9'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'12.8'
+		'12.9'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'12.8'
+		'12.9'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'12.8'
+		'12.9'
 	);
 
 	//Script for ajax reusable loading
@@ -886,7 +901,11 @@ function gspb_greenShift_block_script_assets($html, $block)
 				wp_enqueue_style('gsslightboxfront');
 			}
 			if(!empty($block['attrs']['disablelazy'])){
-				$html = str_replace('src=', 'fetchpriority="high" src=', $html);
+				$p = new \WP_HTML_Tag_Processor( $html );
+				if ( $p->next_tag( 'img' ) ) {
+					$p->set_attribute( 'fetchpriority', 'high' );
+					$html = $p->get_updated_html();
+				}
 			}
 			if(!empty($block['attrs']['href'])){
 				$html = str_replace('rel="noopener"', '', $html);
@@ -966,9 +985,9 @@ function gspb_greenShift_block_script_assets($html, $block)
 			$openlabel = !empty($block['attrs']['openlabel']) ? esc_attr($block['attrs']['openlabel']) : 'Show more';
 			$closelabel = !empty($block['attrs']['closelabel']) ? esc_attr($block['attrs']['closelabel']) : 'Show less';
 
-			$html = str_replace('class="gs-toggler-wrapper"', 'class="gs-toggler-wrapper"'. ' id="'.$id.'"', $html);
-			$html = str_replace('class="gs-tgl-show"', 'class="gs-tgl-show"'. ' tabindex="0" role="button" aria-label="'.$openlabel.'" aria-controls="'.$id.'"', $html);
-			$html = str_replace('class="gs-tgl-hide"', 'class="gs-tgl-hide"'. ' tabindex="0" role="button" aria-label="'.$closelabel.'" aria-controls="'.$id.'"', $html);
+			$html = str_replace('class="gs-toggler-wrapper"', 'class="gs-toggler-wrapper"'. ' id="'.esc_attr($id).'"', $html);
+			$html = str_replace('class="gs-tgl-show"', 'class="gs-tgl-show"'. ' tabindex="0" role="button" aria-label="'.esc_attr($openlabel).'" aria-controls="'.esc_attr($id).'"', $html);
+			$html = str_replace('class="gs-tgl-hide"', 'class="gs-tgl-hide"'. ' tabindex="0" role="button" aria-label="'.esc_attr($closelabel).'" aria-controls="'.esc_attr($id).'"', $html);
 		}
 
 		// looking for counter
@@ -1050,7 +1069,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				wp_enqueue_script('gsslidingpanel');
 				if($blockname == 'greenshift-blocks/button'){
 					$position = !empty($block['attrs']['slidePosition']) ? esc_attr($block['attrs']['slidePosition']) : '';
-					$html = str_replace('id="gspb_button-id-' . $block['attrs']['id'], 'data-paneltype="' . $position . '" id="gspb_button-id-' . greenshift_sanitize_id_key($block['attrs']['id']), $html);
+					$html = str_replace('id="gspb_button-id-' . $block['attrs']['id'], 'data-paneltype="' . esc_attr($position) . '" id="gspb_button-id-' . greenshift_sanitize_id_key($block['attrs']['id']), $html);
 					$html = str_replace('class="gspb_slidingPanel"', 'data-panelid="gspb_button-id-' . greenshift_sanitize_id_key($block['attrs']['id']) . '" class="gspb_slidingPanel"', $html);
 				}
 				if($blockname == 'greenshift-blocks/buttonbox'){
@@ -1066,7 +1085,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				}
 				$linknew = apply_filters('greenshiftseo_url_filter', $link);
 				$linknew = apply_filters('rh_post_offer_url_filter', $linknew);
-				$html = str_replace($link, $linknew, $html);
+				$html = str_replace($link, esc_url($linknew), $html);
 			}
 			if (function_exists('GSPB_make_dynamic_link') && !empty($block['attrs']['dynamicEnable'])) {
 				$field = !empty($block['attrs']['dynamicField']) ? $block['attrs']['dynamicField'] : '';
@@ -1075,8 +1094,9 @@ function gspb_greenShift_block_script_assets($html, $block)
 					$replacedlink = GSPB_get_value_from_array_field($repeaterField, $block['attrs']['repeaterArray']);
 					$replacedlink = GSPB_field_array_to_value($replacedlink, ', ');
 					$replacedlink = apply_filters('greenshiftseo_url_filter', $replacedlink);
+					$replacedlink = esc_url($replacedlink);
 					if($replacedlink){
-						$html = preg_replace('/href\s*=\s*"([^"]*)"/i', 'href="' . $replacedlink . '"', $html);
+						$html = preg_replace('/href\s*=\s*"([^"]*)"/i', 'href="' . esc_url($replacedlink) . '"', $html);
 					}
 				} else {
 					$html = GSPB_make_dynamic_link($html, $block['attrs'], $block, $field, $block['attrs']['buttonLink']);
@@ -2683,7 +2703,7 @@ function gspb_register_route()
 				'methods'             => 'POST',
 				'callback'            => 'gspb_update_global_wp_settings',
 				'permission_callback' => function () {
-					return current_user_can('edit_posts');
+					return current_user_can('manage_options');
 				},
 				'args'                => array(),
 			),

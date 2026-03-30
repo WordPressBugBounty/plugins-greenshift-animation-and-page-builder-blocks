@@ -1,5 +1,29 @@
 const GS_SESSION_ID = 'uid-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 11);
 
+// Sanitize HTML to prevent XSS by stripping dangerous tags and attributes
+function gsSanitizeHTML(html) {
+    if (typeof html !== 'string') return html;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const dangerousTags = ['script', 'iframe', 'object', 'embed', 'form', 'base', 'link', 'meta'];
+    dangerousTags.forEach(tag => {
+        const elements = doc.body.querySelectorAll(tag);
+        elements.forEach(el => el.remove());
+    });
+    const allElements = doc.body.querySelectorAll('*');
+    allElements.forEach(el => {
+        const attrs = Array.from(el.attributes);
+        attrs.forEach(attr => {
+            const name = attr.name.toLowerCase();
+            // Remove event handlers and javascript: URLs
+            if (name.startsWith('on') || ((['href', 'src', 'action', 'formaction', 'xlink:href'].includes(name)) && /^\s*(javascript|data):/i.test(attr.value))) {
+                el.removeAttribute(attr.name);
+            }
+        });
+    });
+    return doc.body.innerHTML;
+}
+
 // Helper function to sanitize JSON strings before parsing
 function sanitizeJSONString(jsonString) {
     if (typeof jsonString !== 'string') {
@@ -397,6 +421,12 @@ function GSrunAPICall(api_filters) {
     // Initiate the API fetch
     // Check if this is a GreenShift proxy API endpoint and add nonce if needed
     const processedApiUrl = dynamicPlaceholders(apiUrl);
+
+    // Block data: and javascript: URIs to prevent XSS via inline payloads
+    if (/^(data|javascript):/i.test(processedApiUrl.trim())) {
+        console.error('GreenShift API: Blocked unsafe URI scheme in apiUrl');
+        return;
+    }
     
     // Add the nonce to headers if this is a GreenShift proxy endpoint
     if (processedApiUrl.includes('greenshift/v1/proxy-api') && typeof gspbApiSettings !== 'undefined') {
@@ -587,7 +617,7 @@ function GSrunAPICall(api_filters) {
                                 targetElem.setAttribute('data-raw-content', currentRawContent);
 
                                 // Process the complete markdown content accumulated so far
-                                targetElem.innerHTML = parseMarkdown(currentRawContent, true);
+                                targetElem.innerHTML = gsSanitizeHTML(parseMarkdown(currentRawContent, true));
                             } else {
                                 // Update the appropriate attribute or content
                                 if (targetElem.hasAttribute('src')) {
@@ -645,7 +675,7 @@ function GSrunAPICall(api_filters) {
                                         if (targetElem && targetElem.hasAttribute('data-raw-content')) {
                                             const rawContent = targetElem.getAttribute('data-raw-content');
                                             // Now process the complete markdown content one final time
-                                            targetElem.innerHTML = parseMarkdown(rawContent, true);
+                                            targetElem.innerHTML = gsSanitizeHTML(parseMarkdown(rawContent, true));
                                             // Clean up the temporary attribute
                                             targetElem.removeAttribute('data-raw-content');
                                         }
@@ -745,7 +775,7 @@ function GSrunAPICall(api_filters) {
                                 } else if (targetElem.hasAttribute('href')) {
                                     targetElem.setAttribute('href', mapValue);
                                 } else {
-                                    targetElem.innerHTML = mapValue;
+                                    targetElem.innerHTML = gsSanitizeHTML(mapValue);
                                 }
                                 targetElem.classList.remove('loading');
                                 targetElem.classList.add('loaded');
@@ -773,12 +803,13 @@ function GSrunAPICall(api_filters) {
 
             // Update the DOM element specified by result_selector.
             if (resultElem) {
+                const sanitizedResponse = gsSanitizeHTML(formattedResponse);
                 if (result_handle === 'replace') {
-                    resultElem.innerHTML = formattedResponse;
+                    resultElem.innerHTML = sanitizedResponse;
                 } else if (result_handle === 'append') {
-                    resultElem.innerHTML += formattedResponse;
+                    resultElem.innerHTML += sanitizedResponse;
                 } else if (result_handle === 'prepend') {
-                    resultElem.innerHTML = formattedResponse + resultElem.innerHTML;
+                    resultElem.innerHTML = sanitizedResponse + resultElem.innerHTML;
                 }
                 Array.from(resultElem.children).forEach(child => {
                     if (!child.classList.contains('result-loaded')) {

@@ -1076,15 +1076,14 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="openaiapimodel">
-																		<option value="gpt-5.2" <?php selected($openaiapimodel, 'gpt-5.2'); ?>> gpt-5.2 </option>
-																		<option value="gpt-5.2-pro" <?php selected($openaiapimodel, 'gpt-5.2-pro'); ?>> gpt-5.2-pro </option>
-																		<option value="gemini-3-flash-preview" <?php selected($openaiapimodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
-																		<option value="gemini-2.5-flash" <?php selected($openaiapimodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
-																		
+																		<option value="gpt-5.4" <?php selected($openaiapimodel, 'gpt-5.4'); ?>> gpt-5.4 </option>
+																		<option value="gpt-5.4-mini" <?php selected($openaiapimodel, 'gpt-5.4-mini'); ?>> gpt-5.4-mini </option>
 																		<option value="gemini-3.1-pro-preview" <?php selected($openaiapimodel, 'gemini-3.1-pro-preview'); ?>> gemini-3.1-pro-preview </option>
+																		<option value="gemini-3-flash-preview" <?php selected($openaiapimodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
+																		<option value="gemini-3.1-flash-lite-preview" <?php selected($openaiapimodel, 'gemini-3.1-flash-lite-preview'); ?>> gemini-3.1-flash-lite-preview </option>
+																		<option value="claude-opus-4-6" <?php selected($openaiapimodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
 																		<option value="claude-sonnet-4-6" <?php selected($openaiapimodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
 																		<option value="claude-haiku-4-5" <?php selected($openaiapimodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
-																		<option value="claude-opus-4-6" <?php selected($openaiapimodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
 																		<option value="deepseek-chat" <?php selected($openaiapimodel, 'deepseek-chat'); ?>> deepseek-chat </option>
 																	</select>
 																</td>
@@ -1095,17 +1094,15 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="aihelpermodel">
-																		<option value="gpt-5.2" <?php selected($aihelpermodel, 'gpt-5.2'); ?>> gpt-5.2 </option>
-																		<option value="gpt-5" <?php selected($aihelpermodel, 'gpt-5'); ?>> gpt-5 </option>
-																		<option value="gpt-5.2-pro" <?php selected($aihelpermodel, 'gpt-5.2-pro'); ?>> gpt-5.2-pro </option>
-																		<option value="gemini-3-flash-preview" <?php selected($aihelpermodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
-																		
-																		
+																		<option value="gpt-5.4" <?php selected($aihelpermodel, 'gpt-5.4'); ?>> gpt-5.4 </option>
+																		<option value="gpt-5.4-mini" <?php selected($aihelpermodel, 'gpt-5.4-mini'); ?>> gpt-5.4-mini </option>
 																		<option value="gemini-3.1-pro-preview" <?php selected($aihelpermodel, 'gemini-3.1-pro-preview'); ?>> gemini-3.1-pro-preview </option>
-																		<option value="gemini-2.5-flash" <?php selected($aihelpermodel, 'gemini-2.5-flash'); ?>> gemini-2.5-flash </option>
-																		<option value="claude-haiku-4-5" <?php selected($aihelpermodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
-																		<option value="claude-sonnet-4-6" <?php selected($aihelpermodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
+																		<option value="gemini-3-flash-preview" <?php selected($aihelpermodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
+																		<option value="gemini-3.1-flash-lite-preview" <?php selected($aihelpermodel, 'gemini-3.1-flash-lite-preview'); ?>> gemini-3.1-flash-lite-preview </option>
 																		<option value="claude-opus-4-6" <?php selected($aihelpermodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
+																		<option value="claude-sonnet-4-6" <?php selected($aihelpermodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
+																		<option value="claude-haiku-4-5" <?php selected($aihelpermodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
+																		<option value="deepseek-chat" <?php selected($aihelpermodel, 'deepseek-chat'); ?>> deepseek-chat </option>
 
 																	</select>
 																</td>
@@ -1118,24 +1115,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<select name="aiimagemodel">
 																		<option value="gemini-3.1-flash-image-preview" <?php selected($aiimagemodel, 'gemini-3.1-flash-image-preview'); ?>> Google Flash 3.1 </option>
 																		<option value="gemini-3-pro-image-preview" <?php selected($aiimagemodel, 'gemini-3-pro-image-preview'); ?>> Google Pro 3 Preview </option>
-																		<option value="gpt-image-1" <?php selected($aiimagemodel, 'gpt-image-1'); ?>> GPT Image 1.5 </option>
+																		<option value="gpt-image-1" <?php selected($aiimagemodel, 'gpt-image-1'); ?>> GPT Image 1 </option>
 																		<option value="gpt-image-1.5" <?php selected($aiimagemodel, 'gpt-image-1.5'); ?>> GPT Image 1.5 </option>
-																		
-																	</select>
-																</td>
-															</tr>
-															<tr class="aidesignmodel">
-																<td>
-																	<label for="aidesignmodel"><?php esc_html_e("AI Design Model", 'greenshift-animation-and-page-builder-blocks'); ?></label>
-																</td>
-																<td>
-																	<select name="aidesignmodel">
-																		<option value="claude-haiku-4-5" <?php selected($aidesignmodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
-																		<option value="claude-sonnet-4-6" <?php selected($aidesignmodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
-																		<option value="claude-opus-4-6" <?php selected($aidesignmodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
-																		<option value="gemini-3-flash-preview" <?php selected($aidesignmodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
-																		<option value="gemini-3.1-pro-preview" <?php selected($aidesignmodel, 'gemini-3.1-pro-preview'); ?>> gemini-3.1-pro-preview </option>
-																		
 																		
 																	</select>
 																</td>
@@ -1433,10 +1414,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			for ($i = 0; (int)$data['fonts_count'] > $i; $i++) {
 				//$item_arr = ['label' => sanitize_text_field($data['font_specific_style_name'][$i])];
 				foreach ($this->allowed_font_ext as $ext) {
-					$item_arr[$ext] = !empty($fonts_urls[$i][$ext]) ? $fonts_urls[$i][$ext] : sanitize_text_field($data[$ext][$i]);
+					$item_arr[$ext] = !empty($fonts_urls[$i][$ext]) ? $fonts_urls[$i][$ext] : sanitize_text_field(wp_unslash($data[$ext][$i]));
 				}
-				$item_arr['preloaded'] = !empty($data['font_family_preload'][$i]) ? sanitize_text_field($data['font_family_preload'][$i]) : '';
-				$arr[sanitize_text_field($data['font_family_name'][$i])] = $item_arr;
+				$item_arr['preloaded'] = !empty($data['font_family_preload'][$i]) ? sanitize_text_field(wp_unslash($data['font_family_preload'][$i])) : '';
+				$arr[sanitize_text_field(wp_unslash($data['font_family_name'][$i]))] = $item_arr;
 			}
 			$new_localfont = json_encode($arr);
 			$global_settings['localfont'] = $new_localfont;

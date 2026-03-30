@@ -1255,6 +1255,12 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 				$value = str_replace('{{POST_TITLE}}', esc_html($post->post_title), $value);
 			}
 		}
+		if (strpos($value, '{{POST_EXCERPT}}') !== false){
+			global $post;
+			if(!empty($post) && is_object($post)){
+				$value = str_replace('{{POST_EXCERPT}}', esc_html($post->post_excerpt), $value);
+			}
+		}
 		if (strpos($value, '{{POST_URL}}') !== false){
 			global $post;
 			if(!empty($post) && is_object($post)){
