@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 12.9.0
+Stable tag: 12.9.1
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -136,6 +136,11 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 12.9.1 =
+
+* Added: Updated Skills for AI agents, not it's better handling external link tags
+* Added: , combined .po file for admin and editor and [Localization of addons tutorial](https://greenshiftwp.com/documentation/greenshift-extra/translation-of-custom-gutenberg-wordpress-plugin/) 
 
 = 12.9.0 =
 

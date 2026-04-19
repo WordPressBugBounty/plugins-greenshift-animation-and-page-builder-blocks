@@ -1052,15 +1052,6 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<div style="margin-bottom:15px"><a href="https://console.anthropic.com/"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
 																</td>
 															</tr>
-															<tr class="deepseekapikey">
-																<td>
-																	<label for="deepseekapi"><?php esc_html_e("Deepseek API Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
-																</td>
-																<td>
-																	<textarea style="width:100%; min-height:50px;border-color:#ddd" id="deepseekapi" name="deepseekapi"><?php echo esc_html($deepseekapi); ?></textarea>
-																	<div style="margin-bottom:15px"><a href="https://platform.deepseek.com/api_keys"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
-																</td>
-															</tr>
 															<tr class="geminiapikey">
 																<td>
 																	<label for="geminiapi"><?php esc_html_e("Gemini API Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
@@ -1084,7 +1075,6 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="claude-opus-4-6" <?php selected($openaiapimodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
 																		<option value="claude-sonnet-4-6" <?php selected($openaiapimodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
 																		<option value="claude-haiku-4-5" <?php selected($openaiapimodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
-																		<option value="deepseek-chat" <?php selected($openaiapimodel, 'deepseek-chat'); ?>> deepseek-chat </option>
 																	</select>
 																</td>
 															</tr>
@@ -1102,7 +1092,6 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="claude-opus-4-6" <?php selected($aihelpermodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
 																		<option value="claude-sonnet-4-6" <?php selected($aihelpermodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
 																		<option value="claude-haiku-4-5" <?php selected($aihelpermodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
-																		<option value="deepseek-chat" <?php selected($aihelpermodel, 'deepseek-chat'); ?>> deepseek-chat </option>
 
 																	</select>
 																</td>
