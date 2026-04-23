@@ -244,7 +244,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-accordion',
 		GREENSHIFT_DIR_URL . 'libs/accordion/index.js',
 		array(),
-		'1.8',
+		'1.9',
 		true
 	);
 
@@ -937,6 +937,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				// Skip an element if it's not supposed to be processed.
 				if ( method_exists('WP_HTML_Tag_Processor', 'has_class') && ($p->has_class( 'gs-accordion-item__content' )) ) {
 					$p->set_attribute( 'aria-labelledby', 'gs-trigger-'.greenshift_sanitize_id_key($block['attrs']['id']).'-'.$icontent);
+					$p->remove_attribute( 'aria-hidden' );
 					$icontent ++;
 				}
 			}
