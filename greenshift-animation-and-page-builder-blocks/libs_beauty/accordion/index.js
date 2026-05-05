@@ -12,13 +12,11 @@ function GSPB_Accordion_Toggle(target) {
                 let titlearea = items[i].querySelector('.gs-accordion-item__title');
                 titlearea.setAttribute('aria-expanded', 'false');
                 let contentarea = items[i].querySelector('.gs-accordion-item__content');
-                contentarea.setAttribute('aria-hidden', 'true');
                 contentarea.style.maxHeight = null;
             }
         } else {
             item.classList.replace("gsopen", "gsclose");
             item.querySelector('.gs-accordion-item__title').setAttribute('aria-expanded', 'false');
-            contentWrap.setAttribute('aria-hidden', 'true');
             contentWrap.style.maxHeight = null;
         }
 
@@ -30,14 +28,12 @@ function GSPB_Accordion_Toggle(target) {
                 let titlearea = items[i].querySelector('.gs-accordion-item__title');
                 titlearea.setAttribute('aria-expanded', 'false');
                 let contentarea = items[i].querySelector('.gs-accordion-item__content');
-                contentarea.setAttribute('aria-hidden', 'true');
                 contentarea.style.maxHeight = null;
             }
         }
         item.classList.replace("gsclose", "gsopen");
         contentWrap.style.maxHeight = contentWrap.scrollHeight + "px";
         item.querySelector('.gs-accordion-item__title').setAttribute('aria-expanded', 'true');
-        contentWrap.setAttribute('aria-hidden', 'false');
         if (enableScroll) {
             item.scrollIntoView({ behavior: 'smooth' });
         }

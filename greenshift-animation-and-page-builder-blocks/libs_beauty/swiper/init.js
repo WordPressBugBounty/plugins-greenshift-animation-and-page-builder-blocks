@@ -66,15 +66,15 @@ function GSPB_render_Swiper(swiperobj, documentobj = document) {
     let swiper_tablet_breakpoint = 768;
     let swiper_mobile_breakpoint = 576;
 
-    if (typeof gs_swiper !== 'undefined') {
-        swiper_desktop_breakpoint = parseInt(gs_swiper.breakpoints.desktop) || 992;
-        swiper_tablet_breakpoint = parseInt(gs_swiper.breakpoints.tablet) || 768;
-        swiper_mobile_breakpoint = parseInt(gs_swiper.breakpoints.mobile) || 576;
+    if (typeof gspb_swiper !== 'undefined') {
+        swiper_desktop_breakpoint = parseInt(gspb_swiper.breakpoints.desktop) || 992;
+        swiper_tablet_breakpoint = parseInt(gspb_swiper.breakpoints.tablet) || 768;
+        swiper_mobile_breakpoint = parseInt(gspb_swiper.breakpoints.mobile) || 576;
     }
-    else if (typeof gs_swiper_params !== 'undefined') {
-        swiper_desktop_breakpoint = parseInt(gs_swiper_params.breakpoints.desktop) || 992;
-        swiper_tablet_breakpoint = parseInt(gs_swiper_params.breakpoints.tablet) || 768;
-        swiper_mobile_breakpoint = parseInt(gs_swiper_params.breakpoints.mobile) || 576;
+    else if (typeof gspb_swiper_params !== 'undefined') {
+        swiper_desktop_breakpoint = parseInt(gspb_swiper_params.breakpoints.desktop) || 992;
+        swiper_tablet_breakpoint = parseInt(gspb_swiper_params.breakpoints.tablet) || 768;
+        swiper_mobile_breakpoint = parseInt(gspb_swiper_params.breakpoints.mobile) || 576;
     }
 
     let objswiper = {

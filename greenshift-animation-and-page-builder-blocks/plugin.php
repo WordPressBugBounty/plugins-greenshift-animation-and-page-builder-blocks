@@ -6,7 +6,7 @@
  * Author: Wpsoul
  * Author URI: https://greenshiftwp.com
  * Plugin URI: https://greenshiftwp.com
- * Version: 12.9.3
+ * Version: 12.9.5
  * Text Domain: greenshift-animation-and-page-builder-blocks
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
@@ -186,10 +186,29 @@ function gspb_GreenShift_plugin_init()
 {
 	if (class_exists('EddLicensePage')) {
 		new EddLicensePage();
+	} else {
+		add_action('admin_notices', 'gspb_edd_license_missing_addon_notice');
 	}
 	if (class_exists('GSPB_GreenShift_Settings')) {
 		new GSPB_GreenShift_Settings();
 	}
+}
+
+function gspb_edd_license_missing_addon_notice()
+{
+	if (!current_user_can('manage_options')) {
+		return;
+	}
+
+	if (empty($_GET['page']) || $_GET['page'] !== EDD_GSPB_PLUGIN_LICENSE_PAGE) {
+		return;
+	}
+
+	?>
+	<div class="notice notice-info inline">
+		<p><?php esc_html_e('Please, install any of premium addons if you want to activate license', 'greenshift-animation-and-page-builder-blocks'); ?></p>
+	</div>
+	<?php
 }
 
 function gspb_activation_redirect($plugin)

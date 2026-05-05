@@ -1280,7 +1280,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 													<tr>
 														<th> <label for="custom_code_before_closed_body"><?php esc_html_e("Custom code before closed Body", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
 														<td>
-															<textarea name="custom_code_before_closed_body" id="" cols="30" rows="10" style="width: 100%"><?php echo $custom_code_before_closed_body ?></textarea>
+															<textarea name="custom_code_before_closed_body" id="" cols="30" rows="10" style="width: 100%"><?php echo $custom_code_before_closed_body; ?></textarea>
 														</td>
 													</tr>
 													<tr>

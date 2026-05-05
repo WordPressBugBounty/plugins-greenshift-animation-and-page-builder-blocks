@@ -14,7 +14,7 @@ const onGSModelInteraction = () => {
 	const modelViewerScript = document.createElement("script");
 	modelViewerScript.type = "module";
 	modelViewerScript.id = 'gsmodelviewerscript';
-	modelViewerScript.src = gs_model_params.pluginURL + "libs/modelviewer/model-viewer.min.js";
+	modelViewerScript.src = gspb_model_params.pluginURL + "libs/modelviewer/model-viewer.min.js";
 	document.body.appendChild(modelViewerScript);
 
 };

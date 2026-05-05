@@ -275,15 +275,15 @@ function gspb_greenShift_register_scripts_blocks(){
 		true
 	);
 	wp_register_script(
-		'gs-swiper-init',
+		'gspb-swiper-init',
 		GREENSHIFT_DIR_URL . 'libs/swiper/init.js',
 		array(),
 		'8.9.9.6',
 		true
 	);
 	wp_localize_script(
-		'gs-swiper-init',
-		'gs_swiper',
+		'gspb-swiper-init',
+		'gspb_swiper',
 		array(
 			'breakpoints' => gspb_get_breakpoints()
 		)
@@ -297,13 +297,13 @@ function gspb_greenShift_register_scripts_blocks(){
 	);
 	wp_localize_script(
 		'gs-swiper-loader',
-		'gs_swiper_params',
+		'gspb_swiper_params',
 		array(
 			'pluginURL' => GREENSHIFT_DIR_URL,
 			'breakpoints' => gspb_get_breakpoints()
 		)
 	);
-	wp_register_style('gsswiper', GREENSHIFT_DIR_URL . 'libs/swiper/swiper-bundle.min.css', array(), '8.4');
+	wp_register_style('gsswiper', GREENSHIFT_DIR_URL . 'libs/swiper/swiper-bundle.min.css', array(), '12.1');
 
 	// tabs
 	wp_register_script(
@@ -505,7 +505,7 @@ function gspb_greenShift_register_scripts_blocks(){
 	);
 	wp_localize_script(
 		'gsmodelinit',
-		'gs_model_params',
+		'gspb_model_params',
 		array(
 			'pluginURL' => GREENSHIFT_DIR_URL
 		)
@@ -520,7 +520,7 @@ function gspb_greenShift_register_scripts_blocks(){
 	);
 	wp_localize_script(
 		'gschartinit',
-		'gs_chart_params',
+		'gspb_chart_params',
 		array(
 			'pluginURL' => GREENSHIFT_DIR_URL
 		)
@@ -695,7 +695,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_osmap',
 		GREENSHIFT_DIR_URL . 'libs/map/leaflet.js',
 		array(),
-		'1.9.3',
+		'1.9.4',
 		true
 	);
 
@@ -703,7 +703,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_osmap_style',
 		GREENSHIFT_DIR_URL . 'libs/map/leaflet.css',
 		array(),
-		'1.9.3'
+		'1.9.4'
 	);
 
 	wp_register_script(
@@ -1253,16 +1253,16 @@ function gspb_greenShift_block_script_assets($html, $block)
 
 			}else if(!empty($block['attrs']['type']) && $block['attrs']['type'] == 'fake'){
 				$hoursSale = !empty($block['attrs']['hoursSale']) ? $block['attrs']['hoursSale'] : 10;
-				$timememory = get_transient('gs_countdown_sale'.$block['attrs']['id']);
-				$timememoryHours = get_transient('gs_countdown_sale_hours'.$block['attrs']['id']);
+				$timememory = get_transient('gspb_countdown_sale'.$block['attrs']['id']);
+				$timememoryHours = get_transient('gspb_countdown_sale_hours'.$block['attrs']['id']);
 				$formattedDateTime = '';
 				if(!$timememory || $timememoryHours != $hoursSale){
 					$currentTimestamp = current_time('mysql', true);
 					$newTimestamp = new DateTime($currentTimestamp);
 					$newTimestamp->modify('+' . $hoursSale . ' hours');	
 					$formattedDateTime = $newTimestamp->format('Y-m-d\TH:i:s');
-					set_transient('gs_countdown_sale'.$block['attrs']['id'], $formattedDateTime, $hoursSale * 60 * 60);
-					set_transient('gs_countdown_sale_hours'.$block['attrs']['id'], $hoursSale, $hoursSale * 60 * 60);
+					set_transient('gspb_countdown_sale'.$block['attrs']['id'], $formattedDateTime, $hoursSale * 60 * 60);
+					set_transient('gspb_countdown_sale_hours'.$block['attrs']['id'], $hoursSale, $hoursSale * 60 * 60);
 				}else{
 					$formattedDateTime = $timememory;
 				}
@@ -1352,7 +1352,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				wp_enqueue_script('gs-swiper-loader');
 			} else {
 				wp_enqueue_script('gsswiper');
-				wp_enqueue_script('gs-swiper-init');
+				wp_enqueue_script('gspb-swiper-init');
 			}
 		}
 
@@ -2392,6 +2392,8 @@ function gspb_global_assets()
 		$classstyles = $styleStore->renderClassStyles();
 		if($styles || $classstyles){
 			$styles = $styles . $classstyles;
+			// Escape CSS to prevent potential security issues
+			$styles = wp_strip_all_tags($styles); //CHANGED
 			wp_register_style('greenshift-style-presets', false);
 			wp_enqueue_style('greenshift-style-presets');
 			wp_add_inline_style('greenshift-style-presets', $styles);
@@ -2464,7 +2466,7 @@ function gspb_global_assets()
 				}
 				if(!empty($global_class_style) && $global_class_value){
 					$cleanTopvalue = preg_replace('/[^a-zA-Z0-9]/', '', $global_class_value);
-
+					$global_class_style = wp_strip_all_tags($global_class_style); //CHANGED
 					wp_register_style('greenshift-global-class-id-'.$cleanTopvalue, false);
 					wp_enqueue_style('greenshift-global-class-id-'.$cleanTopvalue);
 					wp_add_inline_style('greenshift-global-class-id-'.$cleanTopvalue, $global_class_style);

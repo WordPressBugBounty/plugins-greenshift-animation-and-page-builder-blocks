@@ -551,7 +551,7 @@ class Element
 					$turnstile_site_key = apply_filters('greenshift_turnstile_site_key', $turnstile_site_key);
 					if (!empty($turnstile_site_key)) {
 						// Enqueue Turnstile script
-						wp_enqueue_script('cloudflare-turnstile', GREENSHIFT_DIR_URL . 'libs/map/api.js', array(), null, true);
+						wp_enqueue_script('cloudflare-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js', array(), null, true);
 						
 						// Add Turnstile widget before submit button
 						$turnstile_widget = '<div class="cf-turnstile" data-sitekey="' . esc_attr($turnstile_site_key) . '" data-theme="auto"></div>';

@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 12.9.3
+Stable tag: 12.9.5
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -83,7 +83,7 @@ Add woocommerce blocks to FSE. Extend your shop with extra features like Buy now
 [Convert any Figma design to Greenshift blocks in one click.](https://www.youtube.com/watch?v=NjxHbrpE93g). Free to everyone.
 
 = AI Helper =
-[AI Helper](https://www.youtube.com/watch?v=PpGeRu0mZy0) is a tool that helps you to build blocks with AI. Use own api keys, no limits, no subscriptions, no sending data to third parties, no payment required.
+[AI Helper](https://www.youtube.com/watch?v=PpGeRu0mZy0) is a tool that helps you to build blocks with AI. Use own API keys, no GreenShift subscriptions, no payment to GreenShift required. AI requests are sent directly to the selected third-party AI provider.
 
 = HTML code to Wordpress Blocks converter=
 [HTML source to blocks converter](https://youtu.be/nHzq8jyturA) Put any kind of html with css and js snippets and it will be converted to dynamic blocks
@@ -98,6 +98,58 @@ When you activate a premium license for GreenShift addons, the plugin connects t
 
 * Terms of Service: [https://greenshiftwp.com/terms-and-conditions/](https://greenshiftwp.com/terms-and-conditions/)
 * Privacy Policy: [https://greenshiftwp.com/privacy-policy-2/](https://greenshiftwp.com/privacy-policy-2/)
+
+= GreenShift Template Library =
+
+When you browse or import layouts, templates, categories, or related template assets from the GreenShift library, the plugin connects to [https://greenshift.wpsoul.net/](https://greenshift.wpsoul.net/) to retrieve the requested template library data. The request may include selected category IDs, tag IDs, page numbers, layout IDs, and download URLs needed to load or import the selected layout. This connection is used only when interacting with the template library or importing a template.
+
+* Terms of Service: [https://greenshiftwp.com/terms-and-conditions/](https://greenshiftwp.com/terms-and-conditions/)
+* Privacy Policy: [https://greenshiftwp.com/privacy-policy-2/](https://greenshiftwp.com/privacy-policy-2/)
+
+= YouTube =
+
+When a page uses a YouTube video element or YouTube lightbox/player feature, the plugin may load the YouTube iframe API from [https://www.youtube.com/iframe_api](https://www.youtube.com/iframe_api) to render and control the embedded video player.
+
+* Terms of Service: [https://www.youtube.com/t/terms](https://www.youtube.com/t/terms)
+* Privacy Policy: [https://policies.google.com/privacy](https://policies.google.com/privacy)
+
+= Vimeo =
+
+When a page uses a Vimeo video element or helper, the plugin may request Vimeo oEmbed data from [https://vimeo.com/api/oembed.json](https://vimeo.com/api/oembed.json) for the provided Vimeo video URL so the video can be embedded properly.
+
+* Terms of Service: [https://vimeo.com/terms](https://vimeo.com/terms)
+* Privacy Policy: [https://vimeo.com/privacy](https://vimeo.com/privacy)
+
+= Google Maps =
+
+When a map block is configured to use Google Maps and a Google Maps API key is provided, the plugin loads Google Maps JavaScript from [https://maps.googleapis.com/maps/api/js](https://maps.googleapis.com/maps/api/js) to display the map. The request includes the configured API key.
+
+* Terms of Service: [https://cloud.google.com/maps-platform/terms](https://cloud.google.com/maps-platform/terms)
+* Privacy Policy: [https://policies.google.com/privacy](https://policies.google.com/privacy)
+
+= OpenAI =
+
+When AI Helper features are configured to use OpenAI with your own API key, the plugin sends the prompt and related AI request data directly to OpenAI API endpoints such as [https://api.openai.com/v1/responses](https://api.openai.com/v1/responses), [https://api.openai.com/v1/images/generations](https://api.openai.com/v1/images/generations), or [https://api.openai.com/v1/images/edits](https://api.openai.com/v1/images/edits). The request includes your configured OpenAI API key and the content needed for the selected AI action.
+
+* Terms of Service: [https://openai.com/policies/terms-of-use](https://openai.com/policies/terms-of-use)
+* Privacy Policy: [https://openai.com/policies/privacy-policy](https://openai.com/policies/privacy-policy)
+
+= Anthropic =
+
+When AI Helper features are configured to use Anthropic with your own API key, the plugin sends the prompt and related AI request data directly to Anthropic API endpoints such as [https://api.anthropic.com/v1/messages](https://api.anthropic.com/v1/messages). The request includes your configured Anthropic API key and the content needed for the selected AI action.
+
+* Terms of Service: [https://www.anthropic.com/legal/commercial-terms](https://www.anthropic.com/legal/commercial-terms)
+* Privacy Policy: [https://www.anthropic.com/legal/privacy](https://www.anthropic.com/legal/privacy)
+
+= Google Gemini API =
+
+When AI Helper or image generation features are configured to use Google Gemini with your own API key, the plugin sends the prompt and related AI request data directly to Google Gemini API endpoints such as [https://generativelanguage.googleapis.com/](https://generativelanguage.googleapis.com/). The request includes your configured API key and the content needed for the selected AI action.
+
+* Terms of Service: [https://ai.google.dev/gemini-api/terms](https://ai.google.dev/gemini-api/terms)
+* Privacy Policy: [https://policies.google.com/privacy](https://policies.google.com/privacy)
+
+= Github Repository =
+https://github.com/wpsoul/greenshift
 
 
 == Installation ==
@@ -136,6 +188,10 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 12.9.4 =
+
+* Update: Removed license checker
 
 = 12.9.3 =
 

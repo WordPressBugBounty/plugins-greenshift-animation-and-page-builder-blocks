@@ -26,13 +26,46 @@ function greenshift_design_import_group_by($key, $data)
 
 
 /**
+ * Check whether a string is valid UTF-8.
+ */
+function greenshift_import_is_utf8( $str ) {
+	if ( function_exists( 'mb_check_encoding' ) ) {
+		return mb_check_encoding( $str, 'UTF-8' );
+	}
+
+	return (bool) preg_match( '//u', $str );
+}
+
+/**
+ * Convert ISO-8859-1 strings to UTF-8 when needed.
+ */
+function greenshift_import_maybe_convert_to_utf8( $str ) {
+	if ( greenshift_import_is_utf8( $str ) ) {
+		return $str;
+	}
+
+	if ( function_exists( 'mb_convert_encoding' ) ) {
+		return mb_convert_encoding( $str, 'UTF-8', 'ISO-8859-1' );
+	}
+
+	if ( function_exists( 'iconv' ) ) {
+		$converted = iconv( 'ISO-8859-1', 'UTF-8//IGNORE', $str );
+
+		if ( false !== $converted ) {
+			return $converted;
+		}
+	}
+
+	return $str;
+}
+
+
+/**
  * Wrap given string in XML CDATA tag.
  */
 function greenshift_import_wxr_cdata($str)
 {
-	if (!seems_utf8($str)) {
-		$str = utf8_encode($str);
-	}
+	$str = greenshift_import_maybe_convert_to_utf8( $str );
 	// $str = ent2ncr(esc_html($str));
 	$str = '<![CDATA[' . str_replace(']]>', ']]]]><![CDATA[>', $str) . ']]>';
 

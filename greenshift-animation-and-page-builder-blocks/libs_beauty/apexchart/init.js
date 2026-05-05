@@ -7,7 +7,7 @@ const onGSChartInteraction = () => {
     GSloadedChart = true;
 
     const ChartScript = document.createElement("script");
-    ChartScript.src = gs_chart_params.pluginURL + "/libs/apexchart/apexchart.min.js";
+    ChartScript.src = gspb_chart_params.pluginURL + "/libs/apexchart/apexchart.min.js";
     ChartScript.id = 'gs-chart-loaded';
     document.body.appendChild(ChartScript);
 

@@ -7,13 +7,13 @@ const onGSSwiperInteraction = (init = false) => {
     loadedswiper = true;
 
     const SwiperScript = document.createElement("script");
-    SwiperScript.src = gs_swiper_params.pluginURL + "/libs/swiper/swiper-bundle.min.js";
+    SwiperScript.src = gspb_swiper_params.pluginURL + "/libs/swiper/swiper-bundle.min.js";
     SwiperScript.id = 'gs-swiper-loaded';
     document.body.appendChild(SwiperScript);
 
     setTimeout(function(){
         const SwiperScriptInit = document.createElement("script");
-        SwiperScriptInit.src = gs_swiper_params.pluginURL + "/libs/swiper/init.js";
+        SwiperScriptInit.src = gspb_swiper_params.pluginURL + "/libs/swiper/init.js";
         SwiperScriptInit.id = 'gs-swiper-loaded-init';
         document.body.appendChild(SwiperScriptInit);
     }, 200);
