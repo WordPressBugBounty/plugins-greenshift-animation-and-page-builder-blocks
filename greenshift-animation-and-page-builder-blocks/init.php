@@ -2124,6 +2124,7 @@ function gspb_greenShift_editor_assets()
 		) : array(),
 		'isDarkMode' => !empty($sitesettings['dark_mode']) ? $sitesettings['dark_mode'] : '',
 		'nonce' => wp_create_nonce('gspb_nonce'),
+		'rest_nonce' => wp_create_nonce('wp_rest'),
 		'disabled_blocks' => $disabled_blocks,
 		'disabled_variations' => $disabled_variations,
 		'simplified_panels' => $simplified_panels,

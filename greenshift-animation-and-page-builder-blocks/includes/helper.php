@@ -662,7 +662,7 @@ function greenshift_render_preset_classes(){
 				[
 					'value'=> 'gs-twin-on-hover',
 					'label' => "Twin slide on hover",
-					'css'=> '.gs-twin-on-hover{overflow:hidden;position:relative}.gs-twin-on-hover > *{transition:var(--gs-root-motion-transition, var(--gs-root-motion-transition-property, all) var(--gs-root-motion-timing, .6s) var(--gs-root-motion-easing, cubic-bezier(0.42, 0, 0.58, 1)));display:inline-block}.gs-twin-on-hover > *:last-child{transform:translateY(120%);position:absolute;top:0;left:0;}.gspb-bodyfront .gs-twin-on-hover:hover > *:first-child, .gspb-bodyfront .gs-parent-hover:hover .gs-twin-on-hover > *:first-child{transform:translateY(-120%);}.gspb-bodyfront .gs-twin-on-hover:hover > *:last-child, .gspb-bodyfront .gs-parent-hover:hover .gs-twin-on-hover > *:last-child{transform:translateY(0);}',
+					'css'=> '.gs-twin-on-hover{overflow:hidden;position:relative}.gs-twin-on-hover > *{transition:var(--gs-root-motion-transition, var(--gs-root-motion-transition-property, all) var(--gs-root-motion-timing, .6s) var(--gs-root-motion-easing, cubic-bezier(0.42, 0, 0.58, 1)));display:inline-block}.gs-twin-on-hover > *:last-child{transform:translateY(120%);position:absolute;top:0;left:0;}.rtl .gs-twin-on-hover > *:last-child{left:auto;right:0}.gspb-bodyfront .gs-twin-on-hover:hover > *:first-child, .gspb-bodyfront .gs-parent-hover:hover .gs-twin-on-hover > *:first-child{transform:translateY(-120%);}.gspb-bodyfront .gs-twin-on-hover:hover > *:last-child, .gspb-bodyfront .gs-parent-hover:hover .gs-twin-on-hover > *:last-child{transform:translateY(0);}',
 					'type'=> "preset",
 					'style_store' => array(	
 						array(
@@ -676,6 +676,10 @@ function greenshift_render_preset_classes(){
 						array(
 							'selector'     => '.gs-twin-on-hover > *:last-child',
 							'css' => 'transform:translateY(120%);position:absolute;top:0;left:0'
+						),
+						array(
+							'selector'     => '.rtl .gs-twin-on-hover > *:last-child',
+							'css' => 'left:auto;right:0'
 						),
 						array(
 							'selector'     => '.gspb-bodyfront .gs-twin-on-hover:hover > *:first-child, .gspb-bodyfront .gs-parent-hover:hover .gs-twin-on-hover > *:first-child',
