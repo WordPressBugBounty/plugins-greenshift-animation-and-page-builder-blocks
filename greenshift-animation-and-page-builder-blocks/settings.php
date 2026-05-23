@@ -1067,11 +1067,14 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="openaiapimodel">
+																		<option value="gpt-5.5" <?php selected($openaiapimodel, 'gpt-5.5'); ?>> gpt-5.5 </option>
 																		<option value="gpt-5.4" <?php selected($openaiapimodel, 'gpt-5.4'); ?>> gpt-5.4 </option>
 																		<option value="gpt-5.4-mini" <?php selected($openaiapimodel, 'gpt-5.4-mini'); ?>> gpt-5.4-mini </option>
+																		<option value="gemini-3.5-flash-preview" <?php selected($openaiapimodel, 'gemini-3.5-flash-preview'); ?>> gemini-3.5-flash-preview </option>
 																		<option value="gemini-3.1-pro-preview" <?php selected($openaiapimodel, 'gemini-3.1-pro-preview'); ?>> gemini-3.1-pro-preview </option>
 																		<option value="gemini-3-flash-preview" <?php selected($openaiapimodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
 																		<option value="gemini-3.1-flash-lite-preview" <?php selected($openaiapimodel, 'gemini-3.1-flash-lite-preview'); ?>> gemini-3.1-flash-lite-preview </option>
+																		<option value="claude-opus-4-7" <?php selected($openaiapimodel, 'claude-opus-4-7'); ?>> claude-opus-4-7 </option>
 																		<option value="claude-opus-4-6" <?php selected($openaiapimodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
 																		<option value="claude-sonnet-4-6" <?php selected($openaiapimodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
 																		<option value="claude-haiku-4-5" <?php selected($openaiapimodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
@@ -1084,11 +1087,14 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																</td>
 																<td>
 																	<select name="aihelpermodel">
+																		<option value="gpt-5.5" <?php selected($aihelpermodel, 'gpt-5.5'); ?>> gpt-5.5 </option>
 																		<option value="gpt-5.4" <?php selected($aihelpermodel, 'gpt-5.4'); ?>> gpt-5.4 </option>
 																		<option value="gpt-5.4-mini" <?php selected($aihelpermodel, 'gpt-5.4-mini'); ?>> gpt-5.4-mini </option>
+																		<option value="gemini-3.5-flash-preview" <?php selected($aihelpermodel, 'gemini-3.5-flash-preview'); ?>> gemini-3.5-flash-preview </option>
 																		<option value="gemini-3.1-pro-preview" <?php selected($aihelpermodel, 'gemini-3.1-pro-preview'); ?>> gemini-3.1-pro-preview </option>
 																		<option value="gemini-3-flash-preview" <?php selected($aihelpermodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
 																		<option value="gemini-3.1-flash-lite-preview" <?php selected($aihelpermodel, 'gemini-3.1-flash-lite-preview'); ?>> gemini-3.1-flash-lite-preview </option>
+																		<option value="claude-opus-4-7" <?php selected($aihelpermodel, 'claude-opus-4-7'); ?>> claude-opus-4-7 </option>
 																		<option value="claude-opus-4-6" <?php selected($aihelpermodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
 																		<option value="claude-sonnet-4-6" <?php selected($aihelpermodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
 																		<option value="claude-haiku-4-5" <?php selected($aihelpermodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>

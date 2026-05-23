@@ -230,7 +230,7 @@ const GSChartRun = (documentObject) => {
             }
             if (document.querySelector('.download-chart-' + chartId)) {
                 document.querySelector('.download-chart-' + chartId).addEventListener('click', function () {
-                    chartInstance.dataURI().then(function (uri) {
+                    chartInstance.dataURI({ width: 1200 }).then(function (uri) {
                         downloadDataURI(uri.imgURI, 'chart.png');
                     });
                 });

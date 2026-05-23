@@ -1265,11 +1265,38 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 				$value = str_replace('{{POST_EXCERPT}}', esc_html($post->post_excerpt), $value);
 			}
 		}
+		if (strpos($value, '{{POST_CONTENT}}') !== false){
+			global $post;
+			static $rendering_post_content = false;
+			if(!empty($post) && is_object($post) && !$rendering_post_content){
+				$rendering_post_content = true;
+				$post_content = apply_filters('the_content', $post->post_content);
+				$post_content = str_replace(']]>', ']]&gt;', $post_content);
+				$rendering_post_content = false;
+				$value = str_replace('{{POST_CONTENT}}', $post_content, $value);
+			}
+		}
 		if (strpos($value, '{{POST_URL}}') !== false){
 			global $post;
 			if(!empty($post) && is_object($post)){
 				$value = str_replace('{{POST_URL}}', get_permalink($post->ID), $value);
 			}
+		}
+		if (strpos($value, '{{NEXT_POST_LINK}}') !== false){
+			$next_post = get_next_post();
+			$value = str_replace('{{NEXT_POST_LINK}}', (!empty($next_post) && is_object($next_post)) ? esc_url(get_permalink($next_post->ID)) : '', $value);
+		}
+		if (strpos($value, '{{NEXT_POST_TITLE}}') !== false){
+			$next_post = get_next_post();
+			$value = str_replace('{{NEXT_POST_TITLE}}', (!empty($next_post) && is_object($next_post)) ? esc_html(get_the_title($next_post->ID)) : '', $value);
+		}
+		if (strpos($value, '{{PREVIOUS_POST_LINK}}') !== false){
+			$prev_post = get_previous_post();
+			$value = str_replace('{{PREVIOUS_POST_LINK}}', (!empty($prev_post) && is_object($prev_post)) ? esc_url(get_permalink($prev_post->ID)) : '', $value);
+		}
+		if (strpos($value, '{{PREVIOUS_POST_TITLE}}') !== false){
+			$prev_post = get_previous_post();
+			$value = str_replace('{{PREVIOUS_POST_TITLE}}', (!empty($prev_post) && is_object($prev_post)) ? esc_html(get_the_title($prev_post->ID)) : '', $value);
 		}
 		if (strpos($value, '{{AUTHOR_ID}}') !== false){
 			global $post;

@@ -428,8 +428,16 @@ function GSrunAPICall(api_filters) {
         return;
     }
     
-    // Add the nonce to headers if this is a GreenShift proxy endpoint
-    if (processedApiUrl.includes('greenshift/v1/proxy-api') && typeof gspbApiSettings !== 'undefined') {
+    // Add the nonce to headers for same-origin WordPress REST requests.
+    let shouldAddRestNonce = false;
+    try {
+        const requestUrl = new URL(processedApiUrl, window.location.origin);
+        shouldAddRestNonce = requestUrl.origin === window.location.origin && requestUrl.pathname.includes('/wp-json/');
+    } catch (error) {
+        shouldAddRestNonce = false;
+    }
+
+    if (shouldAddRestNonce && typeof gspbApiSettings !== 'undefined' && gspbApiSettings.nonce) {
         headersToSend['X-WP-Nonce'] = gspbApiSettings.nonce;
     }
     

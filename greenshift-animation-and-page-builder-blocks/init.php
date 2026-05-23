@@ -2947,7 +2947,7 @@ function gspb_update_global_settings($request)
 				$ext = $fontExtension;
 		
 				if ($newfilename = greenshift_download_file_localy($fontFile, $dir, $newfilename, $ext)) {
-					$fonturl = trailingslashit($upload_dir['url']) .$newfilename;
+					$fonturl = trailingslashit($upload_dir['baseurl']) . 'GreenShift/' . $newfilename;
 					$localfont[$fontName] = [
 						'woff2' => ($fontExtension == 'woff2') ? $fonturl : '',
 						'woff' => ($fontExtension == 'woff') ? $fonturl : '',
@@ -2986,7 +2986,7 @@ function gspb_update_global_settings($request)
 				$settings['localfontcss'] = $localfontcss;
 				update_option('gspb_global_settings', $settings);
 			}
-			
+
 		}
 
 		if(!empty($params['figma_colors']) && is_array($params['figma_colors'])){
@@ -3809,7 +3809,7 @@ if (!function_exists('gspb_get_layout')) {
 							$upload_dir = wp_upload_dir();
 							$dir = trailingslashit($upload_dir['basedir']) . 'GreenShift/'; 
 							if ($newfilename = greenshift_download_file_localy($fontFile, $dir, $newfilename, $ext)) {
-								$fonturl = trailingslashit($upload_dir['url']) .$newfilename;
+								$fonturl = trailingslashit($upload_dir['baseurl']) . 'GreenShift/' . $newfilename;
 								$localfont[$fontName] = [
 									'woff2' => ($fontExtension == 'woff2') ? $fonturl : '',
 									'woff' => ($fontExtension == 'woff') ? $fonturl : '',
