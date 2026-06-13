@@ -234,6 +234,8 @@ Determines how the block's content is handled:
     <!-- /wp:greenshift-blocks/element -->
     ```
 
+-   **Important — scripts do not run in the editor:** `customJs` runs only on the frontend, never inside the WordPress block editor. Never give a block a base/initial `opacity:0`, `visibility:hidden` or `display:none` and rely on a script to reveal it — the block would stay invisible and uneditable while editing. For entrance/reveal animations use the CSS animation system below (it works in both editor and frontend). If a hidden→visible transition must be driven by JS, set the hidden start state **inside the script** (e.g. `el.style.opacity='0'` or `gsap.set(el,{opacity:0})`) right before animating, so the block is still visible when the script does not run.
+
 ### 13.Animations (`styleAttributes`)
 
 -   Define keyframes using `animation_keyframes_Extra`: An array of objects, each with `name` (e.g., `"gs_3450"`) and `code` (CSS keyframe string).

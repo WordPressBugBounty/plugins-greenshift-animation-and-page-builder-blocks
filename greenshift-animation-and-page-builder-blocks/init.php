@@ -344,7 +344,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gsvimeo',
 		GREENSHIFT_DIR_URL . 'libs/video/vimeo.js',
 		array(),
-		'1.5',
+		'2.30.4',
 		true
 	);
 	wp_register_script(
@@ -731,7 +731,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'4.9',
+		'5.0',
 		true
 	);
 
@@ -756,25 +756,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'12.9'
+		'13.1'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'12.9'
+		'13.1'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'12.9'
+		'13.1'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'12.9'
+		'13.1'
 	);
 
 	//Script for ajax reusable loading
@@ -1886,6 +1886,7 @@ function gspb_greenShift_editor_assets()
 	$gradients = (!empty($sitesettings['gradients'])) ? $sitesettings['gradients'] : '';
 	$hide_local_styles = (!empty($sitesettings['hide_local_styles'])) ? $sitesettings['hide_local_styles'] : '';
 	$row_padding_disable = (!empty($sitesettings['row_padding_disable'])) ? $sitesettings['row_padding_disable'] : '';
+	$disable_button_preset = (!empty($sitesettings['disable_button_preset'])) ? $sitesettings['disable_button_preset'] : '';
 	$default_unit = (!empty($sitesettings['default_unit'])) ? $sitesettings['default_unit'] : '';
 	$variables = greenshift_render_variables($global_variables);
 	$addonlink = admin_url('admin.php?page=greenshift_upgrade');
@@ -2108,6 +2109,7 @@ function gspb_greenShift_editor_assets()
 		'stylebook_url' => $stylebook_url,
 		'hide_local_styles' => $hide_local_styles,
 		'row_padding_disable' => $row_padding_disable,
+		'disable_button_preset' => $disable_button_preset,
 		'show_element_block' => $show_element_block,
 		'default_unit' => $default_unit,
 		'local_wp_fonts' => $local_wp_fonts,
@@ -2631,6 +2633,24 @@ function gspb_register_route()
 		)
 	);
 
+	// Per-class delta endpoint. Lets the editor add/update/delete a SINGLE global
+	// class without re-sending the whole global_classes array on every save, which
+	// kept the POST body growing with the library size and tripped host WAF limits.
+	register_rest_route(
+		'greenshift/v1',
+		'/global_class/',
+		array(
+			array(
+				'methods'             => 'POST',
+				'callback'            => 'gspb_update_global_class',
+				'permission_callback' => function () {
+					return current_user_can('manage_options');
+				},
+				'args'                => array(),
+			),
+		)
+	);
+
 	register_rest_route(
 		'greenshift/v1',
 		'/public_assets/',
@@ -3056,6 +3076,127 @@ function gspb_update_global_settings($request)
 		return json_encode(array(
 			'success' => true,
 			'message' => 'Global settings updated!',
+		));
+	} catch (Exception $e) {
+		return json_encode(array(
+			'success' => false,
+			'message' => $e->getMessage(),
+		));
+	}
+}
+
+/**
+ * Apply a single add/update/delete operation to the global classes library.
+ *
+ * The editor used to POST the entire global_classes array on every save, so the
+ * request body grew with the library and eventually exceeded managed-host WAF
+ * limits (silent 403s on Flywheel, WP Engine, Kinsta, etc.). This endpoint takes
+ * just one class plus an operation, applies it server-side, and keeps both the
+ * gspb_global_settings['global_classes'] store and the standalone
+ * greenshift_global_classes mirror in sync.
+ *
+ * Expected params:
+ *   operation  : 'add' | 'update' | 'delete'
+ *   value      : unique class identifier (matched against each class 'value')
+ *   class      : single class object (required for add/update)
+ *   interaction / animation       : optional single entry to set on add/update
+ *                                   (null removes the entry for this class)
+ *   remove_interaction / remove_animation : truthy to drop the entry on delete
+ */
+function gspb_update_global_class($request)
+{
+	try {
+		$params    = $request->get_params();
+		$operation = !empty($params['operation']) ? sanitize_text_field($params['operation']) : '';
+
+		if (!in_array($operation, array('add', 'update', 'delete'), true)) {
+			throw new Exception('Unknown global class operation.');
+		}
+
+		// Resolve the target class identifier (the unique "value" of the class).
+		$value = '';
+		if (isset($params['value']) && $params['value'] !== '') {
+			$value = sanitize_text_field($params['value']);
+		} elseif (!empty($params['class']['value'])) {
+			$value = sanitize_text_field($params['class']['value']);
+		}
+
+		if ($value === '') {
+			throw new Exception('No class identifier provided.');
+		}
+
+		$settings = get_option('gspb_global_settings');
+		if (!is_array($settings)) {
+			$settings = array();
+		}
+
+		$classes = (!empty($settings['global_classes']) && is_array($settings['global_classes'])) ? $settings['global_classes'] : array();
+
+		// Locate the class by its "value".
+		$found_index = -1;
+		foreach ($classes as $idx => $cls) {
+			if (isset($cls['value']) && $cls['value'] === $value) {
+				$found_index = $idx;
+				break;
+			}
+		}
+
+		if ($operation === 'add' || $operation === 'update') {
+			if (empty($params['class']) || !is_array($params['class'])) {
+				throw new Exception('No class data provided.');
+			}
+
+			if ($found_index > -1) {
+				$classes[$found_index] = $params['class'];
+			} else {
+				$classes[] = $params['class'];
+			}
+
+			// Optionally set (or clear with null) this class's interaction entry.
+			if (array_key_exists('interaction', $params)) {
+				if (!isset($settings['global_interactions']) || !is_array($settings['global_interactions'])) {
+					$settings['global_interactions'] = array();
+				}
+				if ($params['interaction'] === null || $params['interaction'] === '') {
+					unset($settings['global_interactions'][$value]);
+				} else {
+					$settings['global_interactions'][$value] = $params['interaction'];
+				}
+			}
+
+			// Optionally set (or clear with null) this class's animation entry.
+			if (array_key_exists('animation', $params)) {
+				if (!isset($settings['global_animations']) || !is_array($settings['global_animations'])) {
+					$settings['global_animations'] = array();
+				}
+				if ($params['animation'] === null || $params['animation'] === '') {
+					unset($settings['global_animations'][$value]);
+				} else {
+					$settings['global_animations'][$value] = $params['animation'];
+				}
+			}
+		} elseif ($operation === 'delete') {
+			if ($found_index > -1) {
+				array_splice($classes, $found_index, 1);
+			}
+			if (!empty($params['remove_interaction']) && isset($settings['global_interactions'][$value])) {
+				unset($settings['global_interactions'][$value]);
+			}
+			if (!empty($params['remove_animation']) && isset($settings['global_animations'][$value])) {
+				unset($settings['global_animations'][$value]);
+			}
+		}
+
+		$classes                    = array_values($classes);
+		$settings['global_classes'] = $classes;
+		update_option('gspb_global_settings', $settings);
+
+		// Keep the standalone mirror option (used by abilities / MCP) in sync.
+		update_option('greenshift_global_classes', $classes);
+
+		return json_encode(array(
+			'success' => true,
+			'message' => 'Global class updated!',
 		));
 	} catch (Exception $e) {
 		return json_encode(array(

@@ -654,6 +654,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												$default_settings['row_padding_disable'] = false;
 											}
 
+											if (isset($_POST['disable_button_preset'])) {
+												$default_settings['disable_button_preset'] = true;
+											} else {
+												$default_settings['disable_button_preset'] = false;
+											}
+
 											if (isset($_POST['dark_accent_scheme'])) {
 												$default_settings['dark_accent_scheme'] = true;
 											} else {
@@ -687,6 +693,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										$show_element_block = !empty($global_settings['show_element_block']) ? $global_settings['show_element_block'] : '';
 										$default_unit = !empty($global_settings['default_unit']) ? $global_settings['default_unit'] : '';
 										$row_padding_disable = !empty($global_settings['row_padding_disable']) ? $global_settings['row_padding_disable'] : '';
+										$disable_button_preset = !empty($global_settings['disable_button_preset']) ? $global_settings['disable_button_preset'] : '';
 										?>
 										<div class="gspb_settings_form">
 											<form method="POST">
@@ -720,6 +727,12 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 															<td> <label for="row_padding_disable"><?php esc_html_e("Disable default Column padding in Row block", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
 															<td>
 																<input type="checkbox" name="row_padding_disable" id="row_padding_disable" <?php echo $row_padding_disable == true ? 'checked' : ''; ?> />
+															</td>
+														</tr>
+														<tr>
+															<td> <label for="disable_button_preset"><?php esc_html_e("Disable button preset panel", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
+															<td>
+																<input type="checkbox" name="disable_button_preset" id="disable_button_preset" <?php echo $disable_button_preset == true ? 'checked' : ''; ?> />
 															</td>
 														</tr>
 														<tr>

@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 13.0.0
+Stable tag: 13.1.1
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -189,9 +189,17 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 
 == Changelog ==
 
+= 13.1.0 =
+
+* Added: Improved class saving
+* Added: Option quick live search for classes and local style panel 
+* Added: Updated AI skills for improved export to WordPress options outside wordpress environment
+
 = 13.0.0 =
 
 * Added: GLAI 2.0, our inner AI helper, now more stable and with support of dynamic template generations + updated model list in settings
+* Added: "Disable button preset panel" option in Settings - Interface to hide the Button Presets panel in Button and Link element blocks
+* Update: Updated Vimeo Player SDK to v2.30.4 to resolve deprecated API warnings in the video player
 
 = 12.9.4 =
 

@@ -752,14 +752,26 @@ function gspb_execute_inter_Actions(element, triggerElement, layersActions, even
             }
             else if (actionName === 'slidepause') {
                 let sliderobj = targetEle.querySelector('.swiper');
-                if (sliderobj) {
-                    sliderobj.swiper.pause();
+                if (sliderobj && sliderobj.swiper) {
+                    let gsSwiper = sliderobj.swiper;
+                    // Swiper v9+ removed the direct swiper.pause() method. Use the autoplay module API and fall back to the legacy method for older bundles.
+                    if (gsSwiper.autoplay && typeof gsSwiper.autoplay.stop === 'function') {
+                        gsSwiper.autoplay.stop();
+                    } else if (typeof gsSwiper.pause === 'function') {
+                        gsSwiper.pause();
+                    }
                 }
             }
             else if (actionName === 'slideresume') {
                 let sliderobj = targetEle.querySelector('.swiper');
-                if (sliderobj) {
-                    sliderobj.swiper.resume();
+                if (sliderobj && sliderobj.swiper) {
+                    let gsSwiper = sliderobj.swiper;
+                    // Swiper v9+ removed the direct swiper.resume() method. Use the autoplay module API and fall back to the legacy method for older bundles.
+                    if (gsSwiper.autoplay && typeof gsSwiper.autoplay.start === 'function') {
+                        gsSwiper.autoplay.start();
+                    } else if (typeof gsSwiper.resume === 'function') {
+                        gsSwiper.resume();
+                    }
                 }
             }
             else if (actionName === 'sethtml') {

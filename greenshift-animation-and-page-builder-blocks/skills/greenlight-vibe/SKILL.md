@@ -27,6 +27,8 @@ Always build html first and use there best standards. But keep important rules
 10. If you use headings tags or paragraphs, it's required to add margin top and bottom. If you use lists, it's required to disable left margin and spacing
 11. Do not use js inline parameters like "onclick"
 12. Important!!! All styles add in section `<style data-wp-block-html="css">...</style>`. All scripts add in section `<script data-wp-block-html="js">...</script>`. But if you have `<link>` tags, keep them as they are. 
+13. **Never depend on a script for visibility.** Do not give a block a base/initial `opacity:0`, `visibility:hidden` or `display:none` and rely on JavaScript to reveal it. Custom block scripts (`customJs`) do **not** run in the WordPress block editor, so any block that needs a script to appear will be invisible and uneditable while editing. For entrance/reveal animations (fade-in, slide-in, scroll-triggered, etc.) use **CSS animations** — write `@keyframes` and the `animation` property in the `<style data-wp-block-html="css">` block (for scroll-triggered effects use `animation-timeline: view();` with `animation-range`). CSS animations run in both the editor and the frontend with no script. If a hidden→visible transition genuinely must be driven by JS, set the hidden start state **inside the script at runtime** (e.g. `el.style.opacity='0'` or `gsap.set(el,{opacity:0})` immediately before animating to the visible state), so the block stays visible whenever the script does not run.
+14. If you use custom font size for specific element, add also line height for this element.
 
 ***Important*** When you have centered content inside full width section, use next code for such sections. They must be most parent blocks on page
 
@@ -136,3 +138,109 @@ Make the requested changes in the HTML/CSS/JS produced by the deconverter. After
 ### Step 4: Replace the full original block content
 
 Return the full updated Greenshift block code and use it as a complete replacement for the original block content. Do not return only a diff or partial fragment. Keep unchanged blocks and attributes as they were unless they must change to support the requested update.
+
+## Agentic Export to WordPress Site with Greenshift/GreenLight Blocks
+
+If user asked you to export html code to wordpress site, use next steps:
+
+### Step 1: Confirm connection to WordPress site
+
+Before converting HTML to blocks or writing anything to a WordPress site, you **must** confirm a working connection to the target site. Do **not** proceed (no conversion, no publishing) until **one** of the following is true:
+
+1.  **REST API with application password** — the user has provided all of:
+    
+    -   the **site URL** (e.g. `https://example.com`),
+    -   a **WordPress login (username)**, and
+    -   an **application password** (Users → Profile → Application Passwords),
+    
+    _and_ you have verified the connection works. Test it, for example:
+    
+    ```bash
+    curl -sf -u "LOGIN:APP_PASSWORD" "https://example.com/wp-json/wp/v2/users/me"
+    ```
+    
+    A `200` response with the expected user means the connection is good. A `401`/`403` means the credentials are wrong — ask the user to re-check.
+    
+2.  **WP-CLI** — you can reach the site through WP-CLI instead. Verify with, for example:
+    
+    ```bash
+    wp option get siteurl   # (add --path / --ssh / --url as needed for the target site)
+    ```
+    
+
+If neither path is available, **ask the user** for the missing site URL, login, and application password (or WP-CLI access) and **stop**. Never generate blocks or push content to a site whose connection has not been confirmed.
+
+### Step 2: Convert HTML to Greenshift blocks
+
+Use the normal HTML-to-block conversion workflow to generate the Greenshift block code from the provided HTML design as described in the previous sections.
+
+### Step 3: Move custom scripts into a `wp:html` block
+
+The converter puts every `<script>` it finds into the **Style Manager block** as `customJs` with `customJsEnabled: true`. But on the frontend the renderer does **not** execute the inline `customJs` value — it loads the script from the `gspb_block_js` site option, keyed by the block's `id`. The converter does not assign an `id`, so an exported script **will not run** unless you also save it to that option *and* add a matching `id` to the block.
+
+For agentic export, do **not** rely on the site option. Instead move each script out of the block and into a `wp:html` block — WordPress outputs `wp:html` as raw HTML, so the `<script>` executes directly with no option write and no `id` required. This is what the GreenLight export feature does.
+
+If the converted blocks contain any `customJsEnabled: true` (the Style Manager block, and any element block that carries its own script), do this for each one:
+
+1. Take the `customJs` value and **unescape** it back into real JavaScript (the block attribute is JSON-escaped — turn `\n` into newlines, `\"` into `"`, `\\` into `\`).
+2. Replace every `{{PLUGIN_URL}}` placeholder with the real plugin URL `/wp-content/plugins/greenshift-animation-and-page-builder-blocks`. Raw `wp:html` output is **not** processed by PHP, so the placeholder is not resolved there (unlike option-stored scripts).
+3. Append a `wp:html` block at the **end** of the page content:
+
+```html
+<!-- wp:html -->
+<script data-wp-block-html="js">
+/* your script here */
+</script>
+<!-- /wp:html -->
+```
+
+   If the script uses `import` statements, add `type="module"`:
+
+```html
+<!-- wp:html -->
+<script type="module" data-wp-block-html="js">
+import gsap from '/wp-content/plugins/greenshift-animation-and-page-builder-blocks/libs/motion/gsap.js';
+/* ... */
+</script>
+<!-- /wp:html -->
+```
+
+4. **Remove** `customJs` and `customJsEnabled` from the original block, so the script is not left dangling on a block that can't run it.
+
+See `instructions/validate-scripts.md` for the full reference, including the WP-CLI / REST option-save alternatives — only use those if you specifically need the script to remain editable in the GreenShift editor.
+
+### Step 4: Prepare CSS for frontend rendering
+
+If you export to pages or post types, prepare all CSS styles of page as single CSS string. You will use it in custom post meta `_gspb_post_css`. If you export to pattern, template part or template, add `"CSSRender": "1"` to every block that has a `styleAttributes` attribute or a `dynamicGClasses` attribute. This tells the PHP renderer to output the CSS inline on the frontend. Read `instructions/validate-styles.md` for details on how to use CSSRender. Do not use CSSRender for blocks that will be saved in pages or posts — it's only needed for patterns, template parts, templates, theme's content hooks. For pages and posts (including custom post types), common CSS must be added as a single string in the `_gspb_post_css` meta field instead.
+
+### Step 5 (optional): Sync CSS variables and fonts to GreenShift settings
+
+If code has root variables or Google Fonts, you can sync them to GreenShift settings. See `instructions/global-settings.md`. This step is optional but can help make the design more editable in the GreenShift editor after export.
+
+### Step 6: Publish the block content and CSS (optional)
+
+Create or update the page/post/template with the generated Greenshift block code as its `content` (REST: `POST /wp-json/wp/v2/{pages|posts}`, or WP-CLI `wp post create` / `wp post update`).
+
+If you have a CSS string from Step 4, save it in the `_gspb_post_css` meta field of the same page/post using **one** of these:
+
+- **Plugin-native endpoint (preferred):**
+
+    ```bash
+    curl -sf -u "LOGIN:APP_PASSWORD" -H "Content-Type: application/json" \
+        -d '{"id": 123, "css": "<css string>"}' \
+        "https://example.com/wp-json/greenshift/v1/css_settings"
+    ```
+
+- **Core REST** — embed `meta` in the post payload (the meta is registered with `show_in_rest`, so this works on create or update):
+
+    ```bash
+    curl -sf -u "LOGIN:APP_PASSWORD" -H "Content-Type: application/json" \
+        -d '{"meta":{"_gspb_post_css":"<css string>"}}' \
+        "https://example.com/wp-json/wp/v2/pages/123"
+    ```
+
+- **WP-CLI:** `wp post meta update {id} _gspb_post_css "{css_string}"`
+
+Do **not** use `POST /wp-json/wp/v2/{pages|posts}/{id}/meta` — that route does not exist in WordPress core.
+
+If you export to specific page and you export full page content which has also hero section and heading, check if theme has Page without title template. If yes, use it for exported page.

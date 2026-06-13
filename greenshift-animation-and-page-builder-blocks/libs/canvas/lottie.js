@@ -1,1 +1,43 @@
-const initLottieAnimation=(t=document)=>{let e=async(e=t)=>{let a=e.querySelectorAll("canvas[data-canvas-type='lottie']"),{DotLottie:n}=await import("https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web/+esm");a.forEach(t=>{let e=t.getAttribute("data-canvas-src"),a=t.getAttribute("data-canvas-id"),o=new n({canvas:t,src:e,autoplay:!0,loop:!0});window[a]=o})},a=async()=>{document.getElementById("lottie-js"),await e()},n=t.querySelectorAll("canvas[data-canvas-type='lottie']");if(n&&n.length>0){let o=!1;n.forEach(t=>{t.getAttribute("data-canvas-smart-lazy-load")&&(o=!0)}),o?(document.body.addEventListener("mouseover",a,{once:!0}),document.body.addEventListener("touchmove",a,{once:!0}),window.addEventListener("scroll",a,{once:!0}),document.body.addEventListener("keydown",a,{once:!0})):a()}};initLottieAnimation();
+const initLottieAnimation = (root = document) => {
+    const load = async (scope = root) => {
+        const canvases = scope.querySelectorAll("canvas[data-canvas-type='lottie']");
+        const { DotLottie } = await import("https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web/+esm");
+        canvases.forEach((canvas) => {
+            const src = canvas.getAttribute("data-canvas-src");
+            const id = canvas.getAttribute("data-canvas-id");
+            const rawData = canvas.getAttribute("data-canvas-data");
+            const options = { canvas, autoplay: true, loop: true };
+            if (rawData) {
+                try {
+                    options.data = JSON.parse(rawData);
+                } catch (e) {
+                    if (src) options.src = src;
+                }
+            } else if (src) {
+                options.src = src;
+            }
+            const instance = new DotLottie(options);
+            window[id] = instance;
+        });
+    };
+    const lazyStart = async () => {
+        document.getElementById("lottie-js");
+        await load();
+    };
+    const all = root.querySelectorAll("canvas[data-canvas-type='lottie']");
+    if (all && all.length > 0) {
+        let lazy = false;
+        all.forEach((canvas) => {
+            if (canvas.getAttribute("data-canvas-smart-lazy-load")) lazy = true;
+        });
+        if (lazy) {
+            document.body.addEventListener("mouseover", lazyStart, { once: true });
+            document.body.addEventListener("touchmove", lazyStart, { once: true });
+            window.addEventListener("scroll", lazyStart, { once: true });
+            document.body.addEventListener("keydown", lazyStart, { once: true });
+        } else {
+            lazyStart();
+        }
+    }
+};
+initLottieAnimation();
