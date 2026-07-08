@@ -244,7 +244,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-accordion',
 		GREENSHIFT_DIR_URL . 'libs/accordion/index.js',
 		array(),
-		'1.9',
+		'2.0',
 		true
 	);
 
@@ -756,25 +756,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'13.1'
+		'13.1.1'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'13.1'
+		'13.1.1'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'13.1'
+		'13.1.1'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'13.1'
+		'13.1.1'
 	);
 
 	//Script for ajax reusable loading
@@ -2149,6 +2149,19 @@ function gspb_greenShift_editor_assets()
 	);
 	wp_set_script_translations('greenShift-block-js', 'greenshift-animation-and-page-builder-blocks');
 	wp_enqueue_script('greenShift-block-js');
+
+	// Rank Math SEO content analysis integration.
+	// Feeds GreenShift Heading / Element headings to Rank Math so its content
+	// analysis (keyword in subheadings, Table of Contents, length) detects them.
+	if (defined('RANK_MATH_VERSION') || class_exists('RankMath\\Helper')) {
+		wp_enqueue_script(
+			'greenShift-rankmath-analysis',
+			GREENSHIFT_DIR_URL . 'libs/rankmath/rankmath-content-analysis.js',
+			array('wp-hooks', 'wp-data', 'wp-blocks'),
+			$index_asset_file['version'],
+			true
+		);
+	}
 
 	if('gspbstylebook' == get_post_type()){
 		wp_enqueue_script('greenShift-stylebook-js', GREENSHIFT_DIR_URL . 'build/gspbStylebook.js', array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-data'), $index_asset_file['version'], true);

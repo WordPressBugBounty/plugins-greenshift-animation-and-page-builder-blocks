@@ -1087,8 +1087,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="gemini-3.1-pro-preview" <?php selected($openaiapimodel, 'gemini-3.1-pro-preview'); ?>> gemini-3.1-pro-preview </option>
 																		<option value="gemini-3-flash-preview" <?php selected($openaiapimodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
 																		<option value="gemini-3.1-flash-lite-preview" <?php selected($openaiapimodel, 'gemini-3.1-flash-lite-preview'); ?>> gemini-3.1-flash-lite-preview </option>
-																		<option value="claude-opus-4-7" <?php selected($openaiapimodel, 'claude-opus-4-7'); ?>> claude-opus-4-7 </option>
-																		<option value="claude-opus-4-6" <?php selected($openaiapimodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
+																		<option value="claude-opus-4-8" <?php selected($openaiapimodel, 'claude-opus-4-8'); ?>> claude-opus-4-8 </option>
+																		<option value="claude-sonnet-5" <?php selected($openaiapimodel, 'claude-sonnet-5'); ?>> claude-sonnet-5 </option>
 																		<option value="claude-sonnet-4-6" <?php selected($openaiapimodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
 																		<option value="claude-haiku-4-5" <?php selected($openaiapimodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
 																	</select>
@@ -1107,8 +1107,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																		<option value="gemini-3.1-pro-preview" <?php selected($aihelpermodel, 'gemini-3.1-pro-preview'); ?>> gemini-3.1-pro-preview </option>
 																		<option value="gemini-3-flash-preview" <?php selected($aihelpermodel, 'gemini-3-flash-preview'); ?>> gemini-3-flash-preview </option>
 																		<option value="gemini-3.1-flash-lite-preview" <?php selected($aihelpermodel, 'gemini-3.1-flash-lite-preview'); ?>> gemini-3.1-flash-lite-preview </option>
-																		<option value="claude-opus-4-7" <?php selected($aihelpermodel, 'claude-opus-4-7'); ?>> claude-opus-4-7 </option>
-																		<option value="claude-opus-4-6" <?php selected($aihelpermodel, 'claude-opus-4-6'); ?>> claude-opus-4-6 </option>
+																		<option value="claude-opus-4-8" <?php selected($aihelpermodel, 'claude-opus-4-8'); ?>> claude-opus-4-8 </option>
+																		<option value="claude-sonnet-5" <?php selected($aihelpermodel, 'claude-sonnet-5'); ?>> claude-sonnet-5 </option>
 																		<option value="claude-sonnet-4-6" <?php selected($aihelpermodel, 'claude-sonnet-4-6'); ?>> claude-sonnet-4-6 </option>
 																		<option value="claude-haiku-4-5" <?php selected($aihelpermodel, 'claude-haiku-4-5'); ?>> claude-haiku-4-5 </option>
 

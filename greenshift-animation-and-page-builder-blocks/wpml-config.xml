@@ -105,6 +105,8 @@
 
 		<gutenberg-block type="greenshift-blocks/element" translate="1" label="Elements">
 			<xpath>//*[text()]/text()</xpath>
+			<xpath>//a</xpath>
+      		<xpath type="link">//a/@href</xpath>
 			<key name="textContent" />
 			<key name="tooltipText" />
 			<key name="alt" />

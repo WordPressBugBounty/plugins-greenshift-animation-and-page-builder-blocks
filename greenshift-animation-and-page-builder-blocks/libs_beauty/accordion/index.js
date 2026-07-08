@@ -21,9 +21,13 @@ function GSPB_Accordion_Toggle(target) {
         }
 
     } else {
+        let collapsingContent = null;
         if (wrapper.classList.contains('togglelogic')) {
             const items = wrapper.getElementsByClassName('gs-accordion-item');
             for (let i = 0; i < items.length; i++) {
+                if (items[i] !== item && items[i].classList.contains('gsopen')) {
+                    collapsingContent = items[i].querySelector('.gs-accordion-item__content');
+                }
                 items[i].classList.replace("gsopen", "gsclose");
                 let titlearea = items[i].querySelector('.gs-accordion-item__title');
                 titlearea.setAttribute('aria-expanded', 'false');
@@ -35,7 +39,29 @@ function GSPB_Accordion_Toggle(target) {
         contentWrap.style.maxHeight = contentWrap.scrollHeight + "px";
         item.querySelector('.gs-accordion-item__title').setAttribute('aria-expanded', 'true');
         if (enableScroll) {
-            item.scrollIntoView({ behavior: 'smooth' });
+            if (collapsingContent) {
+                // When auto-close is enabled, wait for the previously open item to
+                // finish collapsing so the layout has settled before scrolling.
+                // Otherwise the scroll position is calculated against an outdated
+                // height and lands on the wrong place.
+                let scrolled = false;
+                const doScroll = function () {
+                    if (scrolled) return;
+                    scrolled = true;
+                    collapsingContent.removeEventListener('transitionend', onCollapseEnd);
+                    item.scrollIntoView({ behavior: 'smooth' });
+                };
+                const onCollapseEnd = function (e) {
+                    if (e.target === collapsingContent && e.propertyName === 'max-height') {
+                        doScroll();
+                    }
+                };
+                collapsingContent.addEventListener('transitionend', onCollapseEnd);
+                // Fallback in case the transition does not fire (e.g. reduced motion).
+                setTimeout(doScroll, 400);
+            } else {
+                item.scrollIntoView({ behavior: 'smooth' });
+            }
         }
     }
 }
