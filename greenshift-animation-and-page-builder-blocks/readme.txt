@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 13.1.2
+Stable tag: 13.1.4
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -140,6 +140,17 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 13.1.4 =
+
+* Added: AI Agent Prompt builder in Settings - AI & API Keys - ready-to-copy prompts for AI agents (Claude Code, Cursor, Codex) with prompt types for building designs, fixing blocks, charts, tables and conversions, powered by the greenlight-vibe skill
+* Added: No AI Slop option for agent prompts - adds strict design rules that prevent the generic AI look (violet gradient glows, pulsing dots, glassmorphism and more)
+* Added: Site connection option for agent prompts - generate and manage application passwords directly in settings, prompt includes REST API credentials so agents can publish content to the site
+
+= 13.1.3 =
+
+* Added: Rank Math Table of Contents block support - headings from Heading Advanced and Element blocks now appear in the TOC block with working anchor links
+* Added: OpenGraph image option in Settings - Theme settings - uses the Featured Image on singular pages with a configurable fallback image
 
 = 13.1.2 =
 

@@ -756,25 +756,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'13.1.1'
+		'13.1.4'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'13.1.1'
+		'13.1.4'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'13.1.1'
+		'13.1.4'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'13.1.1'
+		'13.1.4'
 	);
 
 	//Script for ajax reusable loading
@@ -2158,6 +2158,15 @@ function gspb_greenShift_editor_assets()
 			'greenShift-rankmath-analysis',
 			GREENSHIFT_DIR_URL . 'libs/rankmath/rankmath-content-analysis.js',
 			array('wp-hooks', 'wp-data', 'wp-blocks'),
+			$index_asset_file['version'],
+			true
+		);
+		// Makes Rank Math's TOC block detect GreenShift heading blocks
+		// (its heading scanner is hard-coded to core/heading).
+		wp_enqueue_script(
+			'greenShift-rankmath-toc',
+			GREENSHIFT_DIR_URL . 'libs/rankmath/rankmath-toc.js',
+			array('wp-hooks', 'wp-data', 'wp-element'),
 			$index_asset_file['version'],
 			true
 		);

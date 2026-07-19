@@ -31,6 +31,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			add_action('wp_footer', array($this, 'greenshift_additional__footer_elements'));
 			add_action('wp_head', array($this, 'greenshift_additional__header_elements'));
 			add_action('wp_ajax_gspb_generate_stylebook', array($this, 'gspb_generate_stylebook'));
+			add_action('wp_ajax_gspb_agent_app_password_create', array($this, 'gspb_agent_app_password_create'));
+			add_action('wp_ajax_gspb_agent_app_password_delete', array($this, 'gspb_agent_app_password_delete'));
 			add_action('admin_init', array($this, 'gspb_stylebook_redirect'));
 			add_action('admin_enqueue_scripts', array($this, 'greenshift_admin_enqueue_scripts'));
 			add_filter('block_categories_all', array($this, 'gspb_greenShift_category'), 11, 2);
@@ -499,6 +501,71 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			wp_send_json_success($response);
 		}
 
+		public function gspb_agent_app_password_create()
+		{
+			if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'gspb_agent_app_password')) {
+				wp_send_json_error(array('msg' => __('User Security not verified.', 'greenshift-animation-and-page-builder-blocks')));
+			}
+			if (!current_user_can('manage_options')) {
+				wp_send_json_error(array('msg' => __('Unauthorized user', 'greenshift-animation-and-page-builder-blocks')));
+			}
+			$user_id = get_current_user_id();
+			if (!class_exists('WP_Application_Passwords') || !wp_is_application_passwords_available_for_user($user_id)) {
+				wp_send_json_error(array('msg' => __('Application passwords are not available for your account.', 'greenshift-animation-and-page-builder-blocks')));
+			}
+			$name = !empty($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : __('GreenShift AI Agent', 'greenshift-animation-and-page-builder-blocks');
+			$created = WP_Application_Passwords::create_new_application_password($user_id, array('name' => $name));
+			if (is_wp_error($created)) {
+				wp_send_json_error(array('msg' => $created->get_error_message()));
+			}
+			list($new_password, $item) = $created;
+			$new_password = WP_Application_Passwords::chunk_password($new_password);
+			$saved = get_user_meta($user_id, 'gspb_agent_app_passwords', true);
+			if (!is_array($saved)) {
+				$saved = array();
+			}
+			$saved[] = array(
+				'uuid'     => $item['uuid'],
+				'name'     => $name,
+				'password' => $new_password,
+			);
+			update_user_meta($user_id, 'gspb_agent_app_passwords', $saved);
+			wp_send_json_success(array(
+				'uuid'     => $item['uuid'],
+				'name'     => $name,
+				'password' => $new_password,
+			));
+		}
+
+		public function gspb_agent_app_password_delete()
+		{
+			if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'gspb_agent_app_password')) {
+				wp_send_json_error(array('msg' => __('User Security not verified.', 'greenshift-animation-and-page-builder-blocks')));
+			}
+			if (!current_user_can('manage_options')) {
+				wp_send_json_error(array('msg' => __('Unauthorized user', 'greenshift-animation-and-page-builder-blocks')));
+			}
+			$uuid = !empty($_POST['uuid']) ? sanitize_text_field(wp_unslash($_POST['uuid'])) : '';
+			if (!$uuid) {
+				wp_send_json_error(array('msg' => __('No password selected.', 'greenshift-animation-and-page-builder-blocks')));
+			}
+			$user_id = get_current_user_id();
+			if (class_exists('WP_Application_Passwords')) {
+				WP_Application_Passwords::delete_application_password($user_id, $uuid);
+			}
+			$saved = get_user_meta($user_id, 'gspb_agent_app_passwords', true);
+			if (!is_array($saved)) {
+				$saved = array();
+			}
+			foreach ($saved as $key => $pass) {
+				if (isset($pass['uuid']) && $pass['uuid'] === $uuid) {
+					unset($saved[$key]);
+				}
+			}
+			update_user_meta($user_id, 'gspb_agent_app_passwords', array_values($saved));
+			wp_send_json_success(array('uuid' => $uuid));
+		}
+
 		public function settings_page()
 		{
 
@@ -531,7 +598,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 							<a href="?page=greenshift&tab=scripts" id="gspb_text-id-gsbp-f27becf0-4d87" class="gspb_text gspb_text-id-gsbp-f27becf0-4d87   <?php if ($tab === 'scripts') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("Script Options", 'greenshift-animation-and-page-builder-blocks'); ?></a>
 							<a href="?page=greenshift&tab=header" id="gspb_text-id-gsbp-f27becf0-4d87" class="gspb_text gspb_text-id-gsbp-f27becf0-4d87   <?php if ($tab === 'header') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("Header/Footer code", 'greenshift-animation-and-page-builder-blocks'); ?></a>
 							<a href="?page=greenshift&tab=interface" id="gspb_text-id-gsbp-f27becf0-4d87" class="gspb_text gspb_text-id-gsbp-f27becf0-4d87   <?php if ($tab === 'interface') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("Interface", 'greenshift-animation-and-page-builder-blocks'); ?></a>
-							<a href="?page=greenshift&tab=keys" id="gspb_text-id-gsbp-f27becf0-4d87" class="gspb_text gspb_text-id-gsbp-f27becf0-4d87   <?php if ($tab === 'keys') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("API Keys & AI", 'greenshift-animation-and-page-builder-blocks'); ?></a>
+							<a href="?page=greenshift&tab=keys" id="gspb_text-id-gsbp-f27becf0-4d87" class="gspb_text gspb_text-id-gsbp-f27becf0-4d87   <?php if ($tab === 'keys') : ?>gs-tab-active<?php endif; ?>"><?php esc_html_e("AI & API Keys", 'greenshift-animation-and-page-builder-blocks'); ?></a>
 						</div>
 
 
@@ -1013,10 +1080,283 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 										$aidesignmodel = !empty($global_settings['aidesignmodel']) ? $global_settings['aidesignmodel'] : '';
 										$turnstile_site_key = !empty($global_settings['turnstile_site_key']) ? $global_settings['turnstile_site_key'] : '';
 										$turnstile_secret_key = !empty($global_settings['turnstile_secret_key']) ? $global_settings['turnstile_secret_key'] : '';
+									$gspb_current_user = wp_get_current_user();
+										$gspb_agent_passwords = get_user_meta($gspb_current_user->ID, 'gspb_agent_app_passwords', true);
+										if (!is_array($gspb_agent_passwords)) {
+											$gspb_agent_passwords = array();
+										}
+										if (class_exists('WP_Application_Passwords')) {
+											$gspb_existing_uuids = wp_list_pluck(WP_Application_Passwords::get_user_application_passwords($gspb_current_user->ID), 'uuid');
+											$gspb_filtered_passwords = array();
+											foreach ($gspb_agent_passwords as $gspb_agent_pass) {
+												if (!empty($gspb_agent_pass['uuid']) && in_array($gspb_agent_pass['uuid'], $gspb_existing_uuids, true)) {
+													$gspb_filtered_passwords[] = $gspb_agent_pass;
+												}
+											}
+											if (count($gspb_filtered_passwords) !== count($gspb_agent_passwords)) {
+												update_user_meta($gspb_current_user->ID, 'gspb_agent_app_passwords', $gspb_filtered_passwords);
+												$gspb_agent_passwords = $gspb_filtered_passwords;
+											}
+										}
+										$gspb_app_pass_available = function_exists('wp_is_application_passwords_available_for_user') && wp_is_application_passwords_available_for_user($gspb_current_user->ID);
+
+										$gspb_agent_prompt_data = array(
+											'prompts' => array(
+												'intro' => "I'm working on a WordPress site built with the GreenShift/GreenLight page builder.\nBefore doing anything else, install the \"greenlight-vibe\" skill from https://github.com/wpsoul/greenlight-vibe and follow its workflow (it explains how to build designs as clean HTML/CSS/JS and convert them to GreenShift blocks).",
+												'types' => array(
+													'design' => "Build me a design for: [describe the page or section: purpose, content, style, colors, references].\nBuild it as clean vanilla HTML/CSS/JS first following the skill rules, then convert it to GreenShift blocks and return block code ready to paste into the WordPress Gutenberg code editor.",
+													'editdesign' => "Edit my existing design.\nCurrent GreenShift block code:\n[paste block code from the Gutenberg code editor]\n\nChanges I need: [describe the changes].\nUse the skill to convert the blocks back to HTML, apply the changes, convert to blocks again and return the full updated block code.",
+													'fixdesign' => "Fix my GreenShift block design.\nCurrent GreenShift block code:\n[paste block code from the Gutenberg code editor]\n\nProblems I see: [describe what is broken: layout, styles not rendering, scripts not working, responsiveness].\nUse the skill to convert the blocks back to HTML, find and fix the issues, validate the styles and scripts against the skill rules, then convert to blocks again and return the full corrected block code.",
+													'chart' => "Build me a chart.\nChart type: [line / bar / pie / area / radar]\nData: [paste or describe your data]\nReturn GreenShift block code ready to paste into the WordPress Gutenberg code editor.",
+													'table' => "Build me a table with the following data: [paste or describe your data].\nStyle it to match my site and return GreenShift block code ready to paste into the WordPress Gutenberg code editor.",
+													'dynamic' => "Build me a dynamic template: [describe post type, fields and layout, e.g. query loop of latest posts with image, title, excerpt].\nFollow the skill's dynamic-loops and dynamic-placeholders instructions and return GreenShift block code ready to paste into the WordPress Gutenberg code editor.",
+													'convert' => "Convert this code to GreenShift blocks:\n[paste your HTML/CSS/JS]\nReturn block code ready to paste into the WordPress Gutenberg code editor.",
+													'deconvert' => "Convert this GreenShift block code back to clean HTML + CSS + JS:\n[paste block code from the Gutenberg code editor]",
+												),
+												'noslop' => "Design quality rules, follow strictly to avoid a generic AI look:\n- Never use em dashes in any copy, use commas or periods instead.\n- Monospace fonts are allowed only inside <code> tags, never for headings, badges or body text.\n- No status badges with a pulsing dot (\"Available for work\", \"AI powered\" etc).\n- No violet/purple gradients, no blue-to-purple hero backgrounds, no gradient glow, no floating gradient orbs or blurred blobs behind content.\n- No glassmorphism cards, no neon glow borders or shadows, no thick one-side colored borders on rounded cards.\n- No gradient text on headings.\n- No emoji in headings, buttons, badges or as list bullets and feature icons.\n- Do not default to the Inter font and the generic hero + three feature cards + testimonials + pricing layout, propose distinctive typography and layout instead.\n- No motion without meaning: no bouncing buttons, wiggling icons or infinite pulse/float animations.\n- Avoid generic SaaS copy such as \"streamline\", \"empower\", \"supercharge\", \"seamless\", \"unlock\", \"world-class\", \"next-level\".\n- Use a restrained, intentional color palette and a real typographic hierarchy.",
+												'connection' => "Connection to my WordPress site (REST API, Basic auth with application password):\n- Site URL: {site}\n- Login: {login}\n- Application password: {password}\n\nVerify the connection first:\ncurl -sf -u \"{login}:{password}\" \"{site}/wp-json/wp/v2/users/me\"\nThen follow the skill's \"Agentic Export to WordPress Site\" workflow to publish the result directly to the site.",
+											),
+											'site' => site_url(),
+											'login' => $gspb_current_user->user_email,
+											'passwords' => $gspb_agent_passwords,
+											'nonce' => wp_create_nonce('gspb_agent_app_password'),
+											'copiedLabel' => __('Copied!', 'greenshift-animation-and-page-builder-blocks'),
+											'copyLabel' => __('Copy Prompt', 'greenshift-animation-and-page-builder-blocks'),
+											'createdMsg' => __('Password created and selected.', 'greenshift-animation-and-page-builder-blocks'),
+											'revokedMsg' => __('Password revoked.', 'greenshift-animation-and-page-builder-blocks'),
+											'selectFirstMsg' => __('Select a password first.', 'greenshift-animation-and-page-builder-blocks'),
+											'confirmRevoke' => __('Revoke this application password? Agents that use it will lose access to the site.', 'greenshift-animation-and-page-builder-blocks'),
+											'errorMsg' => __('Something went wrong. Please try again.', 'greenshift-animation-and-page-builder-blocks'),
+										);
 									?>
+										<div class="gspb_settings_form" id="gspb_agent_prompt_builder" style="border-bottom:1px solid #ddd;padding-bottom:35px;margin-bottom:40px">
+											<div class="greenshift_form">
+												<h3><?php esc_html_e("AI Agent Prompt", 'greenshift-animation-and-page-builder-blocks'); ?></h3>
+												<p style="max-width:800px"><?php esc_html_e("Build a ready-to-use prompt for AI agents (Claude Code, Cursor, Codex and others). The prompt instructs the agent to use our free skill which converts designs to GreenShift/GreenLight blocks.", 'greenshift-animation-and-page-builder-blocks'); ?> <a href="https://github.com/wpsoul/greenlight-vibe" target="_blank">greenlight-vibe</a></p>
+												<table class="form-table">
+													<tbody>
+														<tr>
+															<td>
+																<label for="gspb_agent_prompt_type"><?php esc_html_e("Prompt type", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+															</td>
+															<td>
+																<select id="gspb_agent_prompt_type">
+																	<option value="design"><?php esc_html_e("Build me Design", 'greenshift-animation-and-page-builder-blocks'); ?></option>
+																	<option value="editdesign"><?php esc_html_e("Edit my Design", 'greenshift-animation-and-page-builder-blocks'); ?></option>
+																	<option value="fixdesign"><?php esc_html_e("Fix my Greenshift block design", 'greenshift-animation-and-page-builder-blocks'); ?></option>
+																	<option value="chart"><?php esc_html_e("Build me Chart", 'greenshift-animation-and-page-builder-blocks'); ?></option>
+																	<option value="table"><?php esc_html_e("Build me Table", 'greenshift-animation-and-page-builder-blocks'); ?></option>
+																	<option value="dynamic"><?php esc_html_e("Build me Dynamic Template", 'greenshift-animation-and-page-builder-blocks'); ?></option>
+																	<option value="convert"><?php esc_html_e("Convert HTML to Blocks", 'greenshift-animation-and-page-builder-blocks'); ?></option>
+																	<option value="deconvert"><?php esc_html_e("Convert Blocks to HTML", 'greenshift-animation-and-page-builder-blocks'); ?></option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label for="gspb_agent_noslop"><?php esc_html_e("No AI Slop", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+															</td>
+															<td>
+																<input type="checkbox" id="gspb_agent_noslop" />
+																<span style="font-size:12px;color:#777"><?php esc_html_e("Adds strict design rules that prevent the generic AI look: violet gradient glows, pulsing dots, glassmorphism, em dashes and more.", 'greenshift-animation-and-page-builder-blocks'); ?></span>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<label for="gspb_agent_connection"><?php esc_html_e("Add Connection to site", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+															</td>
+															<td>
+																<input type="checkbox" id="gspb_agent_connection" />
+																<span style="font-size:12px;color:#777"><?php esc_html_e("Adds site URL, your email and an application password so the agent can publish directly to this site via REST API.", 'greenshift-animation-and-page-builder-blocks'); ?></span>
+															</td>
+														</tr>
+														<tr id="gspb_agent_connection_area" style="display:none">
+															<td>
+																<label for="gspb_agent_pass_select"><?php esc_html_e("Application password", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+															</td>
+															<td>
+																<?php if ($gspb_app_pass_available) : ?>
+																	<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+																		<select id="gspb_agent_pass_select" style="min-width:220px">
+																			<option value=""><?php esc_html_e("Select password", 'greenshift-animation-and-page-builder-blocks'); ?></option>
+																			<?php foreach ($gspb_agent_passwords as $gspb_agent_pass) : ?>
+																				<option value="<?php echo esc_attr($gspb_agent_pass['uuid']); ?>"><?php echo esc_html($gspb_agent_pass['name']); ?></option>
+																			<?php endforeach; ?>
+																		</select>
+																		<button type="button" class="button" id="gspb_agent_pass_delete"><?php esc_html_e("Revoke", 'greenshift-animation-and-page-builder-blocks'); ?></button>
+																	</div>
+																	<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+																		<input type="text" id="gspb_agent_pass_name" placeholder="<?php esc_attr_e("New password name", 'greenshift-animation-and-page-builder-blocks'); ?>" style="border-color:#ddd" />
+																		<button type="button" class="button" id="gspb_agent_pass_create"><?php esc_html_e("Generate App Password", 'greenshift-animation-and-page-builder-blocks'); ?></button>
+																		<span id="gspb_agent_pass_msg" style="font-size:12px"></span>
+																	</div>
+																	<div style="font-size:12px;margin-top:8px;color:#777"><?php esc_html_e("Passwords generated here are stored in your user profile so they can be reused in prompts. Revoke passwords that are no longer needed.", 'greenshift-animation-and-page-builder-blocks'); ?></div>
+																<?php else : ?>
+																	<div><?php esc_html_e("Application passwords are not available for your account. They require HTTPS or a local environment and must not be disabled by security plugins.", 'greenshift-animation-and-page-builder-blocks'); ?></div>
+																<?php endif; ?>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+												<textarea id="gspb_agent_prompt_output" style="width:100%;min-height:240px;border-color:#ddd" spellcheck="false"></textarea>
+												<div style="display:flex;gap:15px;align-items:center;margin-top:10px">
+													<button type="button" class="button button-primary button-large" id="gspb_agent_prompt_copy"><?php esc_html_e("Copy Prompt", 'greenshift-animation-and-page-builder-blocks'); ?></button>
+												</div>
+											</div>
+											<script>
+												(function() {
+													var data = <?php echo wp_json_encode($gspb_agent_prompt_data); ?>;
+													var typeSel = document.getElementById('gspb_agent_prompt_type');
+													var noslop = document.getElementById('gspb_agent_noslop');
+													var conn = document.getElementById('gspb_agent_connection');
+													var connArea = document.getElementById('gspb_agent_connection_area');
+													var passSel = document.getElementById('gspb_agent_pass_select');
+													var output = document.getElementById('gspb_agent_prompt_output');
+													var copyBtn = document.getElementById('gspb_agent_prompt_copy');
+													var createBtn = document.getElementById('gspb_agent_pass_create');
+													var deleteBtn = document.getElementById('gspb_agent_pass_delete');
+													var nameInput = document.getElementById('gspb_agent_pass_name');
+													var msg = document.getElementById('gspb_agent_pass_msg');
+
+													function getPassword(uuid) {
+														for (var i = 0; i < data.passwords.length; i++) {
+															if (data.passwords[i].uuid === uuid) {
+																return data.passwords[i];
+															}
+														}
+														return null;
+													}
+
+													function formatPassword(pass) {
+														return pass.indexOf(' ') === -1 ? (pass.match(/.{1,4}/g) || [pass]).join(' ') : pass;
+													}
+
+													function buildPrompt() {
+														var parts = [data.prompts.intro, data.prompts.types[typeSel.value] || ''];
+														if (noslop.checked) {
+															parts.push(data.prompts.noslop);
+														}
+														if (conn.checked) {
+															var pass = passSel ? getPassword(passSel.value) : null;
+															var passText = pass ? formatPassword(pass.password) : '[generate and select an application password above]';
+															parts.push(data.prompts.connection.split('{site}').join(data.site).split('{login}').join(data.login).split('{password}').join(passText));
+														}
+														output.value = parts.filter(Boolean).join('\n\n');
+													}
+
+													function showMsg(text, isError) {
+														if (!msg) return;
+														msg.textContent = text;
+														msg.style.color = isError ? '#c00' : '#1a7a2e';
+													}
+
+													typeSel.addEventListener('change', buildPrompt);
+													noslop.addEventListener('change', buildPrompt);
+													conn.addEventListener('change', function() {
+														if (connArea) {
+															connArea.style.display = conn.checked ? '' : 'none';
+														}
+														buildPrompt();
+													});
+													if (passSel) {
+														passSel.addEventListener('change', buildPrompt);
+													}
+
+													copyBtn.addEventListener('click', function() {
+														var done = function() {
+															copyBtn.textContent = data.copiedLabel;
+															setTimeout(function() {
+																copyBtn.textContent = data.copyLabel;
+															}, 2000);
+														};
+														if (navigator.clipboard && navigator.clipboard.writeText) {
+															navigator.clipboard.writeText(output.value).then(done);
+														} else {
+															output.select();
+															document.execCommand('copy');
+															done();
+														}
+													});
+
+													if (createBtn) {
+														createBtn.addEventListener('click', function() {
+															var body = new FormData();
+															body.append('action', 'gspb_agent_app_password_create');
+															body.append('nonce', data.nonce);
+															body.append('name', nameInput.value || '');
+															createBtn.disabled = true;
+															fetch(ajaxurl, { method: 'POST', credentials: 'same-origin', body: body })
+																.then(function(r) { return r.json(); })
+																.then(function(res) {
+																	createBtn.disabled = false;
+																	if (res.success) {
+																		data.passwords.push(res.data);
+																		var opt = document.createElement('option');
+																		opt.value = res.data.uuid;
+																		opt.textContent = res.data.name;
+																		passSel.appendChild(opt);
+																		passSel.value = res.data.uuid;
+																		nameInput.value = '';
+																		showMsg(data.createdMsg, false);
+																		buildPrompt();
+																	} else {
+																		showMsg(res.data && res.data.msg ? res.data.msg : data.errorMsg, true);
+																	}
+																})
+																.catch(function() {
+																	createBtn.disabled = false;
+																	showMsg(data.errorMsg, true);
+																});
+														});
+													}
+
+													if (deleteBtn) {
+														deleteBtn.addEventListener('click', function() {
+															var uuid = passSel.value;
+															if (!uuid) {
+																showMsg(data.selectFirstMsg, true);
+																return;
+															}
+															if (!window.confirm(data.confirmRevoke)) {
+																return;
+															}
+															var body = new FormData();
+															body.append('action', 'gspb_agent_app_password_delete');
+															body.append('nonce', data.nonce);
+															body.append('uuid', uuid);
+															deleteBtn.disabled = true;
+															fetch(ajaxurl, { method: 'POST', credentials: 'same-origin', body: body })
+																.then(function(r) { return r.json(); })
+																.then(function(res) {
+																	deleteBtn.disabled = false;
+																	if (res.success) {
+																		data.passwords = data.passwords.filter(function(p) { return p.uuid !== uuid; });
+																		var opt = passSel.querySelector('option[value="' + uuid + '"]');
+																		if (opt) {
+																			opt.remove();
+																		}
+																		passSel.value = '';
+																		showMsg(data.revokedMsg, false);
+																		buildPrompt();
+																	} else {
+																		showMsg(res.data && res.data.msg ? res.data.msg : data.errorMsg, true);
+																	}
+																})
+																.catch(function() {
+																	deleteBtn.disabled = false;
+																	showMsg(data.errorMsg, true);
+																});
+														});
+													}
+
+													buildPrompt();
+												})();
+											</script>
+										</div>
 										<div class="gspb_settings_form">
 											<form method="POST">
 												<div class="greenshift_form">
+													<h3><?php esc_html_e("API Keys & Models", 'greenshift-animation-and-page-builder-blocks'); ?></h3>
 													<?php wp_nonce_field('gspb_settings_page_action', 'gspb_settings_field'); ?>
 													<table class="form-table">
 														<tbody>
@@ -1236,6 +1576,14 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												} else {
 													unset($theme_settings['enable_meta']);
 												}
+												if (isset($_POST['enable_og_image'])) {
+													$theme_settings['enable_og_image'] = !empty($_POST['enable_og_image']) ? sanitize_text_field($_POST['enable_og_image']) : '';
+												} else {
+													unset($theme_settings['enable_og_image']);
+												}
+												if (isset($_POST['og_image_url'])) {
+													$theme_settings['og_image_url'] = !empty($_POST['og_image_url']) ? esc_url_raw(wp_unslash($_POST['og_image_url'])) : '';
+												}
 												if (isset($_POST['remove_emoji'])) {
 													$global_settings['remove_emoji'] = !empty($_POST['remove_emoji']) ? sanitize_text_field($_POST['remove_emoji']) : '';
 												} else {
@@ -1266,7 +1614,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												} else {
 													unset($global_settings['remove_api_links']);
 												}
-												if (isset($_POST['custom_code_in_head']) || isset($_POST['custom_code_before_closed_body']) || isset($_POST['enable_meta'])) {
+												if (isset($_POST['custom_code_in_head']) || isset($_POST['custom_code_before_closed_body']) || isset($_POST['enable_meta']) || isset($_POST['enable_og_image']) || isset($_POST['og_image_url'])) {
 													update_option('greenshift_theme_options', $theme_settings);
 												}
 												if (isset($_POST['remove_emoji']) || isset($_POST['remove_skip_link']) || isset($_POST['remove_generator_meta']) || isset($_POST['remove_wp_block_library']) || isset($_POST['remove_rss_links']) || isset($_POST['remove_api_links'])) {
@@ -1280,6 +1628,8 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 											$custom_code_in_head = !empty($theme_settings['custom_code_in_head']) ? wp_unslash($theme_settings['custom_code_in_head']) : '';
 											$custom_code_before_closed_body = !empty($theme_settings['custom_code_before_closed_body']) ? wp_unslash($theme_settings['custom_code_before_closed_body']) : '';
 											$enable_meta = !empty($theme_settings['enable_meta']) ? sanitize_text_field($theme_settings['enable_meta']) : '';
+											$enable_og_image = !empty($theme_settings['enable_og_image']) ? sanitize_text_field($theme_settings['enable_og_image']) : '';
+											$og_image_url = !empty($theme_settings['og_image_url']) ? esc_url($theme_settings['og_image_url']) : '';
 											$remove_emoji = !empty($global_settings['remove_emoji']) ? sanitize_text_field($global_settings['remove_emoji']) : '';
 											$remove_skip_link = !empty($global_settings['remove_skip_link']) ? sanitize_text_field($global_settings['remove_skip_link']) : '';
 											$remove_generator_meta = !empty($global_settings['remove_generator_meta']) ? sanitize_text_field($global_settings['remove_generator_meta']) : '';
@@ -1306,6 +1656,19 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 														<th> <label for="enable_meta"><?php esc_html_e("Enable Meta Description", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
 														<td>
 															<input type="checkbox" name="enable_meta" id="enable_meta" value="1" <?php checked($enable_meta, '1'); ?>>
+														</td>
+													</tr>
+													<tr>
+														<th> <label for="enable_og_image"><?php esc_html_e("Enable OpenGraph Image", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
+														<td>
+															<input type="checkbox" name="enable_og_image" id="enable_og_image" value="1" <?php checked($enable_og_image, '1'); ?>>
+															<p class="description"><?php esc_html_e("On singular items, the Featured Image is used when set; otherwise the fallback image below is used.", 'greenshift-animation-and-page-builder-blocks'); ?></p>
+														</td>
+													</tr>
+													<tr>
+														<th> <label for="og_image_url"><?php esc_html_e("Fallback OpenGraph Image URL", 'greenshift-animation-and-page-builder-blocks'); ?></label> </th>
+														<td>
+															<input type="url" name="og_image_url" id="og_image_url" value="<?php echo esc_attr($og_image_url); ?>" style="width: 100%;" placeholder="https://example.com/og.jpg">
 														</td>
 													</tr>
 													<tr>
@@ -1782,6 +2145,17 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 				}
 				if(!empty($meta_desc)){
 					echo '<meta name="description" content="' . esc_attr($meta_desc) . '">' . "\n";
+				}
+			}
+			if (!empty($theme_settings['enable_og_image'])) {
+				$og_image = '';
+				if (is_singular() && has_post_thumbnail()) {
+					$og_image = get_the_post_thumbnail_url(null, 'full');
+				} elseif (!empty($theme_settings['og_image_url'])) {
+					$og_image = $theme_settings['og_image_url'];
+				}
+				if ($og_image) {
+					echo '<meta property="og:image" content="' . esc_url($og_image) . '">' . "\n";
 				}
 			}
 			$localfonts = (!empty($sitesettings['localfont'])) ? $sitesettings['localfont'] : '';
