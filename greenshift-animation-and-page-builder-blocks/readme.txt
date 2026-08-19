@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 13.1.4
+Stable tag: 13.1.5
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -140,6 +140,13 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 13.1.5 =
+
+* Added: text-stroke support in server side style rendering
+* Fixed: Server side rendering and preparation for full on fly css rendering which is better for agents (disabling plugin do not break frontend). 
+* Improvements: better API keys handling, few UI updates 
+
 
 = 13.1.4 =
 

@@ -1358,6 +1358,29 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												<div class="greenshift_form">
 													<h3><?php esc_html_e("API Keys & Models", 'greenshift-animation-and-page-builder-blocks'); ?></h3>
 													<?php wp_nonce_field('gspb_settings_page_action', 'gspb_settings_field'); ?>
+													<style>
+														.gspb_secret_field { display: flex; align-items: center; gap: 5px; }
+														.gspb_secret_field input { flex: 1; }
+														.gspb_secret_toggle { display: flex !important; align-items: center; justify-content: center; padding: 0 6px !important; }
+														.gspb_secret_toggle .dashicons { width: 18px; height: 18px; font-size: 18px; }
+													</style>
+													<script>
+														document.addEventListener('click', function(e) {
+															var btn = e.target.closest ? e.target.closest('.gspb_secret_toggle') : null;
+															if (!btn) return;
+															var input = btn.parentNode.querySelector('input');
+															if (!input) return;
+															var hidden = input.type === 'password';
+															input.type = hidden ? 'text' : 'password';
+															btn.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+															btn.setAttribute('aria-label', hidden ? '<?php echo esc_js(__("Hide key", 'greenshift-animation-and-page-builder-blocks')); ?>' : '<?php echo esc_js(__("Show key", 'greenshift-animation-and-page-builder-blocks')); ?>');
+															var icon = btn.querySelector('.dashicons');
+															if (icon) {
+																icon.classList.toggle('dashicons-visibility', !hidden);
+																icon.classList.toggle('dashicons-hidden', hidden);
+															}
+														});
+													</script>
 													<table class="form-table">
 														<tbody>
 															<tr class="googleapikey">
@@ -1365,7 +1388,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<label for="googleapi"><?php esc_html_e("Google API Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
 																</td>
 																<td>
-																	<textarea style="width:100%; min-height:50px;border-color:#ddd" id="googleapi" name="googleapi"><?php echo esc_html($googleapi); ?></textarea>
+																	<div class="gspb_secret_field">
+																		<input type="password" style="width:100%;border-color:#ddd" id="googleapi" name="googleapi" value="<?php echo esc_attr($googleapi); ?>" autocomplete="off" spellcheck="false" />
+																		<button type="button" class="button gspb_secret_toggle" aria-pressed="false" aria-label="<?php esc_attr_e("Show key", 'greenshift-animation-and-page-builder-blocks'); ?>"><span class="dashicons dashicons-visibility"></span></button>
+																	</div>
 																	<div style="margin-bottom:15px"><a href="https://developers.google.com/maps/documentation/javascript/get-api-key"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
 																</td>
 															</tr>
@@ -1383,7 +1409,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<label for="turnstile_secret_key"><?php esc_html_e("Cloudflare Turnstile Secret Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
 																</td>
 																<td>
-																	<input type="text" style="width:100%;border-color:#ddd" id="turnstile_secret_key" name="turnstile_secret_key" value="<?php echo esc_attr($turnstile_secret_key); ?>" />
+																	<div class="gspb_secret_field">
+																		<input type="password" style="width:100%;border-color:#ddd" id="turnstile_secret_key" name="turnstile_secret_key" value="<?php echo esc_attr($turnstile_secret_key); ?>" autocomplete="off" spellcheck="false" />
+																		<button type="button" class="button gspb_secret_toggle" aria-pressed="false" aria-label="<?php esc_attr_e("Show key", 'greenshift-animation-and-page-builder-blocks'); ?>"><span class="dashicons dashicons-visibility"></span></button>
+																	</div>
 																	<div style="margin-bottom:15px"><?php esc_html_e("Secret key is used for server-side verification", 'greenshift-animation-and-page-builder-blocks'); ?></div>
 																</td>
 															</tr>
@@ -1392,7 +1421,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<label for="openaiapi"><?php esc_html_e("Open AI API Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
 																</td>
 																<td>
-																	<textarea style="width:100%; min-height:50px;border-color:#ddd" id="openaiapi" name="openaiapi"><?php echo esc_html($openaiapi); ?></textarea>
+																	<div class="gspb_secret_field">
+																		<input type="password" style="width:100%;border-color:#ddd" id="openaiapi" name="openaiapi" value="<?php echo esc_attr($openaiapi); ?>" autocomplete="off" spellcheck="false" />
+																		<button type="button" class="button gspb_secret_toggle" aria-pressed="false" aria-label="<?php esc_attr_e("Show key", 'greenshift-animation-and-page-builder-blocks'); ?>"><span class="dashicons dashicons-visibility"></span></button>
+																	</div>
 																	<div style="margin-bottom:15px"><a href="https://platform.openai.com/account/api-keys"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
 																</td>
 															</tr>
@@ -1401,7 +1433,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<label for="claudeapi"><?php esc_html_e("Claude API Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
 																</td>
 																<td>
-																	<textarea style="width:100%; min-height:50px;border-color:#ddd" id="claudeapi" name="claudeapi"><?php echo esc_html($claudeapi); ?></textarea>
+																	<div class="gspb_secret_field">
+																		<input type="password" style="width:100%;border-color:#ddd" id="claudeapi" name="claudeapi" value="<?php echo esc_attr($claudeapi); ?>" autocomplete="off" spellcheck="false" />
+																		<button type="button" class="button gspb_secret_toggle" aria-pressed="false" aria-label="<?php esc_attr_e("Show key", 'greenshift-animation-and-page-builder-blocks'); ?>"><span class="dashicons dashicons-visibility"></span></button>
+																	</div>
 																	<div style="margin-bottom:15px"><a href="https://console.anthropic.com/"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
 																</td>
 															</tr>
@@ -1410,7 +1445,10 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 																	<label for="geminiapi"><?php esc_html_e("Gemini API Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
 																</td>
 																<td>
-																	<textarea style="width:100%; min-height:50px;border-color:#ddd" id="geminiapi" name="geminiapi"><?php echo esc_html($geminiapi); ?></textarea>
+																	<div class="gspb_secret_field">
+																		<input type="password" style="width:100%;border-color:#ddd" id="geminiapi" name="geminiapi" value="<?php echo esc_attr($geminiapi); ?>" autocomplete="off" spellcheck="false" />
+																		<button type="button" class="button gspb_secret_toggle" aria-pressed="false" aria-label="<?php esc_attr_e("Show key", 'greenshift-animation-and-page-builder-blocks'); ?>"><span class="dashicons dashicons-visibility"></span></button>
+																	</div>
 																	<div style="margin-bottom:15px"><a href="https://aistudio.google.com/apikey"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
 																</td>
 															</tr>
