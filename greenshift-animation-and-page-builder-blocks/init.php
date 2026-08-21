@@ -756,25 +756,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'13.1.5'
+		'13.1.6'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'13.1.5'
+		'13.1.6'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'13.1.5'
+		'13.1.6'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'13.1.5'
+		'13.1.6'
 	);
 
 	//Script for ajax reusable loading
@@ -1838,6 +1838,7 @@ function gspb_greenShift_editor_assets()
 
 	$index_asset_file = include(GREENSHIFT_DIR_PATH . 'build/index.asset.php');
 	$library_asset_file = include(GREENSHIFT_DIR_PATH . 'build/gspbLibrary.asset.php');
+	$custom_editor_asset_file = include(GREENSHIFT_DIR_PATH . 'build/gspbCustomEditor.asset.php');
 
 	wp_register_script(
 		'greenShift-site-editor-js',
@@ -1864,7 +1865,7 @@ function gspb_greenShift_editor_assets()
 		'greenShift-editor-js',
 		GREENSHIFT_DIR_URL . 'build/gspbCustomEditor.js',
 		array('greenShift-library-script', 'jquery', 'wp-data', 'wp-element'),
-		$index_asset_file['version'],
+		$custom_editor_asset_file['version'],
 		true
 	);
 	wp_set_script_translations('greenShift-editor-js', 'greenshift-animation-and-page-builder-blocks');
