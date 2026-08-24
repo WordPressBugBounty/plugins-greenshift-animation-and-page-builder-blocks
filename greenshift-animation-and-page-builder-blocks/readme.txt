@@ -8,7 +8,7 @@ Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 13.1.6
+Stable tag: 13.1.7
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -140,6 +140,11 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 13.1.7 =
+
+* Added: Support for custom responsive breakpoints from theme.json (settings.viewport, WordPress 7.1+) - editor preview styles and device preview widths now follow the theme breakpoints automatically, matching the core responsive engine and themes like Blocksy
+* Added: "Overwrite breakpoints by theme.json" option in Breakpoints settings - applies the theme.json breakpoints to frontend styles instead of the manual Tablet and Desktop values
 
 = 13.1.6 =
 
