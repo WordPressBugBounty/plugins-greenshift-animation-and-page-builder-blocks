@@ -28,7 +28,10 @@ function gspb_get_theme_json_breakpoints()
 	}
 
 	$viewport = wp_get_global_settings(array('viewport'));
-	if (empty($viewport) || !is_array($viewport)) {
+	// When the path is not set, core falls back to returning the FULL settings
+	// tree (`_wp_array_get($settings, $path, $settings)`), so only accept an
+	// array that actually looks like a viewport config.
+	if (empty($viewport) || !is_array($viewport) || (!isset($viewport['mobile']) && !isset($viewport['tablet']))) {
 		$theme_breakpoints = apply_filters('gspb_theme_json_breakpoints', $theme_breakpoints);
 		return $theme_breakpoints;
 	}
@@ -82,6 +85,13 @@ function gspb_apply_theme_json_breakpoints($breakpoints)
 
 function gspb_get_breakpoints()
 {
+	// Computed once per request: this runs for every rendered block style, and
+	// the option, filter and theme.json values are stable within a request.
+	static $gspb_breakpoints_cache = null;
+	if (null !== $gspb_breakpoints_cache) {
+		return $gspb_breakpoints_cache;
+	}
+
 	// defaults breakpoints.
 	$gsbp_breakpoints = apply_filters('greenshift_responsive_breakpoints', array(
 		'mobile' 	=> 576,
@@ -105,13 +115,14 @@ function gspb_get_breakpoints()
 		if (!empty($gsbp_custom_breakpoints['desktop'])) {
 			$gsbp_breakpoints['desktop'] = trim($gsbp_custom_breakpoints['desktop']);
 		}
-
-		if (!empty($gs_settings['breakpoints_theme_json'])) {
-			$gsbp_breakpoints = gspb_apply_theme_json_breakpoints($gsbp_breakpoints);
-		}
 	}
 
-	return array(
+	// Theme.json viewport breakpoints (WP 7.1+) always overwrite the Tablet and
+	// Desktop points when the theme defines them, so frontend styles switch at
+	// the same boundaries as the core responsive engine and the editor preview.
+	$gsbp_breakpoints = gspb_apply_theme_json_breakpoints($gsbp_breakpoints);
+
+	$gspb_breakpoints_cache = array(
 		'mobile' 			=> intval($gsbp_breakpoints['mobile']),
 		'mobile_down' 		=> intval($gsbp_breakpoints['mobile']) - 0.02,
 		'tablet' 			=> intval($gsbp_breakpoints['tablet']),
@@ -119,6 +130,8 @@ function gspb_get_breakpoints()
 		'desktop' 			=> intval($gsbp_breakpoints['desktop']),
 		'desktop_down'		=> intval($gsbp_breakpoints['desktop']) - 0.02,
 	);
+
+	return $gspb_breakpoints_cache;
 }
 
 function gspb_get_final_css($gspb_css_content)
@@ -2159,11 +2172,9 @@ function gspb_greenShift_editor_assets()
 	$disabled_blocks = array_unique($disabled_blocks);
 	$disabled_variations = array_unique($disabled_variations);
 
-	// Editor previews follow theme.json viewport breakpoints by default (WP 7.1+),
-	// so GreenShift device previews match the core responsive engine. On frontend
-	// theme.json values apply only with the "Overwrite breakpoints by theme.json"
-	// option, which gspb_get_breakpoints() already handles.
-	$editor_breakpoints = gspb_apply_theme_json_breakpoints(gspb_get_breakpoints());
+	// Effective breakpoints for editor previews; gspb_get_breakpoints() already
+	// applies theme.json viewport values (WP 7.1+) on top of plugin settings.
+	$editor_breakpoints = gspb_get_breakpoints();
 
 	//$updatelink = str_replace('greenshift_dashboard-addons', 'greenshift_dashboard-pricing', $addonlink);
 	$localize_array = 		array(
@@ -2175,7 +2186,6 @@ function gspb_greenShift_editor_assets()
 			'tablet' => intval($editor_breakpoints['tablet']),
 			'desktop' => intval($editor_breakpoints['desktop']),
 			'themeJson' => !empty(gspb_get_theme_json_breakpoints()),
-			'themeJsonOverride' => !empty($sitesettings['breakpoints_theme_json']),
 		),
 		'theme' => $themename,
 		'isRehub' => ($themename == 'rehub-theme'),

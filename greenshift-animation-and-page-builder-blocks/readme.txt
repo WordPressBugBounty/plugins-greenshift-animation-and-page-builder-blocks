@@ -4,11 +4,11 @@ Tags: gutenberg-blocks, page-builder, animation, woocommerce-blocks, full-site-e
 Author: Wpsoul
 Author URI: https://greenshiftwp.com
 Plugin URI: https://greenshiftwp.com
-Requires at least: 6.6
-Tested up to: 7.1
+Requires at least: 6.8
+Tested up to: 7.2
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 13.1.7
+Stable tag: 13.1.8
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -140,6 +140,11 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 13.1.8 =
+
+* Changed: theme.json custom breakpoints (settings.viewport, WordPress 7.1+) are now applied automatically to frontend styles - no option needed; the "Overwrite breakpoints by theme.json" checkbox was removed and the Breakpoints settings show the detected theme values instead
+* Improved: breakpoints are resolved once per request (theme.json lookup and settings are cached), so the automatic check adds no measurable overhead to style rendering
 
 = 13.1.7 =
 

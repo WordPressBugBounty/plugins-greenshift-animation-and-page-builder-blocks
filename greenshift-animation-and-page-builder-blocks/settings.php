@@ -878,17 +878,9 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												}
 											}
 
-											if (!empty($_POST['breakpoints_theme_json'])) {
-												$global_settings['breakpoints_theme_json'] = true;
-											} else {
-												if(isset($global_settings['breakpoints_theme_json'])){
-													unset($global_settings['breakpoints_theme_json']);
-												}
-											}
 											update_option('gspb_global_settings', $global_settings);
 										}
 										$enable_landscape = !empty($global_settings['enable_landscape']) ? $global_settings['enable_landscape'] : '';
-										$breakpoints_theme_json = !empty($global_settings['breakpoints_theme_json']) ? $global_settings['breakpoints_theme_json'] : '';
 										$theme_json_breakpoints = function_exists('gspb_get_theme_json_breakpoints') ? gspb_get_theme_json_breakpoints() : array();
 									?>
 										<form method="POST" class="greenshift_form">
@@ -935,14 +927,13 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 												</tr>
 												<?php if (!empty($theme_json_breakpoints)) : ?>
 												<tr>
-													<td> <label for="breakpoints_theme_json"><?php esc_html_e("Overwrite breakpoints by theme.json", 'greenshift-animation-and-page-builder-blocks'); ?></label> </td>
+													<td> <?php esc_html_e("Theme.json breakpoints", 'greenshift-animation-and-page-builder-blocks'); ?> </td>
 													<td>
-														<input type="checkbox" name="breakpoints_theme_json" id="breakpoints_theme_json" <?php echo $breakpoints_theme_json == true ? 'checked' : ''; ?> />
 														<p class="description">
 															<?php
 															printf(
 																/* translators: 1: tablet breakpoint, 2: desktop breakpoint */
-																esc_html__('Your theme defines custom responsive breakpoints in theme.json (Tablet point: %1$s, Desktop point: %2$s). When enabled, they overwrite the Tablet and Desktop values above for frontend styles. The editor already follows theme.json breakpoints by default.', 'greenshift-animation-and-page-builder-blocks'),
+																esc_html__('Your theme defines custom responsive breakpoints in theme.json (Tablet point: %1$s, Desktop point: %2$s). They are applied automatically to editor and frontend styles and overwrite the Tablet and Desktop values above.', 'greenshift-animation-and-page-builder-blocks'),
 																!empty($theme_json_breakpoints['tablet']) ? esc_html($theme_json_breakpoints['tablet'] . 'px') : esc_html__('not set', 'greenshift-animation-and-page-builder-blocks'),
 																!empty($theme_json_breakpoints['desktop']) ? esc_html($theme_json_breakpoints['desktop'] . 'px') : esc_html__('not set', 'greenshift-animation-and-page-builder-blocks')
 															);
