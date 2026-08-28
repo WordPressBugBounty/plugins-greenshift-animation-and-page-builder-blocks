@@ -8,7 +8,7 @@ Requires at least: 6.8
 Tested up to: 7.2
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 13.1.8
+Stable tag: 13.1.9
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -140,6 +140,11 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 13.1.9 =
+
+* Fixed: global class was removed from block classes, but stayed in block attributes, when it was deleted in class selector right after selecting it (synchronization request with database restored deleted class)
+* Improved: breakpoints now injected from theme.json if they are existed
 
 = 13.1.8 =
 

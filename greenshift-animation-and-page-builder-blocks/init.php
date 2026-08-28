@@ -74,9 +74,13 @@ function gspb_apply_theme_json_breakpoints($breakpoints)
 	if (!empty($theme_breakpoints['desktop'])) {
 		$breakpoints['desktop'] = $theme_breakpoints['desktop'];
 	}
-	// The portrait mobile point has no theme.json counterpart; keep it below the
-	// tablet point so device ranges stay ordered.
-	if (intval($breakpoints['mobile']) > intval($breakpoints['tablet'])) {
+	// theme.json has two responsive ranges below desktop, while GreenShift has
+	// three. When both core breakpoints exist, collapse GreenShift's extra
+	// landscape range so its remaining device states map one-to-one to core.
+	if (isset($theme_breakpoints['tablet'], $theme_breakpoints['desktop'])) {
+		$breakpoints['mobile'] = $theme_breakpoints['tablet'];
+	} elseif (intval($breakpoints['mobile']) > intval($breakpoints['tablet'])) {
+		// Keep partially configured breakpoint sets ordered.
 		$breakpoints['mobile'] = intval($breakpoints['tablet']);
 	}
 
@@ -844,25 +848,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'13.1.7'
+		'13.1.9'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'13.1.7'
+		'13.1.9'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'13.1.7'
+		'13.1.9'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'13.1.7'
+		'13.1.9'
 	);
 
 	//Script for ajax reusable loading
@@ -2528,11 +2532,10 @@ function gspb_global_assets()
 
 		$stylesrender = '';
 
+		$hide_theme_json_landscape = 2 === count(gspb_get_theme_json_breakpoints());
 		$hidelandscape = apply_filters('greenshift_hide_landscape_breakpoint', false);
-		if($hidelandscape){
-			if(empty($options['enable_landscape'])){
-				$stylesrender .= '.gspb_inspector_device-icons__icon[data-device="landscape-mobile"], .gspb_inspector_toggle_landscapemobile_hide{display:none !important;}';
-			}
+		if($hide_theme_json_landscape || ($hidelandscape && empty($options['enable_landscape']))){
+			$stylesrender .= '.gspb_inspector_device-icons__icon[data-device="landscape-mobile"], .gspb_inspector_toggle_landscapemobile_hide{display:none !important;}';
 		}
 
 		if (!empty($options['custom_css'])) {
