@@ -158,10 +158,10 @@ if (!function_exists('gspb_AnimationRenderProps')) {
 					$animeprops['data-triggerscrub'] = esc_attr($animation['triggerscrub']);
 				}
 				if (!empty($animation['customProps'])) {
-					$animeprops['data-customprops'] = json_encode($animation['customProps']);
+					$animeprops['data-customprops'] = htmlspecialchars(json_encode($animation['customProps']));
 				}
 				if (!empty($animation['customPropsM'])) {
-					$animeprops['data-custompropsM'] = json_encode($animation['customPropsM']);
+					$animeprops['data-custompropsM'] = htmlspecialchars(json_encode($animation['customPropsM']));
 				}
 				if (!empty($animation['set_from']) && $animation['set_from'] == 'to') {
 					$animeprops['data-from'] = "";
@@ -306,7 +306,7 @@ if (!function_exists('gspb_AnimationRenderProps')) {
 					$animeprops['data-triggertype'] = "load";
 				}
 				if(!empty($animation['multiple_animation'])){
-					$animeprops['multianimations'] = json_encode($animation['multiple_animation']);
+					$animeprops['multianimations'] = htmlspecialchars(json_encode($animation['multiple_animation']));
 				}
 				if (!empty($animation['multikeyframes'])) {
 					$animeprops['data-multikeyframes'] = "yes";
@@ -1455,10 +1455,10 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			}
 		}
 		if(strpos($value, '{{CURRENT_DATE_YMD}}') !== false){
-			$value = str_replace('{{CURRENT_DATE_YMD}}', date('Y-m-d'), $value);
+			$value = str_replace('{{CURRENT_DATE_YMD}}', gmdate('Y-m-d'), $value);
 		}
 		if(strpos($value, '{{CURRENT_DATE_YMD_HMS}}') !== false){
-			$value = str_replace('{{CURRENT_DATE_YMD_HMS}}', date('Y-m-d H:i:s'), $value);
+			$value = str_replace('{{CURRENT_DATE_YMD_HMS}}', gmdate('Y-m-d H:i:s'), $value);
 		}
 		if(strpos($value, '{{TIMESTRING:') !== false){
 			$pattern = '/\{TIMESTRING:(.*?)\}/';

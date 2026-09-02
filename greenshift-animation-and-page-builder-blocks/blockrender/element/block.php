@@ -760,7 +760,7 @@ class Element
 				if(empty($json)){
 					$siteurl = site_url();
 					$type = !empty($block['attrs']['chartData']['chart_type']) ? $block['attrs']['chartData']['chart_type'] : 'chart1';
-					$remote = wp_safe_remote_get($siteurl.'/wp-json/greenshift/v1/get-csv-to-json?type='.$type.'&url='.$block['attrs']['chartData']['csv_link']);
+					$remote = wp_safe_remote_get($siteurl.'/wp-json/greenshift/v1/get-csv-to-json?type='.rawurlencode($type).'&url='.rawurlencode($block['attrs']['chartData']['csv_link']));
 					if(!is_wp_error($remote)){
 						$json = wp_remote_retrieve_body($remote);
 						if($cache_time){

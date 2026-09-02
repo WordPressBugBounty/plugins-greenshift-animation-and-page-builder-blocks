@@ -848,25 +848,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'13.1.9'
+		'13.2.0'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'13.1.9'
+		'13.2.0'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'13.1.9'
+		'13.2.0'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'13.1.9'
+		'13.2.0'
 	);
 
 	//Script for ajax reusable loading
@@ -3489,6 +3489,85 @@ function gspb_convert_svgstring_from_svg_image(WP_REST_Request $request)
 
 }
 
+/**
+ * Hosts the CSV importer is allowed to fetch from.
+ *
+ * The endpoint below reaches out to a user supplied URL, so the destination has to be
+ * pinned to trusted Google Sheets hosts. wp_safe_remote_get() alone is not enough:
+ * it only blocks internal/loopback ranges, and only on recent core versions.
+ */
+if (!function_exists('gspb_get_allowed_csv_hosts')) {
+	function gspb_get_allowed_csv_hosts()
+	{
+		$hosts = array(
+			'docs.google.com',
+			'spreadsheets.google.com',
+		);
+
+		// Escape hatch for site owners who host their CSV data somewhere else.
+		$hosts = apply_filters('gspb_allowed_csv_hosts', $hosts);
+
+		$clean = array();
+		if (is_array($hosts)) {
+			foreach ($hosts as $host) {
+				if (is_string($host) && $host !== '') {
+					$clean[] = strtolower(trim($host, ". \t\n\r\0\x0B"));
+				}
+			}
+		}
+
+		return $clean;
+	}
+}
+
+/**
+ * Check a CSV source URL against the allowlist.
+ *
+ * Returns the normalized (https) URL, or false when the URL may not be fetched.
+ */
+if (!function_exists('gspb_validate_csv_source_url')) {
+	function gspb_validate_csv_source_url($url)
+	{
+		if (!is_string($url) || $url === '' || !filter_var($url, FILTER_VALIDATE_URL)) {
+			return false;
+		}
+
+		$parts = wp_parse_url($url);
+		if (empty($parts['host']) || empty($parts['scheme'])) {
+			return false;
+		}
+
+		// Plain http(s) only, no file://, ftp://, gopher:// and friends.
+		$scheme = strtolower($parts['scheme']);
+		if ($scheme !== 'http' && $scheme !== 'https') {
+			return false;
+		}
+
+		// Credentials are never needed here and are the usual way of disguising the real host.
+		if (isset($parts['user']) || isset($parts['pass'])) {
+			return false;
+		}
+
+		$host = strtolower(rtrim($parts['host'], '.'));
+		if (!in_array($host, gspb_get_allowed_csv_hosts(), true)) {
+			return false;
+		}
+
+		// Nothing but the standard web ports, so the endpoint cannot be used as a port scanner.
+		if (isset($parts['port']) && !in_array((int) $parts['port'], array(80, 443), true)) {
+			return false;
+		}
+
+		// Rebuild from the parsed pieces so the host is always normalized and the request is TLS.
+		$safe = 'https://' . $host;
+		$safe .= isset($parts['path']) ? $parts['path'] : '';
+		$safe .= isset($parts['query']) ? '?' . $parts['query'] : '';
+		$safe .= isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
+
+		return $safe;
+	}
+}
+
 function gspb_get_csv_to_json(WP_REST_Request $request)
 {
 	$url = sanitize_text_field($request->get_param('url'));
@@ -3503,8 +3582,21 @@ function gspb_get_csv_to_json(WP_REST_Request $request)
 			$url = urldecode($url);
 		}
 		
+		// Only allowlisted hosts may be fetched, see gspb_get_allowed_csv_hosts().
+		$url = gspb_validate_csv_source_url($url);
+		if(!$url) {
+			return new WP_Error(
+				'gspb_csv_url_not_allowed',
+				__('This URL is not allowed. Only Google Sheets links can be imported.', 'greenshift-animation-and-page-builder-blocks'),
+				array('status' => 403)
+			);
+		}
+
+		$host = strtolower((string) wp_parse_url($url, PHP_URL_HOST));
+		$path = (string) wp_parse_url($url, PHP_URL_PATH);
+
 		// Check if URL is a Google Sheets URL that needs conversion to CSV export format
-		if(strpos($url, 'docs.google.com/spreadsheets') !== false) {
+		if($host === 'docs.google.com' && strpos($path, '/spreadsheets') === 0) {
 			// If it's not already in the CSV output format
 			if(strpos($url, 'output=csv') === false) {
 				// If it's a standard /d/ format URL
@@ -3523,6 +3615,16 @@ function gspb_get_csv_to_json(WP_REST_Request $request)
 			// If already has output=csv, we'll use it as is
 		}
 		
+		// The rewrite above must not be able to move the request off an allowed host.
+		$url = gspb_validate_csv_source_url($url);
+		if(!$url) {
+			return new WP_Error(
+				'gspb_csv_url_not_allowed',
+				__('This URL is not allowed. Only Google Sheets links can be imported.', 'greenshift-animation-and-page-builder-blocks'),
+				array('status' => 403)
+			);
+		}
+
 		$response = wp_safe_remote_get($url);
 		
 		if(!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {

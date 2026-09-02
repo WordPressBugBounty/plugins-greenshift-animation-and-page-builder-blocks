@@ -4,11 +4,11 @@ Tags: gutenberg-blocks, page-builder, animation, woocommerce-blocks, full-site-e
 Author: Wpsoul
 Author URI: https://greenshiftwp.com
 Plugin URI: https://greenshiftwp.com
-Requires at least: 6.8
+Requires at least: 6.9
 Tested up to: 7.2
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 13.1.9
+Stable tag: 13.2.0
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -140,6 +140,13 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 13.2.0 =
+
+* Fixed: Stored XSS in GSAP animation data attributes - the customProps, customPropsM and multianimations values are now HTML escaped before they are written into the block markup, so a value saved by a lower privileged user (Contributor and up) can no longer break out of the attribute and inject an event handler. Reported by Revanth Hari Narayana Matte
+* Fixed: Server Side Request Forgery in the CSV to JSON REST endpoint - CSV imports are now limited to Google Sheets hosts (docs.google.com, spreadsheets.google.com) over https instead of fetching any URL the request asks for. Reported by Alireza Kalhor
+* Added: gspb_allowed_csv_hosts filter, for site owners who host their CSV data on another trusted host
+* Fixed: chart CSV link is now URL encoded when it is passed to the CSV endpoint, so published Google Sheets links with several query parameters are no longer truncated
 
 = 13.1.9 =
 
