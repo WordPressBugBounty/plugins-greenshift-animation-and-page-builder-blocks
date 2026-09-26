@@ -846,10 +846,10 @@ class Element
 
 			if(!empty($global_js[$id])){
 				$js = $global_js[$id];
-				$js = greenshift_dynamic_placeholders($js);
+				$js = greenshift_dynamic_placeholders($js, [], 0, [], 'js');
 				if(!empty($block['attrs']['customJsControllers'])){
 					foreach($block['attrs']['customJsControllers'] as $index=>$controller){
-						$js = str_replace('{{'.esc_attr($controller['name']).'}}', esc_attr(greenshift_dynamic_placeholders($controller['value'])), $js);
+						$js = str_replace('{{'.esc_attr($controller['name']).'}}', esc_attr(greenshift_dynamic_placeholders($controller['value'], [], 0, [], 'js')), $js);
 					}
 				}
 				if($smart_lazy_load){

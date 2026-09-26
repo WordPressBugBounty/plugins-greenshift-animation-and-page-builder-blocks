@@ -8,7 +8,7 @@ Requires at least: 6.9
 Tested up to: 7.2
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 13.2.0
+Stable tag: 13.2.1
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -140,6 +140,13 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 13.2.1 =
+
+* Fixed: Reflected XSS through the {{GET:...}} and {{COOKIE:...}} dynamic placeholders - URL and cookie values are now JavaScript escaped when they are placed into element Custom JS (including Custom JS controllers) and HTML escaped everywhere else, so a crafted link can no longer break out of a script string or an HTML attribute and run code in the visitor's browser
+* Changed: wrap {{GET:...}} and {{COOKIE:...}} placeholders in quotes when you use them in Custom JS. Unquoted, only letters and digits are passed through, and any other character now stops the script with a syntax error instead of running as code
+* Fixed: inspector input border styles are now limited to GreenShift panels, so input controls of the core editor and other plugins keep their own borders in light and dark mode
+* Changed: headingContent, textContent and buttonContent were removed from wpml-config.xml for the Heading, Advanced text and Button blocks - their text is translated from the block markup
 
 = 13.2.0 =
 

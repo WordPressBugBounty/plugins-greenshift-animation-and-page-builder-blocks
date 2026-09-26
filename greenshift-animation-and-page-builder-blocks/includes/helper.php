@@ -1245,7 +1245,49 @@ function GSPB_generate_dynamic_repeater($html, $block, $extra_data = [], $runind
 // Dynamic Placeholders
 //////////////////////////////////////////////////////////////////
 
-function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0, $response = []){
+/**
+ * Escape a value for use inside inline JavaScript.
+ *
+ * Every character except ASCII letters and digits becomes a \uXXXX escape.
+ * Inside a JS string or template literal this decodes back to the same text,
+ * so quotes, backslashes, backticks and "${" can no longer end the string.
+ * Outside a string the escapes are a syntax error, so the value never runs as code.
+ */
+function greenshift_esc_js_placeholder_value($value){
+	$value = (string) $value;
+	if($value === ''){
+		return '';
+	}
+	$escaped = preg_replace_callback('/[^A-Za-z0-9]/u', function($match){
+		$bytes = array_values(unpack('C*', $match[0]));
+		switch(count($bytes)){
+			case 1: $code = $bytes[0]; break;
+			case 2: $code = (($bytes[0] & 0x1F) << 6) | ($bytes[1] & 0x3F); break;
+			case 3: $code = (($bytes[0] & 0x0F) << 12) | (($bytes[1] & 0x3F) << 6) | ($bytes[2] & 0x3F); break;
+			default: $code = (($bytes[0] & 0x07) << 18) | (($bytes[1] & 0x3F) << 12) | (($bytes[2] & 0x3F) << 6) | ($bytes[3] & 0x3F);
+		}
+		if($code > 0xFFFF){
+			$code -= 0x10000;
+			return sprintf('\\u%04X\\u%04X', 0xD800 | ($code >> 10), 0xDC00 | ($code & 0x3FF));
+		}
+		return sprintf('\\u%04X', $code);
+	}, $value);
+	return $escaped === null ? '' : $escaped;
+}
+
+/**
+ * Clean and escape a visitor-controlled value (GET, COOKIE) for the context it is printed in.
+ * sanitize_text_field() only strips tags, it does not escape quotes, so it is not enough on its own.
+ */
+function greenshift_escape_placeholder_request_value($value, $context = 'html'){
+	$value = sanitize_text_field(wp_unslash($value));
+	if($context === 'js'){
+		return greenshift_esc_js_placeholder_value($value);
+	}
+	return esc_html($value);
+}
+
+function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0, $response = [], $context = 'html'){
 	if($value && strpos($value, '{{') !== false){
 		if (strpos($value, '{{POST_ID}}') !== false){
 			global $post;
@@ -1378,7 +1420,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			if(!empty($matches[1])){
 				foreach($matches[1] as $val){
 					if(isset($_GET[$val])){
-						$value = str_replace('{{GET:'.$val.'}}', sanitize_text_field(wp_unslash($_GET[$val])), $value);
+						$value = str_replace('{{GET:'.$val.'}}', greenshift_escape_placeholder_request_value($_GET[$val], $context), $value);
 					}
 				}
 			}
@@ -1503,7 +1545,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			if(!empty($matches[1])){
 				foreach($matches[1] as $val){
 					if(!empty($_COOKIE[$val])){
-						$cookie_value = sanitize_text_field(wp_unslash($_COOKIE[$val]));
+						$cookie_value = greenshift_escape_placeholder_request_value($_COOKIE[$val], $context);
 						$value = str_replace('{{COOKIE:'.$val.'}}', $cookie_value, $value);
 					}
 				}
@@ -1556,7 +1598,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 		}
 		
 	}
-	return apply_filters('gspb_dynamic_placeholders', $value, $extra_data, $runindex, $response);
+	return apply_filters('gspb_dynamic_placeholders', $value, $extra_data, $runindex, $response, $context);
 }
 //////////////////////////////////////////////////////////////////
 
