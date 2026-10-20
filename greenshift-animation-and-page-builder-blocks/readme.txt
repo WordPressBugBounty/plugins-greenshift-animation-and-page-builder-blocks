@@ -8,7 +8,7 @@ Requires at least: 6.9
 Tested up to: 7.2
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 13.2.1
+Stable tag: 13.2.2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -140,6 +140,13 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 13.2.2 =
+
+* Fixed: Stored DOM XSS in the Text Animated element - its first text was read as plain text and then written back as HTML, so a comment like &lt;svg/onload=...&gt; shown by a nested Latest Comments block (Content set to Blocks) became live markup for every visitor. The text is now set as text only
+* Fixed: same issue in Split Text animations (data-aos-split, gs-split-words) - each word is now HTML escaped before the lines and words are rebuilt
+* Fixed: dynamic values that come back as numbers (for example ACF image IDs) no longer break Element text, image and video placeholders in the editor
+* Fixed: switching the editor preview from landscape mobile to portrait mobile now restores the core canvas width instead of keeping the landscape width
 
 = 13.2.1 =
 

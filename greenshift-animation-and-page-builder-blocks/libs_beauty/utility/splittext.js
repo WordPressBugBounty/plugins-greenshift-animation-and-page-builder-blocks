@@ -1,3 +1,7 @@
+function gsEscapeSplitWord(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 function splitTextIntoLinesAndWords() {
   const elements = document.querySelectorAll('.gs-split-words, [data-aos-split]');
 
@@ -39,7 +43,7 @@ function splitTextIntoLinesAndWords() {
     const wrappedContent = lines.map((line) => {
       const wrappedWords = line.map((word) => {
         wordCount++;
-        return `<span class="gs-words" style="transition-delay: calc(var(--gs-root-transition-delay, var(--gs-root-animation-delay, 0.01s)) + calc(var(--gs-root-transition-delay-multiplier, var(--gs-root-animation-delay-multiplier, 0.1s)) * ${wordCount - 1}));">${word}</span>`;
+        return `<span class="gs-words" style="transition-delay: calc(var(--gs-root-transition-delay, var(--gs-root-animation-delay, 0.01s)) + calc(var(--gs-root-transition-delay-multiplier, var(--gs-root-animation-delay-multiplier, 0.1s)) * ${wordCount - 1}));">${gsEscapeSplitWord(word)}</span>`;
       }).join(' ');
       return `<span class="gs-lines">${wrappedWords}</span>`;
     }).join('');

@@ -18,8 +18,11 @@ class TextAnimator {
     }
 
     initialize() {
-        // No need to set initial text, as it's already in the element
-        this.element.innerHTML = `<span>${this.texts[0]}</span>`;
+        // Set via textContent: initialText is decoded text (entities resolved), never re-parse it as HTML
+        const span = document.createElement('span');
+        span.textContent = this.texts[0];
+        this.element.textContent = '';
+        this.element.appendChild(span);
     }
 
     animate() {
