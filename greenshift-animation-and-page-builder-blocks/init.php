@@ -462,7 +462,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gscounter',
 		GREENSHIFT_DIR_URL . 'libs/counter/index.js',
 		array(),
-		'1.7',
+		'1.8',
 		true
 	);
 
@@ -539,7 +539,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gstypewriter',
 		GREENSHIFT_DIR_URL . 'libs/animatedtext/typewriter.js',
 		array(),
-		'1.0',
+		'1.1',
 		true
 	);
 
@@ -701,7 +701,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gs-greenpanel',
 		GREENSHIFT_DIR_URL . 'libs/greenpanel/index.js',
 		array(),
-		'2.0',
+		'2.1',
 		true
 	);
 
@@ -823,7 +823,7 @@ function gspb_greenShift_register_scripts_blocks(){
 		'gspb_interactions',
 		GREENSHIFT_DIR_URL . 'libs/interactionlayer/index.js',
 		array(),
-		'5.0',
+		'5.1',
 		true
 	);
 
@@ -848,25 +848,25 @@ function gspb_greenShift_register_scripts_blocks(){
 		'greenShift-library-editor',
 		GREENSHIFT_DIR_URL . 'build/gspbLibrary.css',
 		'',
-		'13.2.2'
+		'13.2.3'
 	);
 	wp_register_style(
 		'greenShift-block-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/index.css', // Block editor CSS.
 		array('greenShift-library-editor', 'wp-edit-blocks'),
-		'13.2.2'
+		'13.2.3'
 	);
 	wp_register_style(
 		'greenShift-stylebook-css', // Handle.
 		GREENSHIFT_DIR_URL . 'build/gspbStylebook.css', // Block editor CSS.
 		array(),
-		'13.2.2'
+		'13.2.3'
 	);
 	wp_register_style(
 		'greenShift-admin-css', // Handle.
 		GREENSHIFT_DIR_URL . 'templates/admin/style.css', // admin css
 		array(),
-		'13.2.2'
+		'13.2.3'
 	);
 
 	//Script for ajax reusable loading
@@ -969,6 +969,20 @@ require_once GREENSHIFT_DIR_PATH . 'blockrender/toc/block.php';
 require_once GREENSHIFT_DIR_PATH . 'blockrender/map/block.php';
 require_once GREENSHIFT_DIR_PATH . 'blockrender/element/block.php';
 
+
+// On RTL sites flex places the duplicated marquee copy on the left while the animation moves to the left, so a gap
+// appears between loops. Copies are laid out left to right, their content keeps the RTL direction.
+function gspb_marquee_rtl_inline_style()
+{
+	static $added = false;
+	if ($added || !is_rtl()) {
+		return;
+	}
+	$added = true;
+	wp_register_style('greenshift-marquee-rtl', false);
+	wp_enqueue_style('greenshift-marquee-rtl');
+	wp_add_inline_style('greenshift-marquee-rtl', '.marquee_enabled{direction:ltr}.marquee_enabled > .gspb_marquee_content{direction:rtl}');
+}
 
 function gspb_greenShift_block_script_assets($html, $block)
 {
@@ -1274,6 +1288,7 @@ function gspb_greenShift_block_script_assets($html, $block)
 				$html = GSPB_make_dynamic_link($html, $block['attrs'], $block, $field, $block['attrs']['containerLink']);
 			}
 			if(!empty($block['attrs']['isVariation']) && $block['attrs']['isVariation'] == 'marquee'){
+				gspb_marquee_rtl_inline_style();
 				$pattern = '/<div class="gspb_marquee_content">(.*?)<span class="gspb_marquee_content_end"><\/span><\/div>/s';
 				$html = preg_replace_callback($pattern, function ($matches) {
 					// Original div
@@ -1843,7 +1858,10 @@ function gspb_greenShift_block_inline_styles($html, $block){
 			$dynamic_style = GSPB_make_dynamic_image($dynamic_style, $block['attrs'], $block, $block['attrs']['background'], $block['attrs']['background']['image']);
 		}
 		$dynamic_style = '<style>' . wp_strip_all_tags($dynamic_style) . '</style>';
-		$html = $dynamic_style . $html;
+		// Since WP 6.9 a synced pattern runs render_block twice on the same output, so skip a tag that is already there.
+		if ($dynamic_style !== '<style></style>' && strpos($html, $dynamic_style) !== 0) {
+			$html = $dynamic_style . $html;
+		}
 	}
 	}
 	return $html;

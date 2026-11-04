@@ -8,7 +8,7 @@ Requires at least: 6.9
 Tested up to: 7.2
 Requires PHP: 7.3
 License: GPLv2 or later
-Stable tag: 13.2.2
+Stable tag: 13.2.3
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 More than 20 special blocks for Gutenberg to build complex pages and animations with highest possible web vitals score.
@@ -140,6 +140,24 @@ Yes, we guarantee that Greenshift is built on top of google recommendations and 
 7. **Sliding panels, popups.** Build custom sliding panels, add any block, use for mega menus
 
 == Changelog ==
+
+= 13.2.3 =
+
+* Fixed: Synced patterns printed their style tag twice, and blocks without CSS printed an empty <style></style> - since WordPress 6.9 a synced pattern runs the block render filter twice. Each style is printed once now and empty tags are skipped
+* Fixed: Element repeater inside another repeater crashed in the editor (slice(...).map is not a function) when the nested field was a JSON string or plain text, for example raw query data or ACPT fields. JSON strings are decoded the same way as on the frontend
+* Fixed: Query and repeater post type selectors did not list public post types registered with publicly_queryable set to false
+* Fixed: WPML registered Icon List item texts several times in the Advanced Translation Editor. Only the item text is extracted now
+* Fixed: Dynamic panel (mobile menu) stayed open after tapping a link to a section on the same page
+* Updated: AI model lists in settings - added GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna, Claude Opus 5.5, Claude Fable 5.1, Claude Sonnet 5.5, Claude Haiku 5.5, Gemini 3.8 Flash, Gemini 3.6 Flash, Gemini 3.5 Flash-Lite, Nano Banana 2.1, GPT Image 2.5 Sunburst and Flare. Removed Gemini models that Google has shut down; the default image model is now the stable Gemini 3 Pro Image
+* Fixed: Stored DOM XSS through the Counter block - a value copied onto the Counter prefix by an Interaction Layer with {{ATTR:...}} (for example a comment author URL) ran as HTML for every visitor. Counter prefix and postfix are now set as text only, so HTML typed in these fields shows as plain text
+* Fixed: same issue in the Set HTML content interaction - {{ATTR:...}}, {{VALUE}}, {{STORAGE:...}} and {{COOKIE:...}} values are now inserted as text. Markup typed in the action and {{CONTENT}} stay HTML
+* Fixed: same issue in the Typewriter text animation - the text is now set as text only
+* Fixed: Attach attribute interaction no longer writes a value built from page or visitor data into event handlers (on*), srcdoc or javascript: links
+* Fixed: Sensitive data exposure through nested placeholders - a crafted link could place {{COOKIE:...}} inside a {{GET:...}} value and put a logged in visitor's login cookie into an image URL. Values from GET, COOKIE and FORM placeholders can no longer contain placeholders, the same applies to values read by Interaction Layers, and {{COOKIE:...}} never prints WordPress login, session or post password cookies, WooCommerce session cookies or PHPSESSID
+* Fixed: Portrait Mobile styles were not visible in the block editor when the mobile breakpoint is smaller than the core Mobile preview (360px before WordPress 7.1, 479px since). Selecting Portrait Mobile in the device switcher now narrows the canvas to the portrait width; core's own width is kept when it already fits the portrait breakpoint
+* Fixed: Marquee on RTL sites showed an empty gap between loops. The copies are now laid out left to right while their content keeps the RTL direction, existing marquees are fixed without resaving
+* Fixed: Charts with dynamic CSV / Google Sheet loading received a rest_forbidden error instead of data for visitors (and cached it), because the CSV route requires the edit_posts capability. The CSV converter now runs in the same request
+* Fixed: Text selection shortcuts (Shift+Arrow, Ctrl/Alt+Shift+Arrow) selected whole blocks instead of text in Element, Text, Heading, Button, Accordion, Tabs, Icon List, Progress Bar, Switcher and Title Box text fields. The block editor treated these fields as non-text because they had no selection identifier
 
 = 13.2.2 =
 

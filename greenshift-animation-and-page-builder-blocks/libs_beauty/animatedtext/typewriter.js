@@ -18,7 +18,10 @@ class gspbTextType {
             this.txt = fullTxt.substring(0, this.txt.length + 1);
         }
 
-        this.el.innerHTML = '<span class="gstypewrap">' + this.txt + '</span>';
+        let typewrap = document.createElement('span');
+        typewrap.className = 'gstypewrap';
+        typewrap.textContent = this.txt;
+        this.el.replaceChildren(typewrap);
 
         var that = this;
         var delta = 200 - Math.random() * 100;

@@ -14,6 +14,16 @@ class GSDynamicPanel {
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') this.close();
         });
+        // Same-page anchor links inside the panel (e.g. "#contact" in a mobile menu) close it, so the page can scroll to the target.
+        this.content.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href*="#"]');
+            if (!link || !this.dynamicpanel.classList.contains('active')) return;
+            if (link.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey) return;
+            const url = new URL(link.href, window.location.href);
+            if (url.hash.length > 1 && url.origin === window.location.origin && url.pathname === window.location.pathname && url.search === window.location.search) {
+                this.close();
+            }
+        });
     }
 
     injectStyles() {
@@ -154,7 +164,7 @@ class GSDynamicPanel {
         document.body.style.overflow = 'auto';
         if (this.triggerElement) {
             this.triggerElement.classList.remove('triggeractive');
-            this.triggerElement.focus();
+            this.triggerElement.focus({ preventScroll: true });
         }
     }
 

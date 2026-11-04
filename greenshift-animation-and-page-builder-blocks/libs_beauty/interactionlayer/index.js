@@ -380,7 +380,25 @@ if (GSonMouseMoveIEvents.length > 0) {
     });
 }
 
-function GSPBDynamicMathPlaceholders(element, event, windowobj, documentobj, value, selector) {
+function GSPBEscapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, (char) => '&#' + char.charCodeAt(0) + ';');
+}
+
+// Same rule as dynamic attributes in blockrender/element/block.php: a value built from page or visitor data can't become code.
+function GSPBIsUnsafeDynamicAttribute(name, template, value, documentobj) {
+    if (typeof template !== 'string' || !/\{\{(VALUE|CONTENT|ATTR:|STORAGE:|COOKIE:)/.test(template)) return false;
+    if (/^(on|srcdoc$)/i.test(name)) return true;
+    if (/^(href|src|action|formaction|xlink:href)$/i.test(name)) {
+        try {
+            return new URL(value, documentobj.baseURI).protocol === 'javascript:';
+        } catch (error) {
+            return false;
+        }
+    }
+    return false;
+}
+
+function GSPBDynamicMathPlaceholders(element, event, windowobj, documentobj, value, selector, context) {
     if (selector) {
         element = selector;
     } else if (element && element.length > 0) {
@@ -401,19 +419,6 @@ function GSPBDynamicMathPlaceholders(element, event, windowobj, documentobj, val
     if (value.indexOf('{{CLIENT_X}}') > -1) {
         let clientX = event.clientX;
         value = value.replace('{{CLIENT_X}}', clientX);
-    }
-    if (value.indexOf('{{VALUE}}') > -1) {
-        let inputVal = element?.value;
-        if (inputVal) {
-            value = value.replace('{{VALUE}}', inputVal);
-        }
-    }
-    if (value.indexOf('{{ATTR:') > -1) {
-        let matches = value.match(/\{{ATTR:(.*?)\}\}/)?.[1];
-        if (matches) {
-            let attrValue = element.getAttribute(matches);
-            value = value.replace('{{ATTR:' + matches + '}}', attrValue);
-        }
     }
     if (value.indexOf('{{RANDOM:') > -1) {
         let matches = value.match(/\{{RANDOM:(.*?)\}\}/)?.[1];
@@ -440,20 +445,6 @@ function GSPBDynamicMathPlaceholders(element, event, windowobj, documentobj, val
             value = value.replace(`{{RANDOM:${matches}}}`, randomValue);
         }
     }
-    if (value.indexOf('{{STORAGE:') > -1) {
-        let matches = value.match(/\{{STORAGE:(.*?)\}\}/)?.[1];
-        if (matches) {
-            let storageValue = localStorage.getItem(matches);
-            value = value.replace('{{STORAGE:' + matches + '}}', storageValue);
-        }
-    }
-    if (value.indexOf('{{COOKIE:') > -1) {
-        let matches = value.match(/\{{COOKIE:(.*?)\}\}/)?.[1];
-        if (matches) {
-            let cookieValue = GSCookClass.getCookie(matches);
-            value = value.replace('{{COOKIE:' + matches + '}}', cookieValue);
-        }
-    }
     if (value.indexOf('{{INDEX}}') > -1) {
         let index = Array.from(GSfindChildrenWithoutStyle(element.parentNode)).indexOf(element);
         value = value.replace('{{INDEX}}', index);
@@ -478,10 +469,6 @@ function GSPBDynamicMathPlaceholders(element, event, windowobj, documentobj, val
     if (value.indexOf('{{CLIENT_Y}}') > -1) {
         let clientY = event.clientY;
         value = value.replace('{{CLIENT_Y}}', clientY);
-    }
-    if (value.indexOf('{{CONTENT}}') > -1) {
-        let content = element.innerHTML;
-        value = value.replace('{{CONTENT}}', content);
     }
     if (value.indexOf('{{OFFSET_X}}') > -1) {
         let offsetX = event.offsetX;
@@ -525,7 +512,25 @@ function GSPBDynamicMathPlaceholders(element, event, windowobj, documentobj, val
     if (value.indexOf('{{POSITION_LEFT}}') > -1) {
         value = value.replace('{{POSITION_LEFT}}', element.getBoundingClientRect().left);
     }
-    return value;
+    // Page and visitor data goes in last and in one pass, so it is never scanned for placeholders.
+    // Only {{CONTENT}} is HTML, the rest stays text when the result is written as HTML.
+    return value.replace(/\{\{(VALUE|CONTENT|(ATTR|STORAGE|COOKIE):(.+?))\}\}/g, (placeholder, name, source, key) => {
+        if (name === 'CONTENT') {
+            return element.innerHTML;
+        }
+        let data;
+        if (name === 'VALUE') {
+            data = element?.value;
+            if (!data) return placeholder;
+        } else if (source === 'ATTR') {
+            data = element.getAttribute(key);
+        } else if (source === 'STORAGE') {
+            data = localStorage.getItem(key);
+        } else {
+            data = GSCookClass.getCookie(key);
+        }
+        return context === 'html' ? GSPBEscapeHTML(data) : data;
+    });
 }
 
 function GSPBGetCustomSelector(selector, triggerElement, documentobj) {
@@ -553,11 +558,11 @@ function GSPBGetCustomSelector(selector, triggerElement, documentobj) {
     return selector;
 }
 
-function GSPBMathAttributeOperator(element, triggerElement, event, windowobj, documentobj, unit, value, selector, math) {
+function GSPBMathAttributeOperator(element, triggerElement, event, windowobj, documentobj, unit, value, selector, math, context) {
     if (selector && selector != '.' && selector != '#') {
         selector = GSPBGetCustomSelector(selector, triggerElement, documentobj);
     }
-    value = GSPBDynamicMathPlaceholders(element, event, windowobj, documentobj, value, selector);
+    value = GSPBDynamicMathPlaceholders(element, event, windowobj, documentobj, value, selector, context);
     let finalValue = value;
     if (finalValue && math && math.length > 0) {
         math.forEach((mathItem, mathIndex) => {
@@ -775,7 +780,7 @@ function gspb_execute_inter_Actions(element, triggerElement, layersActions, even
                 }
             }
             else if (actionName === 'sethtml') {
-                targetEle.innerHTML = GSPBMathAttributeOperator(element, triggerElement, event, windowobj, documentobj, targetEleAttributeUnit, targetEleAttributeValue, targetEleAttributeSelector, targetEleAttributecustomMath);
+                targetEle.innerHTML = GSPBMathAttributeOperator(element, triggerElement, event, windowobj, documentobj, targetEleAttributeUnit, targetEleAttributeValue, targetEleAttributeSelector, targetEleAttributecustomMath, 'html');
             }
 
             else if (actionName === 'copyelement') {
@@ -890,10 +895,11 @@ function gspb_execute_inter_Actions(element, triggerElement, layersActions, even
             }
 
             else if (actionName === 'attach-attribute') {
+                let attachValue = GSPBMathAttributeOperator(element, triggerElement, event, windowobj, documentobj, targetEleAttributeUnit, targetEleAttributeValue, targetEleAttributeSelector, targetEleAttributecustomMath);
                 if(targetEleAttribute == 'value'){
-                    targetEle.value = GSPBMathAttributeOperator(element, triggerElement, event, windowobj, documentobj, targetEleAttributeUnit, targetEleAttributeValue, targetEleAttributeSelector, targetEleAttributecustomMath);
-                }else{
-                    targetEle.setAttribute(targetEleAttribute, GSPBMathAttributeOperator(element, triggerElement, event, windowobj, documentobj, targetEleAttributeUnit, targetEleAttributeValue, targetEleAttributeSelector, targetEleAttributecustomMath));
+                    targetEle.value = attachValue;
+                }else if(!GSPBIsUnsafeDynamicAttribute(targetEleAttribute, targetEleAttributeValue, attachValue, documentobj)){
+                    targetEle.setAttribute(targetEleAttribute, attachValue);
                 }
             }
 

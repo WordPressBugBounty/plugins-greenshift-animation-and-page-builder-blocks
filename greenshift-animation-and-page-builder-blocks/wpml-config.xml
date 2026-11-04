@@ -44,7 +44,7 @@
 		</gutenberg-block>
 		<gutenberg-block
 			type="greenshift-blocks/iconlist" translate="1" label="Advanced List">
-			<xpath>//*[contains(@class, 'gspb_iconsList')]</xpath>
+			<xpath>//span[contains(@class, 'gspb_iconsList__item__text')]</xpath>
 			<key name="iconsList">
 				<key name="*">
 					<key name="content" />

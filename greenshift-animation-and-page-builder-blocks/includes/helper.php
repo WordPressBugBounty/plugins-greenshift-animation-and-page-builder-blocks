@@ -1276,15 +1276,38 @@ function greenshift_esc_js_placeholder_value($value){
 }
 
 /**
+ * A visitor-controlled value must never spell a placeholder: it lands in a string that is still being scanned,
+ * and block render can scan the finished HTML again. All braces go, because removing only {{ lets a token
+ * be rebuilt from {{{ or split across two GET values.
+ */
+function greenshift_remove_placeholder_braces($value){
+	return str_replace(array('{', '}'), '', $value);
+}
+
+/**
+ * Login and session cookies are never printed. Placeholder output is markup the browser can send to another host,
+ * which would hand over a cookie that HttpOnly keeps away from scripts.
+ */
+function greenshift_is_protected_cookie($name){
+	$auth_cookies = array(
+		defined('AUTH_COOKIE') ? AUTH_COOKIE : '',
+		defined('SECURE_AUTH_COOKIE') ? SECURE_AUTH_COOKIE : '',
+		defined('LOGGED_IN_COOKIE') ? LOGGED_IN_COOKIE : '',
+	);
+	return in_array($name, $auth_cookies, true) || preg_match('/^(wordpress_|wp-settings-|wp-postpass_|wp_woocommerce_session_|PHPSESSID$)/i', $name) === 1;
+}
+
+/**
  * Clean and escape a visitor-controlled value (GET, COOKIE) for the context it is printed in.
  * sanitize_text_field() only strips tags, it does not escape quotes, so it is not enough on its own.
+ * The JS escape turns braces into \u escapes, so only the HTML branch has to remove them.
  */
 function greenshift_escape_placeholder_request_value($value, $context = 'html'){
 	$value = sanitize_text_field(wp_unslash($value));
 	if($context === 'js'){
 		return greenshift_esc_js_placeholder_value($value);
 	}
-	return esc_html($value);
+	return esc_html(greenshift_remove_placeholder_braces($value));
 }
 
 function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0, $response = [], $context = 'html'){
@@ -1544,7 +1567,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			preg_match_all($pattern, $value, $matches);
 			if(!empty($matches[1])){
 				foreach($matches[1] as $val){
-					if(!empty($_COOKIE[$val])){
+					if(!empty($_COOKIE[$val]) && !greenshift_is_protected_cookie($val)){
 						$cookie_value = greenshift_escape_placeholder_request_value($_COOKIE[$val], $context);
 						$value = str_replace('{{COOKIE:'.$val.'}}', $cookie_value, $value);
 					}
@@ -1557,7 +1580,7 @@ function greenshift_dynamic_placeholders($value, $extra_data = [], $runindex = 0
 			foreach ($matches as $match) {
 				$field = sanitize_key($match[1]);
 				$fallback = isset($match[2]) ? esc_html($match[2]) : '';
-				$replacement = !empty($extra_data[$field]) ? esc_html($extra_data[$field]) : $fallback;
+				$replacement = !empty($extra_data[$field]) ? esc_html(greenshift_remove_placeholder_braces($extra_data[$field])) : $fallback;
 				$value = str_replace($match[0], $replacement, $value);
 			}
 		}

@@ -308,6 +308,7 @@ class Element
 		}
 		if(!empty($block['attrs']['isVariation'])){
 			if($block['attrs']['isVariation'] == 'marquee'){
+				gspb_marquee_rtl_inline_style();
 				$pattern = '/<div class="gspb_marquee_content">(.*?)<span class="gspb_marquee_content_end"><\/span><\/div>/s';
 				$html = preg_replace_callback($pattern, function ($matches) {
 					// Original div
@@ -758,11 +759,14 @@ class Element
 					$json = get_transient($transient_name);
 				}
 				if(empty($json)){
-					$siteurl = site_url();
 					$type = !empty($block['attrs']['chartData']['chart_type']) ? $block['attrs']['chartData']['chart_type'] : 'chart1';
-					$remote = wp_safe_remote_get($siteurl.'/wp-json/greenshift/v1/get-csv-to-json?type='.rawurlencode($type).'&url='.rawurlencode($block['attrs']['chartData']['csv_link']));
-					if(!is_wp_error($remote)){
-						$json = wp_remote_retrieve_body($remote);
+					// The converter runs in this request, its REST route needs edit_posts so a loopback request gets 401 for visitors
+					$csv_request = new \WP_REST_Request('GET', '/greenshift/v1/get-csv-to-json');
+					$csv_request->set_param('type', $type);
+					$csv_request->set_param('url', $block['attrs']['chartData']['csv_link']);
+					$csv_result = \gspb_get_csv_to_json($csv_request);
+					if(!is_wp_error($csv_result) && !empty($csv_result)){
+						$json = wp_json_encode($csv_result);
 						if($cache_time){
 							set_transient($transient_name, $json, $cache_time);
 						}

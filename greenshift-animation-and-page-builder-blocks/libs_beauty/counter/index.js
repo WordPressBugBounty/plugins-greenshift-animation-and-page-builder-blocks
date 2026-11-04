@@ -9,10 +9,10 @@ function gscounteranimate(obj, initVal, lastVal, duration, postfix, prefix) {
             startTime = currentTime;
         }
         const progress = Math.min((currentTime - startTime) / (duration * 1000), 1);
-        let postfixhtml = postfix || '';
-        let prefixhtml = prefix || '';
+        let postfixtext = postfix || '';
+        let prefixtext = prefix || '';
         const formatter = new Intl.NumberFormat();
-        obj.innerHTML = prefixhtml + formatter.format(Math.floor(progress * (lastVal - initVal) + initVal)) + postfixhtml;
+        obj.textContent = prefixtext + formatter.format(Math.floor(progress * (lastVal - initVal) + initVal)) + postfixtext;
         if (progress < 1) {
             window.requestAnimationFrame(step);
         }
