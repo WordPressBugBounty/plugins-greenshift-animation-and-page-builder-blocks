@@ -8,6 +8,7 @@
 			<key name="textafter" />
 			<key name="customAnchor" />
 			<key name="subTitle" />
+			<key name="headingContent" />
 			<key name="animatedText">
 				<key name="*" />
 			</key>
@@ -18,6 +19,7 @@
 		<gutenberg-block
 			type="greenshift-blocks/text" translate="1" label="Advanced text">
 			<xpath>//*[contains(@class, 'gspb_text')]</xpath>
+			<key name="textContent" />
 			<key name="text" />
 			<key name="customAnchor" />
 			<key name="dynamictext">
@@ -32,10 +34,12 @@
 			<key name="customAnchor" />
 			<key name="closeLabel" />
 			<key name="openLabel" />
+			<key name="buttonContent" />
 		</gutenberg-block>
 		<gutenberg-block
 			type="greenshift-blocks/buttonbox" translate="1" label="Advanced Button">
 			<xpath>//*[contains(@class, 'gspb_button_wrapper')]</xpath>
+			<key name="buttonContent" />
 			<key name="label" />
 			<key name="buttonLink" />
 			<key name="customAnchor" />

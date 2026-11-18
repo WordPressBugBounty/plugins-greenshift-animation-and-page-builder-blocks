@@ -2041,6 +2041,7 @@ if (!class_exists('GSPB_GreenShift_Settings')) {
 			}
 			// Allow to filter the id of the reusable block
 			$id = apply_filters('gspb_template_shortcode_function_id', $id);
+			$id = apply_filters( 'wpml_object_id', (int) $id, 'wp_block', true );
 			if (!is_numeric($id)) {
 				$postget = get_page_by_path($id, OBJECT, array('wp_block'));
 				if (is_object($postget)) {
